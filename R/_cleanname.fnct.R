@@ -1,0 +1,41 @@
+clean.name<-function(x){
+    #CLEANS ACCENTS AND OTHER MARKS FROM FIELD CALLED "NAME" 
+    y<-toupper(x$name)
+    y<-gsub("Â","A", y) 
+    y<-gsub("Á","A", y)
+    y<-gsub("Ã","A", y)
+    y<-gsub("É","E", y)
+    y<-gsub("Ê","E", y)
+    y<-gsub("Í","I", y)
+    y<-gsub("Ó","O", y)
+    y<-gsub("Ô","O", y)
+    y<-gsub("Õ","O", y)
+    y<-gsub("Ú","U", y)
+    y<-gsub("Ü","U", y)
+    y<-gsub("Ç","C", y)
+    y<-gsub("'"," ", y)
+    y<-gsub("."," ", y, fixed=TRUE)  
+    y<-gsub("-"," ", y, fixed=TRUE)    
+    return(y)
+}
+
+clean<-function(x){
+    #CLEANS ACCENTS AND OTHER MARKS FROM FIELD
+    y<-toupper(x)
+    y<-gsub("Â","A", y) 
+    y<-gsub("Á","A", y)
+    y<-gsub("Ã","A", y)
+    y<-gsub("É","E", y)
+    y<-gsub("Ê","E", y)
+    y<-gsub("Í","I", y)
+    y<-gsub("Ó","O", y)
+    y<-gsub("Ô","O", y)
+    y<-gsub("Õ","O", y)
+    y<-gsub("Ú","U", y)
+    y<-gsub("Ü","U", y)
+    y<-gsub("Ç","C", y)
+    y<-gsub("'"," ", y)
+    y<-gsub("."," ", y, fixed=TRUE)  
+    y<-gsub("-"," ", y, fixed=TRUE)    
+    return(y)
+}
