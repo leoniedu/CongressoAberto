@@ -1,4 +1,4 @@
-## TODO: What should we do about the last day of the month? Perhaps download the current month and the last?
+## TODO: What should we do about the last day of the month? Perhaps download the current month and the last? CUrrent fix: do the entire year
 
 ##SHould work for current downloads
 #Older downloads, prior to 2009, have subdirectories in the zip files, use four digit years, etc...
@@ -7,41 +7,46 @@
 ##source(paste(run.from,"~/R/_cleanname.fnct.R",sep=""))
 run.from<-"~/reps/CongressoAberto/data/NECON/"
 source("~/reps/CongressoAberto/R/_cleanname.fnct.R")
+source("~/reps/CongressoAberto/R/caFunctions.R")
 current.encoding <- getOption("encoding")
 ## set as iso
 options(encoding="ISO8859-1")
 
 
 #Get current date, and move to appropriate directory
-current.month <- as.numeric(format(Sys.time(), "%m"))
 current.year <- format(Sys.time(), "%Y")
 setwd(paste(run.from,current.year,sep=""))  
 SFfiles <- grep("SF",dir(),value=TRUE)
 if(length(SFfiles)>0){file.remove(SFfiles)} #Get rid of SENADO files, if they exist
 ### See current files, download this months`s data, flag new votes
-old.LVfiles <- grep("LV",dir(),value=TRUE)  #get already coded votes
 ##we could change this so that it uses the csv votes (already tabulated) as the reference
 ##Download current months's zip
 monthspt<-c("Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro")
-month <- monthspt[current.month]
 year <- substr(current.year,3,4)
-the.url <- paste("http://www.camara.gov.br/internet/plenario/result/votacao/",month,year,".zip",sep="")
-try(download.file(the.url,dest=paste(month,current.year,".zip",sep=""),quiet = FALSE, mode="wb"),silent=TRUE) #continue even if some file doesn't exist
-##Unzip this months's zip file
-##zip.unpack(paste(month,current.year,".zip",sep=""), dest=getwd())
-## the following code extracts to the current dir junking paths (i.e.)
-##    it does not create directories, putting everything in the same place
-unzip(paste(month,current.year,".zip",sep=""),junkpaths=TRUE)
 
-SFfiles <- grep("SF",dir(),value=TRUE)
-if(length(SFfiles)>0){file.remove(SFfiles)} #Get rid of SENADO files, if they were downloaded
+
+file.table <- matrix("",ncol=2)
+
+old.LVfiles <- grep("LV",dir(),value=TRUE)  #get already coded votes
+for (current.month in 1:12) {
+  month <- monthspt[current.month]
+  the.url <- paste("http://www.camara.gov.br/internet/plenario/result/votacao/",month,year,".zip",sep="")
+  tmp <- try(download.file(the.url,dest=paste(month,current.year,".zip",sep=""),quiet = FALSE, mode="wb"),silent=TRUE) #continue even if some file doesn't exist
+  if ("try-error"%in%class(tmp)) next
+  cat(current.month)
+  ##Unzip this months's zip file
+  ##zip.unpack(paste(month,current.year,".zip",sep=""), dest=getwd())
+  ## the following code extracts to the current dir junking paths (i.e.)
+  ##    it does not create directories, putting everything in the same place
+  unzip(paste(month,current.year,".zip",sep=""),junkpaths=TRUE)
+  SFfiles <- grep("SF",dir(),value=TRUE)
+  if(length(SFfiles)>0){file.remove(SFfiles)} #Get rid of SENADO files, if they were downloaded
+}
 
 new.LVfiles<-grep("LV",dir(),value=TRUE) 
 votes <- setdiff(new.LVfiles,old.LVfiles) #compare new files with old to flag recently downloaded
-
 nvotes <- length(votes)
 if (nvotes>0) {
-  file.table <- matrix("",nvotes,2)  
   for(i in 1:nvotes) {  #for each new vote, create two new files
     file.table[i,1] <- LVfile <- votes[i]  
     ##Read data from VOTE LIST file for the vote
@@ -66,9 +71,40 @@ if (nvotes>0) {
     vt.descrip<-read.table(HEfile, header = FALSE, nrows = 1,skip = 12, strip.white = TRUE, as.is = TRUE, sep=";",quote="")
     vt.session<-read.table(HEfile, header = FALSE, nrows = 1,skip = 0, strip.white = TRUE, as.is = TRUE)[1,1]
     vt.descrip<-gsub("\"","",vt.descrip)    #get rid of quotes in the description of the bill
-    HE <- data.frame(voteid,date=vt.date,session=vt.session,description=vt.descrip)
+    HE <- data.frame(voteid,dates=vt.date,session=vt.session,bill=vt.descrip)
     write.csv(HE,file=paste(gsub("txt","csv",HEfile)),row.names = FALSE)
   }
   file.table <- gsub("txt","csv",file.table)
   ## do something (load db, post, graphs, whatever)
+  data.votacoes <- do.call(rbind,lapply(file.table[,2],gd,encoding=FALSE))
+  data.votos <- do.call(rbind,lapply(file.table[,1],gv))
+  ##put in db
+  library(RMySQL)
+  driver<-dbDriver("MySQL")
+  if (exists("connect")) dbDisconnect(connect)
+  connect<-dbConnect(driver, group="congressoaberto")  
+  dbWriteTable(connect, "br_votos", data.votos, overwrite=FALSE,
+               row.names = F, eol = "\r\n" ,append=TRUE)    
+  dbWriteTable(connect, "br_votacoes", data.votacoes, overwrite=FALSE,
+               row.names = F, eol = "\r\n" ,append=TRUE)
+  ##sanity check, exclude duplicates
+  dbGetQuery(connect,"select count(*) as row_ct from br_votos")
+  dbSendQuery(connect,"drop  table tmp")
+  dbSendQuery(connect,"create table tmp as select distinct * from br_votos")
+  dbSendQuery(connect,"drop  table br_votos")
+  dbSendQuery(connect,"create table br_votos as select * from tmp")
+  dbGetQuery(connect,"select count(*) as row_ct from br_votos")
+  dbGetQuery(connect,"select count(*) as row_ct from br_votacoes")
+  dbSendQuery(connect,"drop  table tmp")
+  dbSendQuery(connect,"create table tmp as select distinct * from br_votacoes")
+  dbSendQuery(connect,"drop  table br_votacoes")
+  dbSendQuery(connect,"create table br_votacoes as select * from tmp")
+  dbGetQuery(connect,"select count(*) as row_ct from br_votacoes")
+  ##FIX check that deputados are in db
+  ##dbWriteTable(connect, "br_deputados", data.deputados, overwrite=TRUE,
+  ##row.names = F, eol = "\r\n" )    
 }
+
+
+  
+
