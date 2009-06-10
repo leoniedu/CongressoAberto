@@ -1,4 +1,14 @@
-##bio
+##process bio files
+## creates: bio.all (one row per legislator)
+##          idname (one row per legislator/name/session
+                                        # names written in multiple forms)
+
+library(plyr)
+library(RMySQL)
+source("~/reps/CongressoAberto/R/caFunctions.R")
+
+
+
 gb <- function(x) trim(toupper(gsub(".*<b>(.*)<.*b>.*","\\1",x)))
 
 get.bio <- function(file.now) {
@@ -12,13 +22,13 @@ get.bio <- function(file.now) {
                    )
                )
   imagefile <- gsub(".*\"(.*)\".* width.*","\\1",text.now[grep("img",text.now)[1]])
+  imagefile <- gsub(".*/(depnovos.*)&nome.*","\\1",imagefile)
   birthplace <- gb((gsub(".* - ","",birth)))
   birthdate <-  as.Date(gb(gsub(" - .*","",birth)),format="%d/%m/%Y")
   sessions <- gb(text.now[grep("Legislaturas:",text.now)[1]])
-  sessions <- sub(".*: |\\.","",sessions)
+  sessions <- gsub(".*: |\\.| +","",sessions)
   ##sessions <- strsplit(sessions,",")[[1]]
-  parties <- toupper(paste(party,";",trim(gsub("<.*>(.*)<.*>","\\1",text.now[grep("Filiações Partidárias",text.now)[1]+5]))))
-  mandates <- gsub("<.*>(.*)<.*>","\\1",trim(text.now[grep("Mandatos Eletivos",text.now)[1]+5]))
+  mandates <- gsub("<.*>(.*)<.*>","\\1",trim(text.now[grep("Mandatos Eletivos",text.now)[1]+5]))  
   nameshort <- gb(text.now[65])
   if (substr(nameshort,nchar(nameshort),nchar(nameshort))=="-") {
     ##no party/state info (deputies from older sessions)
@@ -44,14 +54,61 @@ get.bio <- function(file.now) {
     state <- partystate[[1]][2]
     nameshort <- toupper(trim(gsub(" - .*","",nameshort)))
   }
-  data.frame(nameshort, name=namelong, partynow=party, state=state, birth=birthdate, birthplace, sessions=sessions, parties=parties , mandates,id,biofile=file.now,imagefile,sessionow=session.now)
+  parties <- toupper(paste(party,";",trim(gsub("<.*>(.*)<.*>","\\1",text.now[grep("Filiações Partidárias",text.now)[1]+5]))))
+  ##print(sessions)
+  file.now <- gsub(".*/(DepNovos.*)","\\1",file.now)
+  parties <- gsub("\t+| +|^ +|^\t+","",parties)
+  mandates <- gsub("\t+| +|^ +|^\t+","",mandates)
+  gc()
+  data.frame(nameshort, name=namelong, partynow=party, state=state, birth=birthdate, birthplace, sessions=sessions, parties=parties , mandates,bioid=id,biofile=file.now,imagefile)
 }
-
-
-bio.all <- list()
-for (session.now in sessions) {
-  cat(session.now,"\n")
-  files.list <- dir(paste('../data/bio/',session.now,'/',sep=''),pattern="DepNovos_Detalhe",full.names=TRUE)
-  bio.all <- c(bio.all,lapply(files.list,get.bio))
-}
+files.list <- dir('../data/bio/all/',pattern="DepNovos_Detalhe",full.names=TRUE)
+bio.all <- lapply(files.list,get.bio)
 bio.all <- do.call(rbind,bio.all)
+
+##manual fixes
+bio.all[bio.all$bioid=="96883","state"] <- "AP"
+
+## create a deputyid/name/session to use when merging data from
+## multiple sources (this is slow and memory consuming)
+idname <- with(bio.all,
+               data.frame(bioid,
+                          name,                         
+                          nameshort,
+                          state,
+                          sessions))
+idname <- ddply(idname,'bioid',
+                function(x) 
+                with(x,data.frame(bioid,
+                                  name,
+                                  nameshort,
+                                  state,
+                                  sessions=strsplit(as.character(sessions),",")[[1]]
+                                  )
+                     ),
+                .progress="text")
+idname <- with(idname,rbind(
+                            data.frame(bioid,name=as.character(name),state,sessions),
+                            data.frame(bioid,name=as.character(nameshort),state,sessions))
+               )
+idname <- unique(idname)
+
+
+
+
+##try to join this to votos db
+## votos.id <- dbGetQuery(connect, "select distinct br_votos.id, br_votos.name, br_votos.state, br_votacoes.anolegislativo from br_votos,br_votacoes where br_votos.origvote=br_votacoes.origvote")
+
+connect.db()
+
+
+dbRemoveTable(connect,"br_idname")
+dbRemoveTable(connect,"br_bio")
+
+dbWriteTable(connect, "br_idname", idname, overwrite=TRUE,
+             row.names = F, eol = "\r\n" )    
+
+dbWriteTable(connect, "br_bio", bio.all, overwrite=TRUE,
+             row.names = F, eol = "\r\n" )    
+
+
