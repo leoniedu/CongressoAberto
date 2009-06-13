@@ -4,7 +4,22 @@ source("~/reps/CongressoAberto/R/caFunctions.R",encoding="UTF8")
 connect.db()
 
 ## Downloading from tse
+## candidaturas
 ##http://www.tse.gov.br/sadEleicao2006DivCand/listaBens.jsp?sg_ue=SP&sq_cand=10297
+
+## electoral
+load("../data/electoral/2006.RData")
+##votos.x situacao.x turno.x votos.y situacao.y turno.y
+
+library(gtools)
+tmp <- smartbind(depfed.nom,depest.nom,senador)
+tmp$office <- car::recode(tmp$cargo, "c('deputado estadual','deputado distrital')='Deputados Estaduais';'deputado federal'='Deputados Federais';'senador'='Senadores'")
+tmp$tseid <- with(tmp,paste(office,toupper(uf),numero,sep=";"))
+
+dbWriteTable(connect,"br_tse2006legis",tmp)
+
+
+
 
 
 ##load data from CIS
@@ -24,6 +39,13 @@ dcis$state <- toupper(state.l2a(dcis$state))
 dcis$tseid <- with(dcis,paste(office,state,number,sep=";"))
 ##dcis <- subset(dcis,situation!="Não Concorreu")
 dcis$firstlast <- clean(firstlast(dcis$name))
+
+
+###############
+tmp0 <- with(tmp,unique(data.frame(tseid,nome)))
+
+###############
+tmp1 <- merge(tmp,dcis,by="tseid")
 
 
 
@@ -135,11 +157,15 @@ names(matches)[3] <- "csiid"
 save(matches,file="../data/electoral/biocis2006.RData")
 
 ## write to db
+dbRemoveTable(connect,"br_csiidbioid")
 dbWriteTable(connect,"br_csiidbioid",matches)
 
-
-
-## We can't trust the "outcome" variable
+## FIX: We can't trust the "outcome" variable
 ## RENATO COZZOLINO SOBRINHO (Suplente) [coded as eleito in CIS db]
 ## EDGARD MONTENOR FERNANDES (Suplente) [coded as eleito in CIS db]
 ## MARCELO RICARDO MARIANO (Suplente) [coded as eleito in CIS db]
+
+
+
+## matching to depfed
+
