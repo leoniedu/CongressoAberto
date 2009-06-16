@@ -7,8 +7,9 @@ source("~/reps/CongressoAberto/R/caFunctions.R",encoding="UTF8")
 run.from <- "~/reps/CongressoAberto/data/camara/rollcalls"
 ##Get current year
 current.year <- format(Sys.time(), "%Y")
+years <- 1999:current.year
 ##list of files to download
-zip.files <- apply(expand.grid(c("Janeiro","Fevereiro","Mar%C3%A7o","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"),substr(1999:current.year,3,4)),1,paste,collapse="")
+zip.files <- apply(expand.grid(c("Janeiro","Fevereiro","Mar%C3%A7o","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"),substr(years,3,4)),1,paste,collapse="")
 zip.files <- c(zip.files,c("Janeiro1999","1slo51l","2sle51l","2slo51l","4sle51l","3slo51l"))
 try(dir.create(paste(run.from,"/extracted",sep=""),recursive=TRUE)  )
 setwd(paste(run.from,sep=""))
@@ -47,8 +48,7 @@ if (update.all) votes <- new.LVfiles
 nvotes <- length(votes)
 file.table <- cbind(votes,gsub("^LV","HE",votes))
 if (nvotes>0) {
-
-  for(LVfile in votes[992:nvotes]) {  #for each new vote, create two new files
+  for(LVfile in votes[1:nvotes]) {  #for each new vote, create two new files
     print(LVfile)
     ##Read data from VOTE LIST file for the vote
     readOne(LVfile,post=TRUE)

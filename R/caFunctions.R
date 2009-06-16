@@ -1,4 +1,97 @@
-## duplicates are being dropped but they are nor necessarily duplicates. check.
+
+clean.name<-function(x){
+    #CLEANS ACCENTS AND OTHER MARKS FROM FIELD CALLED "NAME" 
+    y <- clean(x$name)
+    return(y)
+}
+
+clean<-function(x){
+    #CLEANS ACCENTS AND OTHER MARKS FROM FIELD
+    y<-toupper(x)
+    y<-gsub("Â","A", y) 
+    y<-gsub("Á","A", y)
+    y<-gsub("Ã","A", y)
+    y<-gsub("É","E", y)
+    y<-gsub("Ê","E", y)
+    y<-gsub("Í","I", y)
+    y<-gsub("Ó","O", y)
+    y<-gsub("Ô","O", y)
+    y<-gsub("Õ","O", y)
+    y<-gsub("Ú","U", y)
+    y<-gsub("Ü","U", y)
+    y<-gsub("Ç","C", y)
+    y<-gsub("'"," ", y)
+    y<-gsub("."," ", y, fixed=TRUE)  
+    y<-gsub("-"," ", y, fixed=TRUE)    
+    return(y)
+}
+
+## get first and last name
+firstlast <- function(x) {
+  x <- as.character(x)
+  s1 <- strsplit(x," ")
+  fl <- function(z) paste(z[1],z[length(z)])
+  sapply(s1,fl)
+}
+
+
+
+##convert character vectors from a df from latin1
+iconv.df <- function(df,encoding="latin1") {
+  cv <- which(sapply(df,is.character))
+  for (i in cv) df[,i] <- iconv(df[,i],from=encoding)
+  fv <- which(sapply(df,is.factor))
+  for (i in fv) {
+    levels(df[,i]) <- iconv(levels(df[,i]),from=encoding)    
+  }
+  df
+}
+
+
+## MySQL utils - These save factors and characters
+## that are utf8, convert the_codes_ into latin1 (three bytes per non ascii char)
+## and writes the  table
+dbWriteTableU <- function(conn,name,value,...) {
+  if (is.data.frame(value)) {
+    value <- iconv.df(value)
+  } else {
+    stop("must be a data frame")
+  }
+  dbWriteTable(conn, name, value,...,row.names = FALSE, eol = "\r\n")
+}
+
+dbWriteTableSeq <- function(conn,name,value,n=NULL,...) {
+  nr <- nrow(value)
+  if (is.null(n)) {
+    splits <- min(100,round(nr/2))
+  } else {
+    splits=n
+  }
+  st <- rep(1:splits,length.out=nr)
+  for ( i in 1:max(st)) {
+    cat(i,".")
+    dbWriteTableU(connect,name,value[st==i,],append=TRUE)
+  }
+}
+
+  
+
+## EXAMPLE FOR WORKING AROUND RMYSQL ENCODING LIMITATIONS
+## library(RMySQL)
+## driver <- dbDriver("MySQL")
+## connect <-dbConnect(driver, group="yourdb")
+## dbRemoveTable(connect,"t1")
+## df1 <- data.frame(a=c("Apple","Passion Fruit"),b=c("Maçã","Maracujá"),fix="")
+## dbWriteTable(connect,"t1",df1,row.names=FALSE)
+## dbReadTable(connect,'t1')
+## df1$fix <- iconv(as.character(df1$b),from='latin1')
+## dbWriteTable(connect,"t1",df1,append=TRUE,row.names=FALSE)
+## dbReadTable(connect,'t1')
+
+
+
+
+
 ## FIX: need to add file name as a column.
 readOne <- function(LVfile,post=FALSE) {
   options(encoding="ISO8859-1")
@@ -147,23 +240,16 @@ state.l2a <- function(object) {
 ##connect to external db
 connect.db <- function() {
   library(RMySQL)
-  driver<<-dbDriver("MySQL")
   if (exists("connect")) {
-    testconnect <- try(dbExistsTable(connect,"iakjsdh")[1])
-    if (("try-error"%in%class(testconnect))) {
+    testconnect <- class(try(dbListTables(connect)))
+    if ("try-error"%in%testconnect) {
       try(dbDisconnect(connect))
-      try(rm(connect))
+      connect<<-dbConnect(driver, group="congressoaberto")
     }
   } else {
+    driver<<-dbDriver("MySQL")
     connect<<-dbConnect(driver, group="congressoaberto")
   }
-}
-
-##convert character vectors from a df from latin1
-iconv.df <- function(df,encoding="latin1") {
-  cv <- which(sapply(df,is.character))
-  for (i in cv) df[,i] <- iconv(df[,i],from=encoding)
-  df
 }
 
 ## reshape votos
