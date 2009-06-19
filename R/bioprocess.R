@@ -81,10 +81,13 @@ pe <- gsub("</b>","",pe)
 pe <- strsplit(pe,"/")
 np <- sapply(pe,function(x) x[[1]])
 uf <- sapply(pe,function(x) x[[length(x)]])
-np <- strsplit(np,"-")
+np <- strsplit(np," - ")
 name <- sapply(np,function(x) trim(x[[1]]))
-partido.current <- sapply(np,function(x) trim(x[[2]]))
-id <- gsub(".*id=([0-9]+)&.*","\\1",ll[peloc-1])
+partido.current <- sapply(np,function(x) {
+  newx <- try(trim(x[[2]]))
+  ifelse ("try-error"%in%class(newx),"",newx)
+})
+id <- as.numeric(gsub(".*id=([0-9]+)&.*","\\1",ll[peloc-1]))
 
 ##manual fix: there is a mistake in the camara website of the
 ## code of "tatico"
@@ -125,7 +128,7 @@ idname <- with(idname,rbind(
                             data.frame(bioid,name=as.character(nameindex),state,sessions))
                )
 idname <- unique(idname)
-idname$id <- ""
+##idname$id <- "" ## Why did I put this here????
 
 
 
