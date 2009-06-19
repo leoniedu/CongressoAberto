@@ -29,7 +29,6 @@ CreatedBy=bioprocess.R
 updatedBy=
 ';
 
-
 DROP TABLE IF EXISTS `br_bioidname`;
 CREATE TABLE IF NOT EXISTS `br_bioidname` (
     `bioid` int,
@@ -72,8 +71,8 @@ CREATE TABLE IF NOT EXISTS `br_votos` (
 
 
 --`session` belowe comes from rollcall metadata (e.g. CC02O008O). We should rename one or the other to avoid confusion
-DROP TABLE IF EXISTS `br_votacoes2`;
-CREATE TABLE IF NOT EXISTS `br_votacoes2` (
+DROP TABLE IF EXISTS `br_votacoes`;
+CREATE TABLE IF NOT EXISTS `br_votacoes` (
     `voteid` int default NULL,
     `session` varchar(9), 
     `bill` text,
