@@ -71,10 +71,11 @@ CREATE TABLE IF NOT EXISTS `br_votos` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='';
 
 
-DROP TABLE IF EXISTS `br_votacoes`;
-CREATE TABLE IF NOT EXISTS `br_votacoes` (
+--`session` belowe comes from rollcall metadata (e.g. CC02O008O). We should rename one or the other to avoid confusion
+DROP TABLE IF EXISTS `br_votacoes2`;
+CREATE TABLE IF NOT EXISTS `br_votacoes2` (
     `voteid` int default NULL,
-    `session` varchar(9), --This is a different "session". Comes from rollcall metadata. We should rename one or the other to avoid confusion
+    `session` varchar(9), 
     `bill` text,
     `data` text,
     `texordia` text,
