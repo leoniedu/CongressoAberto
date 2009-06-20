@@ -1,16 +1,17 @@
-
-
 ##process bio files
 ## creates: bio.all (one row per legislator)
 ##          idname (one row per legislator/name/session
                                         # names written in multiple forms)
 
-##FIX: Get the party/state from the page index. 
+##FIX: ##to download all  (perhaps do this once a week?)
+##but we should also look for new legislators every day, right? 
 
 
 library(plyr)
 library(RMySQL)
 source("~/reps/CongressoAberto/R/caFunctions.R")
+
+download.now <- FALSE
 
 connect.db()
 
@@ -65,11 +66,13 @@ get.bio <- function(file.now) {
   parties <- gsub("\t+| +|^ +|^\t+","",parties)
   mandates <- gsub("\t+| +|^ +|^\t+","",mandates)
   gc()
-  data.frame(nameshort, name=namelong, partynow=party, state=state, birth=birthdate, birthplace, sessions=sessions, parties=parties , mandates,bioid=id,biofile=file.now,imagefile)
+  data.frame(namelegis=nameshort, name=namelong, party=party, state=state, birthdate, birthplace, legisserved=sessions, prevparties=parties , mandates,bioid=id,biofile=file.now,imagefile)
 }
 
-##to download all (uncomment this to download the file)
-##system(paste("wget -nd -E -Nr -P ../data/bio/all 'http://www.camara.gov.br/internet/deputado/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim'",sep=''))
+##to download all  (perhaps do this once a week?)
+##but we should also look for new legislators every day, right? 
+if (download.now) system(paste("wget -nd -E -Nr -P ../data/bio/all 'http://www.camara.gov.br/internet/deputado/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim'",sep=''))
+
 
 index.file <- "../data/bio/all/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim.html"
 ll <- readLines(index.file,encoding='latin1')
@@ -98,69 +101,80 @@ id <- as.numeric(gsub(".*id=([0-9]+)&.*","\\1",ll[peloc-1]))
 data.legis <- data.frame(bioid=id,nameindex=name,state=uf)##,partido.current=partido.current)
 
 files.list <- dir('../data/bio/all/',pattern="DepNovos_Detalhe",full.names=TRUE)
-bio.all <- lapply(files.list,get.bio)
-bio.all <- do.call(rbind,bio.all)
+bio.all.list <- lapply(files.list,get.bio)
+
+bio.all <- do.call(rbind,bio.all.list)
 
 ## create a deputyid/name/session to use when merging data from
 ## multiple sources (this is slow and memory consuming)
 idname <- with(bio.all,
                data.frame(bioid,
                           name,                         
-                          nameshort,
+                          namelegis,
                           ##state,
-                          sessions))
+                          legisserved))
 idname <- merge(idname,data.legis)
+
 bio.all <- merge(subset(bio.all,select=-state),data.legis)##,by="bioid")
+
+##FIX: This could be faster by creating just the legis vector and duplicating
+## the rows of bio
 idname <- ddply(idname,'bioid',
                 function(x) 
                 with(x,data.frame(bioid,
                                   name,
-                                  nameshort,
+                                  namelegis,
                                   nameindex,
                                   state,
-                                  sessions=strsplit(as.character(sessions),",")[[1]]
+                                  legis=strsplit(as.character(legisserved),",")[[1]]
                                   )
                      ),
                 .progress="text")
+
 idname <- with(idname,rbind(
-                            data.frame(bioid,name=as.character(name),state,sessions),
-                            data.frame(bioid,name=as.character(nameshort),state,sessions),
-                            data.frame(bioid,name=as.character(nameindex),state,sessions))
+                            data.frame(bioid,name=as.character(name),state,legis),
+                            data.frame(bioid,name=as.character(namelegis),state,legis),
+                            data.frame(bioid,name=as.character(nameindex),state,legis))
                )
+
 idname <- unique(idname)
+
 ##idname$id <- "" ## Why did I put this here????
-
-
-
-connect.db()
-
-
-dbRemoveTable(connect,"br_bioidname")
-dbRemoveTable(connect,"br_bio")
-
-dbWriteTable(connect, "br_bioidname", idname, overwrite=TRUE,
-             row.names = F, eol = "\r\n" )    
-
-dbWriteTable(connect, "br_bio", bio.all, overwrite=TRUE,
-             row.names = F, eol = "\r\n" )    
-
+save(idname,file="~/reps/CongressoAberto/data/idname.RData")
+save(bio.all,file="~/reps/CongressoAberto/data/bio.all.RData")
 
 connect.db()
+
+## We comment out the following lines because we should have
+## created the tables using a SQL code
+## dbRemoveTable(connect,"br_bioidname")
+## dbRemoveTable(connect,"br_bio")
+
+##delete all data
+## dbGetQuery(connect,"truncate table br_bioidname")
+## dbGetQuery(connect,"truncate table br_bio")
+
+##write tables
+dbWriteTableU(connect, "br_bioidname", idname, append=TRUE)
+dbWriteTableU(connect, "br_bio", bio.all, append=TRUE)
+
+
+
 
 ##manual fixes
-source("~/reps/CongressoAberto/R/caFunctions.R")
-connect.db()
+##source("~/reps/CongressoAberto/R/caFunctions.R")
+##connect.db()
 
 
 ## PHILEMON RODRIGUES was a deputy both in MG and in PB
 dbSendQuery(connect,"update br_bioidname set state='PB' where (bioid='98291')")
-dbSendQuery(connect,"update br_bioidname set state='MG' where (bioid='98291') AND (sessions!='2003-2007')")
+dbSendQuery(connect,"update br_bioidname set state='MG' where (bioid='98291') AND (legis!='2003-2007')")
 dbGetQuery(connect,"select * from  br_bioidname where bioid='98291'")
 
 
 ##tatico deputi in both DF and GO
-dbSendQuery(connect,"update br_bioidname set state='DF' where (bioid='108697') AND (sessions='2003-2007')")
-dbSendQuery(connect,"update br_bioidname set state='GO' where (bioid='108697') AND (sessions='2007-2011')")
+dbSendQuery(connect,"update br_bioidname set state='DF' where (bioid='108697') AND (legis='2003-2007')")
+dbSendQuery(connect,"update br_bioidname set state='GO' where (bioid='108697') AND (legis='2007-2011')")
 dbGetQuery(connect,"select * from  br_bioidname where bioid='108697'")
 
 ## ze indio: 100486
@@ -169,7 +183,8 @@ tmp$name <- 'JOSÉ ÍNDIO'
 tmp <- unique(tmp)
 dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
              row.names = F, eol = "\r\n" )
-dedup.db('br_bioidname')
+##not needed since we have primary keys now
+##dedup.db('br_bioidname')
 
 
 ## Mainha is José de Andrade Maia Filho 182632
@@ -178,18 +193,13 @@ tmp$name <- 'MAINHA'
 tmp <- unique(tmp)
 dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
              row.names = F, eol = "\r\n" )
-dedup.db('br_bioidname')
-
-
-
-
+##dedup.db('br_bioidname')
 
 
 ##Pastor Jorge is Jorge dos Reis Pinheiro 100606
 tmp <- iconv.df(dbGetQuery(connect,"select * from  br_bioidname where bioid='100606'"))
-
 tmp$name <- 'PASTOR JORGE'
 tmp <- unique(tmp)
 dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
              row.names = F, eol = "\r\n" )
-dedup.db('br_bioidname')
+##dedup.db('br_bioidname')

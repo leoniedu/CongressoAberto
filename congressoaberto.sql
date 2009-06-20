@@ -8,15 +8,15 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"; -- Normally, you generate the next sequenc
 -- --------------------------------------------------------
 
 DROP TABLE IF EXISTS `br_bio`;
-CREATE TABLE IF NOT EXISTS `br_bio` (
+CREATE TABLE  `br_bio` (
     `bioid` int COMMENT 'You can add a comment here',
-    `nameshort` varchar(100),
+    `namelegis` varchar(100),
     `name` varchar(100),
-    `partynow` varchar(10),
-    `birth` varchar(10),
+    `party` varchar(10),
+    `birthdate` varchar(10),
     `birthplace` varchar(100),
-    `sessions` text,
-    `parties` text,
+    `legisserved` text,
+    `prevparties` text,
     `mandates` text,
     `biofile` varchar(100),
     `imagefile` varchar(100),
@@ -26,75 +26,85 @@ CREATE TABLE IF NOT EXISTS `br_bio` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
 Content=Holds the biography information available at the Camara site. 
 CreatedBy=bioprocess.R
-updatedBy=
+updatedBy=bioprocess.R
 ';
 
 DROP TABLE IF EXISTS `br_bioidname`;
-CREATE TABLE IF NOT EXISTS `br_bioidname` (
+CREATE TABLE  `br_bioidname` (
     `bioid` int,
     `name` varchar(100),
     `state` varchar(2),
-    `sessions` varchar(9),
-    PRIMARY KEY  (`bioid`,`name`(100),`state`(2))
+    `legis` varchar(9),
+    PRIMARY KEY  (`bioid`,`name`(100),`legis`(9))
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
 Content=Link table between biography id and names. Used in the function reading roll calls to match bioid to the roll call id. 
 CreatedBy=bioprocess.R
 updatedBy=function readOne 
 ';
 
+
 DROP TABLE IF EXISTS `br_idbioid`;
-CREATE TABLE IF NOT EXISTS `br_idbioid` (
+CREATE TABLE  `br_idbioid` (
     `bioid` int,
     `id` int,
-    `sessions` varchar(9),
-    PRIMARY KEY  (`bioid`,`id`,`session`(9))
+    `legis` varchar(9),
+    PRIMARY KEY  (`bioid`,`id`,`legis`(9))
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
 Content=Link table between biography id and the roll call id
 CreatedBy=readOne
 updatedBy=readOne';
 
 
-
 DROP TABLE IF EXISTS `br_votos`;
-CREATE TABLE IF NOT EXISTS `br_votos` (
+CREATE TABLE  `br_votos` (
     `id` int,
-    `sessions` varchar(9),
-    `name` text,
+    `legis` varchar(9),
+    `namelegis` text,
     `party` text,
     `state` text,
-    `voto` varchar(20),
-    `filename` varchar(30),
-    `voteid` int,
+    `rc` varchar(20),
+    `rcfile` varchar(30),
+    `rcvoteid` int,
     `bioid` int,
-    PRIMARY KEY  (`bioid`,`filename`(30))
+    PRIMARY KEY  (`bioid`,`rcfile`(30))
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='';
 
 
---`session` belowe comes from rollcall metadata (e.g. CC02O008O). We should rename one or the other to avoid confusion
 DROP TABLE IF EXISTS `br_votacoes`;
-CREATE TABLE IF NOT EXISTS `br_votacoes` (
-    `voteid` int default NULL,
+CREATE TABLE  `br_votacoes` (
+    `rcvoteid` int default NULL,
     `session` varchar(9), 
+    `billtext` text,
+    `rcdate` text,
+    `billproc` text,
+    `billdescription` text,
     `bill` text,
-    `data` text,
-    `texordia` text,
-    `descricao` text,
-    `proposicao` text,
-    `anolegislativo` int,
-    `anovotacao` int,
-    `ano` int,
-    `numero` text,
-    `tipo` varchar(30),
-    `sessions` varchar(9),
-    `filename` varchar(30),
-    PRIMARY KEY  (`filename`(30))
+    `legisyear` int,
+    `rcyear` int,
+    `billyear` int,
+    `billno` text,
+    `billtype` varchar(30),
+    `legis` varchar(9),
+    `rcfile` varchar(30),
+    PRIMARY KEY  (`rcfile`(30))
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+--- todo
+
+
+
+
+
+
 
 
 --- TODO BELOW HERE
 
 
-CREATE TABLE IF NOT EXISTS `br_cisidbioid` (
+CREATE TABLE  `br_cisidbioid` (
     `row_names` text,
     `bioid` text,
     `cisid` text,
@@ -102,14 +112,14 @@ CREATE TABLE IF NOT EXISTS `br_cisidbioid` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE IF NOT EXISTS `br_bioidtseid06` (
+CREATE TABLE  `br_bioidtseid06` (
     `row_names` text,
     `bioid` text,
     `tseid` text,
     `dist` text
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `br_cis` (
+CREATE TABLE  `br_cis` (
     `row_names` text,
     `tseid` text,
     `id` text,
@@ -153,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `br_cis` (
     `votos` double default NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `br_tse2006legis` (
+CREATE TABLE  `br_tse2006legis` (
     `uf` text,
     `municipio` text NOT NULL,
     `zona` bigint(20) default NULL,
@@ -171,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `br_tse2006legis` (
     PRIMARY KEY  (`tseid`(30),`municipio`(30),`zonachar`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `br_tse2006mun` (
+CREATE TABLE  `br_tse2006mun` (
     `uf` text,
     `municipio` text NOT NULL,
     `cargo` text,

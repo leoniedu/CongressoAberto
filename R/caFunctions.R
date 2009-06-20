@@ -1,3 +1,7 @@
+##FIX: dbWriteTable , append=TRUE does NOT update the table
+##Possible solutions: write a function that deletes the data beforehand
+##                    write a function that creates a new temp table and updates from there with a join 
+##                    delete relevant rows explicitly
 
 clean.name<-function(x){
     #CLEANS ACCENTS AND OTHER MARKS FROM FIELD CALLED "NAME" 
@@ -37,7 +41,7 @@ firstlast <- function(x) {
 
 
 ##convert character vectors from a df from latin1
-iconv.df <- function(df,encoding="latin1") {
+iconv.df <- function(df,encoding="windows-1252") {
   cv <- which(sapply(df,is.character))
   for (i in cv) df[,i] <- iconv(df[,i],from=encoding)
   fv <- which(sapply(df,is.factor))
@@ -51,13 +55,23 @@ iconv.df <- function(df,encoding="latin1") {
 ## MySQL utils - These save factors and characters
 ## that are utf8, convert the_codes_ into latin1 (three bytes per non ascii char)
 ## and writes the  table
-dbWriteTableU <- function(conn,name,value,...) {
+dbWriteTableU <- function(conn,name,value,convert=FALSE,...) {
   if (is.data.frame(value)) {
-    value <- iconv.df(value)
+    if (convert) {
+      value <- iconv.df(value)
+    }
   } else {
     stop("must be a data frame")
   }
   dbWriteTable(conn, name, value,...,row.names = FALSE, eol = "\r\n")
+}
+
+dbReadTableU <- function(conn,name,...,convert=TRUE) {
+  df <- dbReadTable(conn, name,...)
+  if (convert) {
+    df <- iconv.df(df)
+  }
+  df
 }
 
 dbWriteTableSeq <- function(conn,name,value,n=NULL,...) {
@@ -106,53 +120,54 @@ readOne <- function(LVfile,post=FALSE) {
     LV <- read.fwf(LVfile, widths=c(9,-1,6,40,10,10,25,4),strip.white=TRUE)
   }
   voteid <- LV$V2[1]  #store number of vote for future use
-  names(LV) <- c("sessionid","voteid","name",paste("vote",voteid,sep="."),"party","state","id") #rename fields
+  names(LV) <- c("session","rcvoteid","namelegis",paste("vote",voteid,sep="."),"party","state","id") #rename fields
   ##FIX: ENABLE CLEAN NAME OR NOT?
   ##LV$name<-clean.name(LV) #apply cleaning function for accents and other characters
   LV$state <- toupper(state.l2a(LV$state))
   LV$state <- factor(LV$state,levels=toupper(states))
-  LV <- LV[,c("id","name","party","state",paste("vote",voteid,sep="."))] #rearrange fields
+  LV <- LV[,c("id","namelegis","party","state",paste("vote",voteid,sep="."))] #rearrange fields
   vt.date<-as.Date(as.character(read.table(HEfile, header = FALSE, nrows = 1,skip = 2, strip.white = TRUE, as.is = TRUE)[1,1]), "%d/%m/%Y")
   vt.descrip<-read.table(HEfile, header = FALSE, nrows = 1,skip = 12, strip.white = TRUE, as.is = TRUE, sep=";",quote="")
   vt.session<-read.table(HEfile, header = FALSE, nrows = 1,skip = 0, strip.white = TRUE, as.is = TRUE)[1,1]
   vt.descrip<-gsub("\"","",vt.descrip)    #get rid of quotes in the description of the bill
-  HE <- data.frame(voteid,dates=vt.date,session=vt.session,bill=vt.descrip)  
+  HE <- data.frame(rcvoteid=voteid,rcdate=vt.date,session=vt.session,billtext=vt.descrip)  
   data.votacoes <- get.votacoes(HE)
-  data.votacoes$sessions <- get.legis(data.votacoes$anolegislativo)
-  data.votacoes$filename <- LVfile
+  data.votacoes$legis <- get.legis(data.votacoes$legisyear)
+  data.votacoes$rcfile <- LVfile
   data.votos <- LV
-  data.votos$filename <- LVfile
-  data.votos$voteid <- voteid
-  names(data.votos)[5] <- "voto"
-  data.votos$voto <- gsub("^<.*","Ausente",as.character(data.votos$voto))
-  data.votos$voto <- gsub("^Art.*","Abstenção",as.character(data.votos$voto))
-  data.votos$sessions <- data.votacoes$sessions[1]
+  data.votos$rcfile <- LVfile
+  data.votos$rcvoteid <- voteid
+  names(data.votos)[5] <- "rc"
+  data.votos$rc <- gsub("^<.*","Ausente",as.character(data.votos$rc))
+  data.votos$rc <- gsub("^Art.*","Abstenção",as.character(data.votos$rc))
+  data.votos$legis <- data.votacoes$legis[1]
   if (!post) {
     list(data.votos=data.votos,data.votacoes=data.votacoes)    
   } else {
     connect.db()
-    session.now <- as.character(data.votacoes$sessions[1])
+    session.now <- as.character(data.votacoes$legis[1])
     ##bioids
-    idname <- dbGetQuery(connect,paste("select * from br_bioidname where sessions='",session.now,"'",sep=''))
+    idname <- dbGetQuery(connect,paste("select * from br_bioidname where legis='",session.now,"'",sep=''))
     idname <- iconv.df(idname)
     idname$id <- NULL
     ## merge using the br_ids db (a mapping of all ids)
     createtab <- !dbExistsTable(connect,"br_idbioid")
-    if (createtab) {
-      ids <- data.frame(bioid="",id="",sessions="")
+    ids <- dbReadTable(connect,"br_idbioid")
+    if (nrow(ids)>0) {
+      ##merge with camara ids first
+      tomatch <- merge(data.votos,ids,by=c("id","legis"),all.x=TRUE)
+      tomatch <- subset(tomatch,is.na(bioid),select=-bioid)
     } else {
-      ids <- dbReadTable(connect,"br_idbioid")
+      tomatch <- data.votos
     }
-    ##merge with camara ids first
-    tomatch <- merge(data.votos,ids,by=c("id","sessions"),all.x=TRUE)
-    tomatch <- subset(tomatch,is.na(bioid),select=-bioid)
     ##try to find the bioid for new deps
     if (nrow(tomatch)>0) {
+      idname$namelegis <- idname$name
       res <- merge.approx(states,idname,
-                          tomatch,"state","name")
+                          tomatch,"state","namelegis")
       ##might have multiple matches. We discard if the 
       ##tripple (id,bioid, session) is still unique
-      res <- unique(with(res,data.frame(bioid,id,sessions)))
+      res <- unique(with(res,data.frame(bioid,id,legis)))
       ##fix: check explicitly for multiple ids.
       if(min(tomatch$id%in%res$id)==0) {
         print(tomatch[!tomatch$id%in%res$id,])
@@ -162,21 +177,14 @@ readOne <- function(LVfile,post=FALSE) {
         stop("Some ids are duplicated ")
       }
       ##write new matches to db
-      dbWriteTable(connect, "br_idbioid",res, append=TRUE,
-                   row.names = F, eol = "\r\n" )
-      ## exclude dups
-      ##dedup.db("br_idbioid")      
+      dbWriteTableU(connect, "br_idbioid",res,append=TRUE)
     }
     ## read table again
-    ids <- dbReadTable(connect,"br_idbioid")
-    data.votos <- merge(data.votos,ids,by=c("id","sessions"),all.x=TRUE)
+    ids <- dbReadTableU(connect,"br_idbioid")
+    data.votos <- merge(data.votos,ids,by=c("id","legis"),all.x=TRUE)
     if (sum(is.na(data.votos$bioid))>0) stop("there are missing ids")
-    dbWriteTable(connect, "br_votos",data.votos, append=TRUE,
-                 row.names = F, eol = "\r\n" )    
-    dbWriteTable(connect, "br_votacoes",data.votacoes, append=TRUE,
-                 row.names = F, eol = "\r\n" )
-    ## exclude dups
-    ##dedup.db(c("br_votos",'br_votacoes'))      
+    dbWriteTableU(connect, "br_votos",data.votos, append=TRUE)
+    dbWriteTableU(connect, "br_votacoes",data.votacoes, append=TRUE)
   }
 }
 
@@ -278,7 +286,7 @@ gd <- function(filename,encoding=TRUE) {
 ## session (e.g. 1991-1994)
 get.legis <- function(x) {
   ## note the +1 here to make calc right
-  vec <- cut(x+1,seq(1947,max(x)+4,4),include.lowest=FALSE)
+  vec <- cut(x+1,seq(1947,max(x)+4,4),include.est=FALSE)
   labs <- levels(vec)
   labs <- cbind(lower = as.numeric( sub("\\((.+),.*", "\\1", labs) ),
                 upper = as.numeric( sub("[^,]*,([^]]*)\\]", "\\1", labs) ))
@@ -302,38 +310,36 @@ get.votos <- function(data.votos) {
 get.votacoes <- function(data.votacoes) {
   data.votacoes <- within(data.votacoes,{
     ##modify bill so that it is parseable
-    texordia <- bill
-    texordia <- gsub(" +"," ",texordia)
-    texordia <- gsub(" / ","/",texordia)
-    texordia <- gsub("^PL P ","PLP ",texordia)
-    texordia <- gsub("N º","Nº",texordia)
-    texordia <- gsub("N \\.","N.",texordia)
-    texordia <- gsub("/;","/",texordia)
-    texordia <- gsub("(^[A-Z]+) ([0-9])","\\1 Nº \\2",texordia)
-    data <- dates
-    dates <- NULL
+    billproc <- billtext
+    billproc <- gsub(" +"," ",billproc)
+    billproc <- gsub(" / ","/",billproc)
+    billproc <- gsub("^PL P ","PLP ",billproc)
+    billproc <- gsub("N º","Nº",billproc)
+    billproc <- gsub("N \\.","N.",billproc)
+    billproc <- gsub("/;","/",billproc)
+    billproc <- gsub("(^[A-Z]+) ([0-9])","\\1 Nº \\2",billproc)
     ##     wpdate <- as.character(paste(data,"T12:00:00"))
   })
-  ## parse texordia (bill)
-  ss <- strsplit(gsub(" +"," ",as.character(data.votacoes$texordia)),c(" |/"))
+  ## parse billproc (bill)
+  ss <- strsplit(gsub(" +"," ",as.character(data.votacoes$billproc)),c(" |/"))
   data.votacoes <- within(data.votacoes,{  
-    tipo <- factor(sapply(ss,function(x) x[1]))
-    tipo <- car::recode(tipo,"'MENSAGEM'='MSG';'PROCESSO'='PRC';'PROPOSICAO'='PRP';'RECURSO'='REC';'REQUERIMENTO'='REQ';'L'='PL'")
-    tipo <- gsub("\\.","",tipo)
-    numero <- (sapply(ss,function(x) x[3]))
-    ano <- as.numeric(sapply(ss,function(x) x[4]))
-    ano[ano==203] <- 2003
-    ano <- ifelse(ano<1000 & ano>50, ano+1900,ano)
-    ano <- ifelse(ano<1000 & ano<50, ano+2000,ano)
-    anovotacao <- format.Date(data,"%Y")
-    m <- as.numeric(as.numeric(format.Date(data,"%m"))<2)
-    anolegislativo <- as.numeric(anovotacao)-m
+    billtype <- factor(sapply(ss,function(x) x[1]))
+    billtype <- car::recode(billtype,"'MENSAGEM'='MSG';'PROCESSO'='PRC';'PROPOSICAO'='PRP';'RECURSO'='REC';'REQUERIMENTO'='REQ';'L'='PL'")
+    billtype <- gsub("\\.","",billtype)
+    billno <- (sapply(ss,function(x) x[3]))
+    billyear <- as.numeric(sapply(ss,function(x) x[4]))
+    billyear[billyear==203] <- 2003
+    billyear <- ifelse(billyear<1000 & billyear>50, billyear+1900,billyear)
+    billyear <- ifelse(billyear<1000 & billyear<50, billyear+2000,billyear)
+    rcyear <- format.Date(rcdate,"%Y")
+    m <- as.numeric(as.numeric(format.Date(rcdate,"%m"))<2)
+    legisyear <- as.numeric(rcyear)-m
     rm(m)
     ##if ano is missing use ano_votacao
-    ano <- ifelse(is.na(ano), anovotacao,ano)
-    proposicao <- with(data.votacoes,paste(tipo," ",numero,"/",ano,sep=""))
-    descricao <- sapply(ss,function(x) paste(x[6:length(x)], collapse=" "))
-    descricao <- gsub("^ *- *", "", descricao)
+    billyear <- ifelse(is.na(billyear), rcyear,billyear)
+    bill <- with(data.votacoes,paste(billtype," ",billno,"/",billyear,sep=""))
+    billdescription <- sapply(ss,function(x) paste(x[6:length(x)], collapse=" "))
+    billdescription <- gsub("^ *- *", "", billdescription)
   })
   data.votacoes
 }
@@ -344,7 +350,7 @@ dedup.db <- function(tab) {
   for (x in tab) {
     ## FIX make it drop rows and insert instead of creating tables anew
     init <- dbGetQuery(connect,paste("select count(*) as row_ct from ",x))[1,1]
-    dbSendQuery(connect,"drop  table tmp")
+    try(dbSendQuery(connect,"drop  table tmp"))
     dbSendQuery(connect,paste("create table tmp as select distinct * from ",x))
     mid <- dbGetQuery(connect,paste("select count(*) as row_ct from tmp"))[1,1]
     if (mid<init) {
@@ -370,3 +376,7 @@ manfix <- function(id,newstate) {
 ## bio.all[bio.all$bioid=="96883","state"] <- "AP"
 ## bio.all[bio.all$bioid=="97304","state"] <- "RO" ## Expedito Junior (born in SP)
 ## bio.all[bio.all$bioid=="100597","state"] <- "MT" ## Osvaldo Sobrinho
+
+
+dia <- paste(c("Â","Á","Ã","É","Ê","Í","Ó","Ô","Õ","Ú","Ü","Ç"),collapse=" ")
+## "Í" and "Á" create problems in MySQL latin1 conversions.

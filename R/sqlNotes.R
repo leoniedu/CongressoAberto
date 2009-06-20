@@ -1,4 +1,8 @@
-xsource("~/reps/CongressoAberto/R/caFunctions.R",encoding="UTF8")
+## to write to the wordpress tables and display correctly do:
+#dbGetQuery(connect,"update  wp_hufib7_posts set post_title=Convert(Convert((select name from  br_bioidname where bioid=100006 limit 1) using binary) using latin1)  where ID=827")
+
+
+source("~/reps/CongressoAberto/R/caFunctions.R",encoding="UTF8")
 connect.db()
 
 
@@ -16,11 +20,16 @@ dbRemoveTable(connect,"tmp")
 dbRemoveTable(connect,"tmp2")
 dbRemoveTable(connect,"tmp3")
 
-tmp3 <- data.frame(post_title=iconv("maçã5",from='latin1'))
-
-dbWriteTable(connect,"tmp3",tmp3)
-
+tmp3o <- data.frame(post_title="deusdeth antônio corrêa barbosa maçã2")
+tmp3 <- data.frame(post_title=iconv(as.character(tmp3o$post_title),from='latin1'))
+dbRemoveTable(connect,"tmp3")
+##dbWriteTable(connect,"tmp3",tmp3,overwrite=TRUE)
+dbWriteTableU(connect,"tmp3",tmp3o,overwrite=TRUE)
 dbSendQuery(connect,"update  wp_hufib7_posts set post_title=(select post_title from tmp3)  where ID=827")
+
+dbGetQuery(connect,"update  wp_hufib7_posts set post_title=(select name from  br_bioidname where bioid=100006 limit 1)  where ID=827")
+
+dbGetQuery(connect,"select name from  br_bioidname where bioid=100006 limit 1")
 
 (select post_title from tmp3 AS CHAR CHARACTER SET latin1)
 
