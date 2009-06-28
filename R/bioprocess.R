@@ -76,10 +76,10 @@ get.bio <- function(file.now) {
 ##to download all  (perhaps do this once a week?)
 ##FIX:  we should also look for new legislators every day, so create a comparison between the old and new files
 ## FIX: for now we use no clobber  (-nc) so that only new files are downloaded
-if (download.now) system(paste("wget -nd -E -r -nc -P ../data/bio/all 'http://www.camara.gov.br/internet/deputado/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim'",sep=''))
+if (download.now) system(paste("wget -nd -r -nc -P ../data/bio/all 'http://www.camara.gov.br/internet/deputado/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim'",sep=''))
 
 
-index.file <- "../data/bio/all/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim.html"
+index.file <- "../data/bio/all/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim"
 ll <- readLines(index.file,encoding='latin1')
 ll <- gsub("\t+| +"," ",ll)
 ##pe <- ll[grep("[A-Z] - [A-Z]",ll)]
