@@ -2,6 +2,23 @@
 ##Possible solutions: write a function that deletes the data beforehand
 ##                    write a function that creates a new temp table and updates from there with a join 
 ##                    delete relevant rows explicitly
+##UPDATE summary AS t, (query) AS q SET t.C=q.E, t.D=q.F WHERE t.X=q.X
+
+recode.party <- function(x) x <- car::recode(x,'"PFL"="DEM"')
+
+pad0 <- function(x,mx=NULL,fill=0) {
+  lx <- nchar(as.character(x))
+  mx.calc <- max(lx,na.rm=TRUE)
+  if (!is.null(mx)) {
+    if (mx<mx.calc) {
+      stop("number of maxchar is too small")
+    }
+  } else {
+    mx <- mx.calc
+  }
+  px <- mx-lx
+  paste(sapply(px,function(x) paste(rep(fill,x),collapse="")),x,sep="")
+}
 
 clean.name<-function(x){
     #CLEANS ACCENTS AND OTHER MARKS FROM FIELD CALLED "NAME" 
@@ -74,6 +91,14 @@ dbReadTableU <- function(conn,name,...,convert=TRUE) {
   df
 }
 
+dbGetQueryU <- function(conn,statement,...,convert=TRUE) {
+  df <- dbGetQuery(conn, statement,...)
+  if (convert) {
+    df <- iconv.df(df)
+  }
+  df
+}
+
 dbWriteTableSeq <- function(conn,name,value,n=NULL,...) {
   nr <- nrow(value)
   if (is.null(n)) {
@@ -89,24 +114,6 @@ dbWriteTableSeq <- function(conn,name,value,n=NULL,...) {
 }
 
   
-
-## EXAMPLE FOR WORKING AROUND RMYSQL ENCODING LIMITATIONS
-## library(RMySQL)
-## driver <- dbDriver("MySQL")
-## connect <-dbConnect(driver, group="yourdb")
-## dbRemoveTable(connect,"t1")
-## df1 <- data.frame(a=c("Apple","Passion Fruit"),b=c("Maçã","Maracujá"),fix="")
-## dbWriteTable(connect,"t1",df1,row.names=FALSE)
-## dbReadTable(connect,'t1')
-## df1$fix <- iconv(as.character(df1$b),from='latin1')
-## dbWriteTable(connect,"t1",df1,append=TRUE,row.names=FALSE)
-## dbReadTable(connect,'t1')
-
-
-
-
-
-## FIX: need to add file name as a column.
 readOne <- function(LVfile,post=FALSE) {
   options(encoding="ISO8859-1")
   HEfile <- gsub("^LV","HE",LVfile)
@@ -147,8 +154,7 @@ readOne <- function(LVfile,post=FALSE) {
     connect.db()
     session.now <- as.character(data.votacoes$legis[1])
     ##bioids
-    idname <- dbGetQuery(connect,paste("select * from br_bioidname where legis='",session.now,"'",sep=''))
-    idname <- iconv.df(idname)
+    idname <- dbGetQueryU(connect,paste("select * from br_bioidname where legis='",session.now,"'",sep=''))
     idname$id <- NULL
     ## merge using the br_ids db (a mapping of all ids)
     createtab <- !dbExistsTable(connect,"br_idbioid")
@@ -162,7 +168,7 @@ readOne <- function(LVfile,post=FALSE) {
     }
     ##try to find the bioid for new deps
     if (nrow(tomatch)>0) {
-      idname$namelegis <- idname$name
+      idname$namelegis <- clean(idname$name)
       res <- merge.approx(states,idname,
                           tomatch,"state","namelegis")
       ##might have multiple matches. We discard if the 
@@ -283,8 +289,8 @@ gd <- function(filename,encoding=TRUE) {
 }
 
 ##given a _legislative_ year (ends Feb 1st) give the legislative
-## session (e.g. 1991-1994)
-get.legis <- function(x) {
+## session  (e.g. 1991-1994)
+get.legis.text <- function(x) {
   ## note the +1 here to make calc right
   vec <- cut(x+1,seq(1947,max(x)+4,4),include.est=FALSE)
   labs <- levels(vec)
@@ -293,6 +299,14 @@ get.legis <- function(x) {
   labs <- apply(labs,1,paste,collapse="-")
   levels(vec) <- labs
   as.character(vec)
+}
+
+##given a _legislative_ year (ends Feb 1st) give the legislative
+## session number (e.g. 49 for 1991-1994)
+get.legis <- function(x) {
+  ## note the +1 here to make calc right
+  vec <- as.numeric(cut(x+1,seq(1947,max(x)+4,4),include.est=FALSE))+37
+  vec
 }
 
 ## recast votos
@@ -363,6 +377,86 @@ dedup.db <- function(tab) {
 }
 
 
+trimm <- function(x) gsub(" +"," ",trim(x))
+
+getbill <- function(sigla="MPV",numero=447,ano=2008,overwrite=TRUE) {
+  ##FIX use RCurl?
+  if (overwrite) {
+    opts <- "-N"
+  } else {
+    opts <- "-nc"
+  }  
+  ## FIX: download the file to disk (allows faster recovery)
+  ## FIX: code as NA if value is missing
+  ## -N for overwriting, -nc for not overwriting
+  tmp <- system(paste("wget -t 15  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/www.camara.gov.br/sileg  2>&1",sep=''),intern=TRUE)
+  tmp <- iconv(tmp,from="latin1")
+  url <- gsub(".*`.*(www.camara.gov.br.*)'.*","\\1",tmp[length(tmp)-1])
+  data.frame(sigla,numero,ano,url)
+}
+
+
+
+
+#FIX add to db, first checking that the results were updated.
+readbill <- function(tmp) {
+  if (length(grep("Prop_Erro|Prop_Lista",file))>0)  return(NULL)
+  tmp <- readLines(file,encoding="latin1")
+  if(length(grep("Nenhuma proposição encontrada",tmp))>0) return(NULL)
+  tmp <-  gsub("\r|&nbsp","",tmp)
+  t0 <- tmp[grep("Proposição",tmp)[1]]
+  propno <- as.numeric(trimm(gsub(".*CodTeor=([0-9]+).*","\\1",t0)))
+  ##FIX: parse result when a deputado is the author
+  t0 <- tmp[grep("Autor",tmp)[1]]
+  author <- trimm(gsub(".*Autor: </b></td><td>(.*)</td>.*","\\1",t0))  
+  t0 <- tmp[grep("Data de Apresentação",tmp)]
+  date <- trimm(gsub(".*</b>(.*)","\\1",t0))
+  date <- as.character(as.Date(date,"%d/%m/%Y"))
+  ##FIX: find what this is
+  t0 <- tmp[grep("Apreciação:",tmp)][1]
+  aprec <- trimm(gsub(".*</b>(.*)","\\1",t0))
+  ##FIX: need english name
+  t0 <- tmp[grep("Regime de tramitação:",tmp)+1][1]
+  tramit <- trimm(gsub(".*</b>(.*)","\\1",t0))
+  ##FIX: Categorize response
+  t0 <- tmp[grep("Situação:",tmp)][1]
+  status <- trimm(gsub(".*</b>(.*)<br>","\\1",t0))
+  ##FIX: name
+  t0 <- tmp[grep("Ementa:",tmp)][1]
+  ementa <- trimm(gsub(".*</b>(.*)","\\1",t0))
+  ##FIX: name
+  t0 <- tmp[grep("Explicação da Ementa:",tmp)][1]
+  ementashort <- trimm(gsub(".*</b>(.*)","\\1",t0))
+  ##FIX: name
+  t0 <- tmp[grep("Indexação:",tmp)][1]
+  indexa <- trimm(gsub(".*</b>(.*)","\\1",t0))
+  f <- function(x) ifelse (length(x)==0,NA,x)
+  tmp1[grep("Nenhuma proposi",tmp1$author),]
+  res <- try(data.frame(## billtype=f(sigla), ##FIX GET FROM FILE
+                        ## billno=f(numero),
+                        ## billyear=f(ano),
+                        propno=f(propno),
+                        author=f(author),
+                        date=f(date),
+                        aprec=f(aprec),
+                        tramit=f(tramit),
+                        status=f(status),
+                        ementa=f(ementa),
+                        ementashort=f(ementashort),
+                        indexa=f(indexa),
+                        stringsAsFactors=FALSE))
+  if (("try-error"%in%class(res))) {   
+    res <- NULL
+  } 
+  res
+}
+
+factors2strings <- function(x) data.frame(lapply(x,function(z) {
+  if (is.factor(z)) z <- as.character(z)
+  z
+}))
+
+
 ##manual fixes
 manfix <- function(id,newstate) {
   dbSendQuery(connect,paste("update br_idname set state='",newstate,"' where bioid='",id,"'",sep=''))
@@ -378,5 +472,119 @@ manfix <- function(id,newstate) {
 ## bio.all[bio.all$bioid=="100597","state"] <- "MT" ## Osvaldo Sobrinho
 
 
-dia <- paste(c("Â","Á","Ã","É","Ê","Í","Ó","Ô","Õ","Ú","Ü","Ç"),collapse=" ")
-## "Í" and "Á" create problems in MySQL latin1 conversions.
+## VARIABLES
+
+states <- c("AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG", "PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO")
+
+
+
+map.rc <- function(filenow='',title='') {  
+  rc$rc2 <- rc$rc=="Sim"
+  tmp <- recast(rc,state~variable,measure.var="rc2",fun.aggregate=function(x) c(n=length(x),p=sum(x)/length(x)))
+  tmp$UF <- tmp$state
+  m2 <- merge.sp(m1,tmp,by="UF")
+  par(bg="grey")
+  n1 <- 4
+  seqx <- c(0,.15,.3,.45,.55,.70,.85,1)
+  col.vec <- c(rev(brewer.pal(n1,"Blues")[-1]),"grey95",brewer.pal(n1,"Reds")[-1])
+  ##pdf(file=paste(fname,"small.pdf",sep=""),height=6,width=6)
+  ##par(mai=c(0,0,0,0))
+  ##plot.heat(m2,NULL,"concpt_p",title="Proporção votando\njunto com o PT",breaks=seqx,reverse=FALSE,cex.legend=1,bw=1,col.vec=col.vec,plot.legend=FALSE)
+  ##dev.off()
+  ##   pdf(file=paste(fname,".pdf",sep=""),height=6,width=6)
+  par(mai=c(0,0,0.6,0))
+  plot.heat(m2,NULL,"rc2_p",title="Proporção votando a favor da proposição",breaks=seqx,reverse=FALSE,cex.legend=1,bw=1,col.vec=col.vec,main=filenow)
+  with(m2@data,text(x,y,UF,cex=0.8),col="grey30")
+  mtext(title,3, cex=.9)
+  ##   dev.off()
+}
+
+
+barplot.rc <- function(pty="PT",title="") {
+  ## FIX: add reference lines for the required number of Yes votes.
+  ## Look for quorum.
+  votop <- names(which.max(table(rc[rc$party==pty,"rc"])))
+  rc$votop <- rc$rc==votop
+  rc$rc2 <- factor(with(rc,car::recode(rc,"'Sim'='A Favor';else='Contra'")),levels=c("Contra","A Favor"))
+  colvec <- c("darkblue","red")[order(table(rc$votop))]
+  colvec <- alpha(colvec,"1")
+  ## Stacked barchart
+  wd <- .97
+  theme_set(theme_grey(base_size = 10))
+  p <- ggplot(rc, aes(x = rc2))+geom_bar(width = wd,aes(fill = rc))+geom_bar(data=rc,colour=colvec,width=wd,size=2,fill="transparent")+scale_y_continuous(name="",limits=c(0,513),expand=c(0,0))
+  p <- p+theme_bw()+opts(axis.title.x = theme_blank(),
+                         axis.title.y = theme_blank(),
+                         panel.grid.minor = theme_blank(),
+                         panel.grid.major=theme_blank(),
+                         panel.background=theme_rect(fill = NA, colour = NA),
+                         plot.background = theme_rect(colour = NA,fill=NA)
+                         ,plot.title = theme_text(size = 10))
+  psmall <- p+opts(legend.position="none",
+                   axis.text.y = theme_blank(),
+                   axis.text.x = theme_blank()
+                   ,axis.ticks = theme_blank()
+                   ,panel.border = theme_blank()
+                   )
+  p <- p+opts(title=title)
+  ## pdf(file=paste(fname,"bar.pdf",sep=""),height=6,width=6)
+  print(p)
+  ##   dev.off()
+  ##   pdf(file=paste(fname,"barsmall.pdf",sep=""),height=6,width=4)
+  ##   print(psmall)
+  ##   dev.off()  
+}
+
+
+plot.heat <- function(tmp,state.map,z,title=NULL,breaks=NULL,reverse=FALSE,cex.legend=1,bw=.2,col.vec=NULL,main=NULL,plot.legend=TRUE) {
+  ##Break down the vote proportions
+  if (is.null(breaks)) {
+    breaks=
+      seq(
+          floor(min(tmp@data[,z],na.rm=TRUE)*10)/10
+          ,
+          ceiling(max(tmp@data[,z],na.rm=TRUE)*10)/10
+          ,.1)
+  }
+  tmp@data$zCat <- cut(tmp@data[,z],breaks,include.lowest=TRUE)
+  cutpoints <- levels(tmp@data$zCat)
+  if (is.null(col.vec)) col.vec <- heat.colors(length(levels(tmp@data$zCat)))
+  if (reverse) {
+    cutpointsColors <- rev(col.vec)
+  } else {
+    cutpointsColors <- col.vec
+  }
+  levels(tmp@data$zCat) <- cutpointsColors
+  plot(tmp,border=gray(.8), lwd=bw,axes = FALSE, las = 1,col=as.character(tmp@data$zCat),main="A")
+  if (!is.null(state.map)) {
+      plot(state.map,add=TRUE,lwd=1)
+  }
+  if (plot.legend) legend("bottomleft", cutpoints, fill = cutpointsColors,bty="n",title=title,cex=cex.legend)
+}
+
+
+##read file and get centroids
+readShape.cent <- function(shape.file="~/test.shp",IDvar="NOMEMESO") {
+  require(maptools)
+  ##  read shape and get centroids
+  tmp <- read.shape(shape.file)
+  tmp.c <- as.data.frame(get.Pcent(tmp))
+  names(tmp.c) <- c("x","y")
+  tmp.c[,IDvar] <- tmp$att.data[,IDvar]
+  tmp <-  readShapePoly(shape.file,IDvar=IDvar)
+  tm <- match(tmp@data[,IDvar],tmp.c[,IDvar])
+  tmp@data$x <- tmp.c[tm,1]
+  tmp@data$y <- tmp.c[tm,2]
+  tmp
+}
+
+
+##merge sp objects with data
+merge.sp <- function(tmp,data,by="uf") {
+  by.loc <- match(by,names(data))
+  by.data <- data[,by.loc]
+  data <- data[,-by.loc]
+  tmp@data <- data.frame(tmp@data,
+                         data[match(tmp@data[,by],by.data),]
+                         )
+  tmp
+}

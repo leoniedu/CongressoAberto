@@ -1,11 +1,13 @@
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"; -- Normally, you generate the next sequence number for the column by inserting either NULL or 0 into it. NO_AUTO_VALUE_ON_ZERO suppresses this behavior for 0 so that only NULL generates the next sequence number.
 
 --
--- Database: `congressoaberto`
+-- Database: `congressoaberto`;
 --
 
 -- We will use InnoDB engine, which allows for foreign keys. (That we might want to use.)
 -- --------------------------------------------------------
+
+use congressoaberto;
 
 DROP TABLE IF EXISTS `br_bio`;
 CREATE TABLE  `br_bio` (
@@ -27,15 +29,19 @@ CREATE TABLE  `br_bio` (
 Content=Holds the biography information available at the Camara site. 
 CreatedBy=bioprocess.R
 updatedBy=bioprocess.R
-';
+'
+;
+
+--PARTITION BY HASH( YEAR(hired) )
+-- ALTER TABLE br_bio ADD INDEX (columns_to_index)
 
 DROP TABLE IF EXISTS `br_bioidname`;
 CREATE TABLE  `br_bioidname` (
     `bioid` int,
     `name` varchar(100),
     `state` varchar(2),
-    `legis` varchar(9),
-    PRIMARY KEY  (`bioid`,`name`(100),`legis`(9))
+    `legis` int,
+    PRIMARY KEY  (`bioid`,`name`(100),`legis`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
 Content=Link table between biography id and names. Used in the function reading roll calls to match bioid to the roll call id. 
 CreatedBy=bioprocess.R
@@ -47,8 +53,8 @@ DROP TABLE IF EXISTS `br_idbioid`;
 CREATE TABLE  `br_idbioid` (
     `bioid` int,
     `id` int,
-    `legis` varchar(9),
-    PRIMARY KEY  (`bioid`,`id`,`legis`(9))
+    `legis` int,
+    PRIMARY KEY  (`bioid`,`id`,`legis`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
 Content=Link table between biography id and the roll call id
 CreatedBy=readOne
@@ -58,7 +64,7 @@ updatedBy=readOne';
 DROP TABLE IF EXISTS `br_votos`;
 CREATE TABLE  `br_votos` (
     `id` int,
-    `legis` varchar(9),
+    `legis` int,
     `namelegis` text,
     `party` text,
     `state` text,
@@ -66,8 +72,12 @@ CREATE TABLE  `br_votos` (
     `rcfile` varchar(30),
     `rcvoteid` int,
     `bioid` int,
-    PRIMARY KEY  (`bioid`,`rcfile`(30))
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='';
+    PRIMARY KEY  (`bioid`,`rcfile`(30),`legis`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=''
+PARTITION BY HASH(legis);
+-- FIX add KEY 
+alter table br_votos add key rcfile_index(rcfile);
+-- alter table br_votos add key bioid_index(bioid)") (not needed because of the primary key)
 
 
 DROP TABLE IF EXISTS `br_votacoes`;
@@ -84,12 +94,12 @@ CREATE TABLE  `br_votacoes` (
     `billyear` int,
     `billno` text,
     `billtype` varchar(30),
-    `legis` varchar(9),
+    `legis` int,
     `rcfile` varchar(30),
-    PRIMARY KEY  (`rcfile`(30))
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
+    PRIMARY KEY  (`rcfile`(30),`legis`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+PARTITION BY HASH(legis);
+alter table br_votacoes add key legis_index(legis);
 
 
 --- todo

@@ -1,13 +1,15 @@
-## unix account setup http://wiki.dreamhost.com/Unix_account_setup
-wget http://cran.r-project.org/src/base/R-2/R-2.9.0.tar.gz
-tar xvzf R-2.9.0.tar.gz
-cd R-2.9.0
-./configure --prefix=/home/leoniedu/run --with-readline=no --with-x=no
-##There is a problem in the make file http://tolstoy.newcastle.edu.au/R/e6/devel/09/04/1434.html substitute the following in src/modules/Makefile
-# @if test "$(R_MODULES)"	!= ""; then \
-#                 for d in "$(R_MODULES)"; do \
-#                   (cd $${d} && $(MAKE) $@) || exit 1; \
-#                 done; \ 
-# 	fi
+## First do the unix account setup http://wiki.dreamhost.com/Unix_account_setup
+cd ~/soft
+curl -O ftp://ftp.gnu.org/gnu/readline/readline-6.tar.gz
+tar xzvf readline-6.tar.gz
+cd readline-6
+./configure --prefix=$HOME/run
+make
+make install
+cd ~/soft
+wget http://cran.r-project.org/src/base-prerelease/R-2.9.1.gz
+tar xvzf R-2.9.1.tar.gz
+cd R-2.9.1
+./configure --prefix=/home/leoniedu/run  --with-x=no LDFLAGS=-L/home/leoniedu/run/lib
 make
 make install

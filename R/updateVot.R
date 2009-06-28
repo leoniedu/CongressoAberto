@@ -1,3 +1,4 @@
+##FIX USe Rcurl instead of system wget?
 ##need var "update.all" set to something
 ##need var "download.now" set to something
 source("~/reps/CongressoAberto/R/caFunctions.R",encoding="UTF8")

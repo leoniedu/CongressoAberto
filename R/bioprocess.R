@@ -6,12 +6,11 @@
 ##FIX: ##to download all  (perhaps do this once a week?)
 ##but we should also look for new legislators every day, right? 
 
-
 library(plyr)
 library(RMySQL)
 source("~/reps/CongressoAberto/R/caFunctions.R")
 
-download.now <- FALSE
+## need variable download.now set
 
 connect.db()
 
@@ -70,7 +69,7 @@ get.bio <- function(file.now) {
 }
 
 ##to download all  (perhaps do this once a week?)
-##but we should also look for new legislators every day, right? 
+##FIX:  we should also look for new legislators every day, so create a comparison between the old and new files 
 if (download.now) system(paste("wget -nd -E -Nr -P ../data/bio/all 'http://www.camara.gov.br/internet/deputado/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim'",sep=''))
 
 
@@ -126,7 +125,7 @@ idname <- ddply(idname,'bioid',
                                   namelegis,
                                   nameindex,
                                   state,
-                                  legis=strsplit(as.character(legisserved),",")[[1]]
+                                  legis=get.legis(strsplit(as.character(legisserved),",")[[1]])
                                   )
                      ),
                 .progress="text")
@@ -145,12 +144,9 @@ save(bio.all,file="~/reps/CongressoAberto/data/bio.all.RData")
 
 connect.db()
 
-## We comment out the following lines because we should have
-## created the tables using a SQL code
-## dbRemoveTable(connect,"br_bioidname")
-## dbRemoveTable(connect,"br_bio")
-
-##delete all data
+## load(file="~/reps/CongressoAberto/data/idname.RData")
+## load(file="~/reps/CongressoAberto/data/bio.all.RData")
+## ##delete all data
 ## dbGetQuery(connect,"truncate table br_bioidname")
 ## dbGetQuery(connect,"truncate table br_bio")
 
@@ -168,13 +164,13 @@ dbWriteTableU(connect, "br_bio", bio.all, append=TRUE)
 
 ## PHILEMON RODRIGUES was a deputy both in MG and in PB
 dbSendQuery(connect,"update br_bioidname set state='PB' where (bioid='98291')")
-dbSendQuery(connect,"update br_bioidname set state='MG' where (bioid='98291') AND (legis!='2003-2007')")
+dbSendQuery(connect,"update br_bioidname set state='MG' where (bioid='98291') AND (legis!=52)")
 dbGetQuery(connect,"select * from  br_bioidname where bioid='98291'")
 
 
 ##tatico deputi in both DF and GO
-dbSendQuery(connect,"update br_bioidname set state='DF' where (bioid='108697') AND (legis='2003-2007')")
-dbSendQuery(connect,"update br_bioidname set state='GO' where (bioid='108697') AND (legis='2007-2011')")
+dbSendQuery(connect,"update br_bioidname set state='DF' where (bioid='108697') AND (legis=52)")
+dbSendQuery(connect,"update br_bioidname set state='GO' where (bioid='108697') AND (legis=53)")
 dbGetQuery(connect,"select * from  br_bioidname where bioid='108697'")
 
 ## ze indio: 100486
