@@ -4,6 +4,7 @@
 ##                    delete relevant rows explicitly
 ##UPDATE summary AS t, (query) AS q SET t.C=q.E, t.D=q.F WHERE t.X=q.X
 
+
 recode.party <- function(x) x <- car::recode(x,'"PFL"="DEM"')
 
 pad0 <- function(x,mx=NULL,fill=0) {
@@ -374,6 +375,15 @@ dedup.db <- function(tab) {
       cat(paste(init-end), "rows deleted in table ",x,"\n")
     }
   }
+}
+
+
+trim <-  function (s)
+{
+  s <- sub("^\t+","", s)
+  s <- sub("^ +", "", s)
+  s <- sub(" +$", "", s)
+  s
 }
 
 
