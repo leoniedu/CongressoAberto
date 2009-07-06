@@ -1,0 +1,5 @@
+Segue abaixo a estrutura do arquivo:
+Os campos estam delimitados por ponto e vírgula ";"
+
+Campos respectivos as informações existentes no arquivo:
+NOME_DOADOR;CPF_CNPJ_DOADOR;VALOR_DOAÇÃO;DATA_DOAÇÃO;TIPO_RECURSO;NR_CANDIDATO;NOME_CANDIDATO;CARGO_ELETIVO;NR_PARTIDO;SIGLA_PARTIDO;UF_CANDIDATO;CNPJ_CAMPANHA_CANDIDATO;TIPO_DOAÇÃO;
