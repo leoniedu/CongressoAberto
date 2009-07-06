@@ -10,7 +10,7 @@ rm(list=ls(all=TRUE))
 run.from <-"C:/reps/CongressoAberto/DATA/CampaignContributions"
 #this portion of the code does not neet do be ran again
     ### Unzip all state data into a single temporary folder
-    setwd(paste(run.from,"/2006/COMITÊS/RECEITAS",sep=""))
+    setwd(paste(run.from,"/2006/COMITES/RECEITAS",sep=""))
     temp.dir <- paste(run.from,"/2006/TEMP-receitas-comites",sep="")
     dir.create(temp.dir, showWarnings = TRUE, recursive = FALSE, mode = "0777")
     subdirs <- dir(getwd())[-grep("\\.",dir(getwd()))]  #find subdirectories with state data   
