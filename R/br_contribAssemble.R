@@ -9,11 +9,15 @@
 
 ## FOR 2002, pretty simple
 ##rm(list=ls(all=TRUE))
-if (.Platform$OS.type!="unix") {
-  run.from <-"C:/reps/CongressoAberto"
-} else {
-  run.from <- "~/reps/CongressoAberto"
+rf <- function() {
+  if (.Platform$OS.type!="unix") {
+    "C:/reps/CongressoAberto"
+  } else {
+    "~/reps/CongressoAberto"
+  }
 }
+run.from <- rf()
+
 setwd(run.from)
 
 d <- read.delim(paste(run.from,"/data/CampaignContributions/2002/ReceitaCandidato.txt",sep=""), header = FALSE, sep = "\t", quote="\"", dec=",",##skip=100,

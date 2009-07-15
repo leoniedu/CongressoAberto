@@ -1,5 +1,5 @@
-##FIX: create a new or modify this file to download deputies from this legislatureo nly
-## Possible solution: use non clobber so only new files are downloaded
+##FIX: This uses too much memory. Any way to break down the analysis into chuncks? Or to make it more efficient memorywise?
+
 ##FIX: Download pics or not?
 
 
@@ -8,8 +8,8 @@
 ##          idname (one row per legislator/name/session
                                         # names written in multiple forms)
 
-##FIX: ##to download all  (perhaps do this once a week?)
-##but we should also look for new legislators every day, right? 
+##FIX: ##to download all  (perhaps do this once a week?) [in case individual bios get update]
+##but we search for new legislators every day 
 
 library(plyr)
 library(RMySQL)
@@ -37,7 +37,6 @@ get.bio <- function(file.now) {
   birthdate <-  as.Date(gb(gsub(" - .*","",birth)),format="%d/%m/%Y")
   sessions <- gb(text.now[grep("Legislaturas:",text.now)[1]])
   sessions <- gsub(".*: |\\.| +","",sessions)
-  ##sessions <- strsplit(sessions,",")[[1]]
   mandates <- gsub("<.*>(.*)<.*>","\\1",trim(text.now[grep("Mandatos Eletivos",text.now)[1]+5]))  
   nameshort <- gb(text.now[65])
   if (substr(nameshort,nchar(nameshort),nchar(nameshort))=="-") {
@@ -76,78 +75,87 @@ get.bio <- function(file.now) {
 ##to download all  (perhaps do this once a week?)
 ##FIX:  we should also look for new legislators every day, so create a comparison between the old and new files
 ## FIX: for now we use no clobber  (-nc) so that only new files are downloaded
-if (download.now) system(paste("wget -nd -r -nc -P ../data/bio/all 'http://www.camara.gov.br/internet/deputado/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim'",sep=''))
-
+## should change this to be used only when not update.all
+##dir('~/reps/CongressoAberto/data/bio/all/', pattern="DepNovos_Lista*")
 
 index.file <- "../data/bio/all/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim"
-ll <- readLines(index.file,encoding='latin1')
-ll <- gsub("\t+| +"," ",ll)
-##pe <- ll[grep("[A-Z] - [A-Z]",ll)]
-peloc <- grep("/[A-Z]{2}<",ll)
-pe <- trim(ll[peloc])
-pe <- gsub("</b>","",pe)
-pe <- strsplit(pe,"/")
-np <- sapply(pe,function(x) x[[1]])
-uf <- sapply(pe,function(x) x[[length(x)]])
-np <- strsplit(np," - ")
-name <- sapply(np,function(x) trim(x[[1]]))
-partido.current <- sapply(np,function(x) {
-  newx <- try(trim(x[[2]]))
-  ifelse ("try-error"%in%class(newx),"",newx)
-})
-id <- as.numeric(gsub(".*id=([0-9]+)&.*","\\1",ll[peloc-1]))
+oldfiles <- dir('~/reps/CongressoAberto/data/bio/all',pattern="DepNovos_Detalhe", full.names=TRUE)
+if (download.now) {
+  try(file.remove(index.file))
+  tmp <- system(paste("wget -nd -r -nc -P ../data/bio/all 'http://www.camara.gov.br/internet/deputado/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim' 2>&1",sep=''), intern=TRUE)
+  newfiles <- dir('~/reps/CongressoAberto/data/bio/all',pattern="DepNovos_Detalhe",full.names=TRUE)
+  if (update.all) {
+    files.list <- newfiles
+  }  else {
+    files.list <- setdiff(newfiles, oldfiles)
+  }
+}
 
-##manual fix: there is a mistake in the camara website of the
-## code of "tatico"
-## we recode it here
-## id[id=='108697'] <- '520630'
-## system(paste("wget -nd -E -Nr -P ../data/bio/all 'http://www.camara.gov.br/internet/deputado/DepNovos_Detalhe.asp?id=108697&leg=QQ'",sep=''))
+if (length(files.list)>0) {
 
-data.legis <- data.frame(bioid=id,nameindex=name,state=uf)##,partido.current=partido.current)
-
-files.list <- dir('../data/bio/all/',pattern="DepNovos_Detalhe",full.names=TRUE)
-bio.all.list <- lapply(files.list,get.bio)
-
-bio.all <- do.call(rbind,bio.all.list)
-
-## create a deputyid/name/session to use when merging data from
-## multiple sources (this is slow and memory consuming)
-idname <- with(bio.all,
-               data.frame(bioid,
-                          name,                         
-                          namelegis,
-                          ##state,
-                          legisserved))
-idname <- merge(idname,data.legis)
-
-bio.all <- merge(subset(bio.all,select=-state),data.legis)##,by="bioid")
-
-##FIX: This could be faster by creating just the legis vector and duplicating
-## the rows of bio
-idname <- ddply(idname,'bioid',
-                function(x) 
-                with(x,data.frame(bioid,
-                                  name,
-                                  namelegis,
-                                  nameindex,
-                                  state,
-                                  legis=get.legis(strsplit(as.character(legisserved),",")[[1]])
-                                  )
-                     ),
-                .progress="text")
-
-idname <- with(idname,rbind(
-                            data.frame(bioid,name=as.character(name),state,legis),
-                            data.frame(bioid,name=as.character(namelegis),state,legis),
-                            data.frame(bioid,name=as.character(nameindex),state,legis))
-               )
-
-idname <- unique(idname)
-
-##idname$id <- "" ## Why did I put this here????
-save(idname,file="~/reps/CongressoAberto/data/idname.RData")
-save(bio.all,file="~/reps/CongressoAberto/data/bio.all.RData")
-
+  ll <- readLines(index.file,encoding='latin1')
+  ll <- gsub("\t+| +"," ",ll)
+  ##pe <- ll[grep("[A-Z] - [A-Z]",ll)]
+  peloc <- grep("/[A-Z]{2}<",ll)
+  pe <- trim(ll[peloc])
+  pe <- gsub("</b>","",pe)
+  pe <- strsplit(pe,"/")
+  np <- sapply(pe,function(x) x[[1]])
+  uf <- sapply(pe,function(x) x[[length(x)]])
+  np <- strsplit(np," - ")
+  name <- sapply(np,function(x) trim(x[[1]]))
+  partido.current <- sapply(np,function(x) {
+    newx <- try(trim(x[[2]]))
+    ifelse ("try-error"%in%class(newx),"",newx)
+  })
+  id <- as.numeric(gsub(".*id=([0-9]+)&.*","\\1",ll[peloc-1]))
+  
+  data.legis <- data.frame(bioid=id,nameindex=name,state=uf)##,partido.current=partido.current)
+  
+  bio.all.list <- lapply(files.list,get.bio)  
+  bio.all <- do.call(rbind,bio.all.list)
+  
+  ## create a deputyid/name/session to use when merging data from
+  ## multiple sources (this is slow and memory consuming)
+  idname <- with(bio.all,
+                 data.frame(bioid,
+                            name,                         
+                            namelegis,
+                            ##state,
+                            legisserved))
+  idname <- merge(idname,data.legis)
+  
+  bio.all <- merge(subset(bio.all,select=-state),data.legis)##,by="bioid")
+  
+  ##FIX: This could be faster by creating just the legis vector and duplicating
+  ## the rows of bio
+  idname <- ddply(idname,'bioid',
+                  function(x) 
+                  with(x,data.frame(bioid,
+                                    name,
+                                    namelegis,
+                                    nameindex,
+                                    state,
+                                    legis=get.legis.n(legisserved)
+                                    )
+                       ),
+                  .progress="text") 
+  
+  idname <- with(idname,rbind(
+                              data.frame(bioid,name=as.character(name),state,legis),
+                              data.frame(bioid,name=as.character(namelegis),state,legis),
+                              data.frame(bioid,name=as.character(nameindex),state,legis))
+                 )
+  
+  idname <- unique(idname)
+  
+  ##idname$id <- "" ## Why did I put this here????
+  if (update.all) {
+    save(idname,file="~/reps/CongressoAberto/data/idname.RData")
+    save(bio.all,file="~/reps/CongressoAberto/data/bio.all.RData")
+  }
+}
+  
 connect.db()
 
 ## load(file="~/reps/CongressoAberto/data/idname.RData")

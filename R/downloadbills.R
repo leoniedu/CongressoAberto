@@ -2,23 +2,35 @@ source("~/reps/CongressoAberto/R/caFunctions.R")
 
 connect.db()
 
-bills <- dbReadTableU(connect,"br_votacoes")
-##FIX: types (this should be fixed when loading the rcs)
-##FIX: Parecer da Câmara (p.c) vs. parecer de comissão (PAR)
-##FIX: PLC (Lei complementar) or PLP?
-##FIX: unique bills by billtype billno billyear
-bills$billtype <- car::recode(bills$billtype,"'PLN'='PL';c('MP','MEDIDA')='MPV';c('MENS','MSG')='MSC';c('PARECER')='PAR';'PDL'='PDC';'PLC'='PLP'")
-bills$billno <- gsub("\\.","",bills$billno)
-bills$billno <- gsub("[A-Z]*|-","",bills$billno)
-bills$billnof <- as.numeric(bills$billno)
-billsf <- unique(bills[,c("billtype","billno","billyear")])
-billsf <- subset(billsf,!is.na(billno))
 
-bill.up <- do.call(rbind,lapply(283:nrow(billsf)
-                                ,
-                                function(i) {
-                                  print(i)
-                                  with(billsf,getbill(billtype[i],billno[i],billyear[i],overwrite=FALSE))
-                    }))
+if (update.all) {
+  bills <- dbReadTableU(connect,"br_votacoes")
+  ##FIX: unique bills by billtype billno billyear
+  billsf <- unique(bills[,c("billtype","billno","billyear")])
+  billsf <- subset(billsf,!is.na(billno))
+  billsf$billid <- NA
+  billsf$billurl <- NA
+} else {
+  billsf <- dbReadTableU(connect, "br_billid")
+}
+
+##update.all conditional
+toup <- which(is.na(billsf$billid))
+if (update.all) {
+  toup <- 1:nrow(billsf)
+}
+
+for ( i in toup) {
+  print(i)
+  billsf[i, c("billurl", "billid")] <- with(billsf,getbill(billtype[i],billno[i],billyear[i],overwrite=download.now))
+}
+
+toupdate <- billsf[toup, ]
+
+dbWriteTableU(connect, "br_billid", toupdate, append=TRUE)
+
+
+
+
 
 

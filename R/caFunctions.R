@@ -5,6 +5,92 @@
 ##UPDATE summary AS t, (query) AS q SET t.C=q.E, t.D=q.F WHERE t.X=q.X
 
 
+## paths
+rf <- function() {
+  if (.Platform$OS.type!="unix") {
+    "C:/reps/CongressoAberto"
+  } else {
+    "~/reps/CongressoAberto"
+  }
+}
+
+
+
+##cpf/cnpj validation
+validate.cpfcnpj <- function(x) {
+  ifelse(nchar(x)==11,sapply(x,valid.cpf),sapply(x,valid.cnpj))
+}
+valid.cnpj <- function(x) {
+  valid.cnpj1 <- c(5,4,3,2,9,8,7,6,5,4,3,2)
+  valid.cnpj2 <- c(6,valid.cnpj1)
+  x <- as.character(x)
+  if (nchar(x)!=14) return(FALSE)
+  x <- strsplit(x,"")[[1]]
+  ## validate 1st
+  sx <- sum(as.numeric(x[1:12])*valid.cnpj1)%%11
+  if (sx<2) {
+    d1 <- 0
+  } else {
+    d1 <- 11-sx
+  }
+  if (d1!=x[13]) {
+    return(FALSE)
+  }
+  ## validate 2nd
+  sx <- sum(as.numeric(x[1:13])*valid.cnpj2)%%11
+  if (sx<2) {
+    d1 <- 0
+  } else {
+    d1 <- 11-sx
+  }
+  if (d1!=x[14]) {
+    return(FALSE)
+  }
+  TRUE
+}
+valid.cpf <- function(x) {
+  x <- as.character(x)
+  if (nchar(x)!=11) return(FALSE)
+  valid.cpf1 <- c(10,9,8,7,6,5,4,3,2)
+  valid.cpf2 <- c(11,valid.cpf1)
+  x <- strsplit(x,"")[[1]]
+  ## validate 1st
+  d1 <- 11-sum(as.numeric(x[1:9])*valid.cpf1)%%11
+  if (d1>=10) {
+    d1 <- 0
+  }
+  if (d1!=x[10]) {
+    return(FALSE)
+  }
+  ## validate 2nd
+  d2 <- 11-sum(as.numeric(x[1:10])*valid.cpf2)%%11
+  if (d2>=10) {
+    d2 <- 0
+  } 
+  if (d2!=x[11]) {
+    return(FALSE)
+  }
+  TRUE
+}
+
+
+## recode bill type
+## FIX: check this types against the ones used in camara
+##FIX: Parecer da Câmara (p.c) vs. parecer de comissão (PAR)
+##FIX: PLC (Lei complementar) or PLP?
+recode.billtype <- function(x) {
+  car::recode(x,"'PLN'='PL';c('MP','MEDIDA')='MPV';c('MENSAGEM', 'MENS','MSG')='MSC';c('PARECER')='PAR';'PDL'='PDC';'PLC'='PLP';'PROCESSO'='PRC';'PROPOSICAO'='PRP';'RECURSO'='REC';'REQUERIMENTO'='REQ';'L'='PL'")
+}
+
+##get bill no as numeric
+get.billno <- function(x) {
+  x <- gsub("\\.","",x)
+  x <- gsub("[A-Z]*|-","",x)
+  x <- as.numeric(x)
+  x
+}
+
+
 recode.party <- function(x) x <- car::recode(x,'"PFL"="DEM"')
 
 pad0 <- function(x,mx=NULL,fill=0) {
@@ -84,7 +170,7 @@ dbWriteTableU <- function(conn,name,value,convert=FALSE,...) {
   dbWriteTable(conn, name, value,...,row.names = FALSE, eol = "\r\n")
 }
 
-dbReadTableU <- function(conn,name,...,convert=TRUE) {
+dbReadTableU <- function(conn,name,...,convert=dbConvert(conn)) {
   df <- dbReadTable(conn, name,...)
   if (convert) {
     df <- iconv.df(df)
@@ -92,7 +178,20 @@ dbReadTableU <- function(conn,name,...,convert=TRUE) {
   df
 }
 
-dbGetQueryU <- function(conn,statement,...,convert=TRUE) {
+## check to see if charset conversion is needed
+dbConvert <- function(connect) {
+  a <- data.frame(word="MaçãMAÇÓES")
+  dbSendQuery(connect, "drop table if exists tmp")
+  dbWriteTable(connect, "tmp", a)
+  if ((dbReadTable(connect, "tmp")==a)[1]) {
+    FALSE
+  } else {
+    TRUE
+  }
+}
+
+
+dbGetQueryU <- function(conn,statement,...,convert=dbConvert(conn)) {
   df <- dbGetQuery(conn, statement,...)
   if (convert) {
     df <- iconv.df(df)
@@ -156,7 +255,6 @@ readOne <- function(LVfile,post=FALSE) {
     session.now <- as.character(data.votacoes$legis[1])
     ##bioids
     idname <- dbGetQueryU(connect,paste("select * from br_bioidname where legis='",session.now,"'",sep=''))
-    idname$id <- NULL
     ## merge using the br_ids db (a mapping of all ids)
     createtab <- !dbExistsTable(connect,"br_idbioid")
     ids <- dbReadTable(connect,"br_idbioid")
@@ -169,7 +267,8 @@ readOne <- function(LVfile,post=FALSE) {
     }
     ##try to find the bioid for new deps
     if (nrow(tomatch)>0) {
-      idname$namelegis <- clean(idname$name)
+      idname$namelegis <- idname$name
+      ##browser()
       res <- merge.approx(states,idname,
                           tomatch,"state","namelegis")
       ##might have multiple matches. We discard if the 
@@ -310,6 +409,9 @@ get.legis <- function(x) {
   vec
 }
 
+##given a legislatura (e.g. 1991-1995) returns the legislaturan number (49)
+get.legis.n <- function(x) get.legis(as.numeric(substr(strsplit(as.character(x), ",")[[1]], 1, 4)))
+
 ## recast votos
 get.votos <- function(data.votos) {
   data.votos$origvote <- gsub("vote\\.","",data.votos$variable)
@@ -338,10 +440,9 @@ get.votacoes <- function(data.votacoes) {
   ## parse billproc (bill)
   ss <- strsplit(gsub(" +"," ",as.character(data.votacoes$billproc)),c(" |/"))
   data.votacoes <- within(data.votacoes,{  
-    billtype <- factor(sapply(ss,function(x) x[1]))
-    billtype <- car::recode(billtype,"'MENSAGEM'='MSG';'PROCESSO'='PRC';'PROPOSICAO'='PRP';'RECURSO'='REC';'REQUERIMENTO'='REQ';'L'='PL'")
-    billtype <- gsub("\\.","",billtype)
-    billno <- (sapply(ss,function(x) x[3]))
+    billtype <- as.character(sapply(ss,function(x) x[1]))
+    billtype <- recode.billtype(gsub("\\.","",billtype))
+    billno <- get.billno(sapply(ss,function(x) x[3]))
     billyear <- as.numeric(sapply(ss,function(x) x[4]))
     billyear[billyear==203] <- 2003
     billyear <- ifelse(billyear<1000 & billyear>50, billyear+1900,billyear)
@@ -389,7 +490,7 @@ trim <-  function (s)
 
 trimm <- function(x) gsub(" +"," ",trim(x))
 
-getbill <- function(sigla="MPV",numero=447,ano=2008,overwrite=TRUE) {
+getbill <- function(sigla="MPV",numero=447,ano=2008,overwrite=TRUE, deletefirst=TRUE) {
   ##FIX use RCurl?
   if (overwrite) {
     opts <- "-N"
@@ -399,26 +500,46 @@ getbill <- function(sigla="MPV",numero=447,ano=2008,overwrite=TRUE) {
   ## FIX: download the file to disk (allows faster recovery)
   ## FIX: code as NA if value is missing
   ## -N for overwriting, -nc for not overwriting
-  tmp <- system(paste("wget -t 15  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/www.camara.gov.br/sileg  2>&1",sep=''),intern=TRUE)
+  ##tmp <- system(paste("wget -r -l1 -t 15  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/www.camara.gov.br/sileg  2>&1",sep=''),intern=TRUE)
+  ##if (deletefirst)   unlink(paste("~/reps/data/", billurl, sep=''))
+  tmp <- system(paste("wget -r -l2 -t 15 --force-html --base=url  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/  2>&1",sep=''),intern=TRUE)
   tmp <- iconv(tmp,from="latin1")
+  links <- 
   url <- gsub(".*`.*(www.camara.gov.br.*)'.*","\\1",tmp[length(tmp)-1])
-  data.frame(sigla,numero,ano,url)
+  id <- gsub(".*id=(.*)", "\\1", url)
+  if (length(grep("id=", url))==0) {
+    id <- NA
+  }
+  c(url, id)
 }
 
+##http://www.camara.gov.br/sileg/MostrarIntegra.asp?CodTeor=83624
 
 
+remove.tags <- function(x) gsub("<[^<]*>|\t",  "",  x)
 
 #FIX add to db, first checking that the results were updated.
-readbill <- function(tmp) {
+readbill <- function(file) {  
   if (length(grep("Prop_Erro|Prop_Lista",file))>0)  return(NULL)
-  tmp <- readLines(file,encoding="latin1")
+  ##FIX: figure out if encoding is necessary
+  tmp <- readLines(file,encoding="latin1"
+                   )
+  ## write file out for debugging
+  writeLines(tmp, con="~/reps/CongressoAberto/tmp/tmp.html")
   if(length(grep("Nenhuma proposição encontrada",tmp))>0) return(NULL)
   tmp <-  gsub("\r|&nbsp","",tmp)
+  tmp <-  gsub(";+"," ",tmp)
   t0 <- tmp[grep("Proposição",tmp)[1]]
   propno <- as.numeric(trimm(gsub(".*CodTeor=([0-9]+).*","\\1",t0)))
   ##FIX: parse result when a deputado is the author
   t0 <- tmp[grep("Autor",tmp)[1]]
-  author <- trimm(gsub(".*Autor: </b></td><td>(.*)</td>.*","\\1",t0))  
+  author <- trimm(gsub(".*Autor: </b></td><td>(.*)</td>.*","\\1",t0))
+  ##FIX: what to do with "Poder Executivo" and other non-legislators?
+  if (length(grep("Detalhe.asp", t0))>0) {
+    authorid <- gsub(".*Detalhe.asp\\?id=([0-9]*).*", "\\1", t0)
+  } else {
+    authorid <- NA
+  }
   t0 <- tmp[grep("Data de Apresentação",tmp)]
   date <- trimm(gsub(".*</b>(.*)","\\1",t0))
   date <- as.character(as.Date(date,"%d/%m/%Y"))
@@ -427,7 +548,10 @@ readbill <- function(tmp) {
   aprec <- trimm(gsub(".*</b>(.*)","\\1",t0))
   ##FIX: need english name
   t0 <- tmp[grep("Regime de tramitação:",tmp)+1][1]
-  tramit <- trimm(gsub(".*</b>(.*)","\\1",t0))
+  ##tramit <- trimm(gsub(".*</b>(.*)","\\1",t0))
+  ## note use of the not operator!
+  tramit <- trimm(gsub("([^<]*)<br>?.*","\\1",t0, perl=TRUE))
+  tramit[tramit=="."] <- NA
   ##FIX: Categorize response
   t0 <- tmp[grep("Situação:",tmp)][1]
   status <- trimm(gsub(".*</b>(.*)<br>","\\1",t0))
@@ -439,14 +563,28 @@ readbill <- function(tmp) {
   ementashort <- trimm(gsub(".*</b>(.*)","\\1",t0))
   ##FIX: name
   t0 <- tmp[grep("Indexação:",tmp)][1]
-  indexa <- trimm(gsub(".*</b>(.*)","\\1",t0))
-  f <- function(x) ifelse (length(x)==0,NA,x)
-  tmp1[grep("Nenhuma proposi",tmp1$author),]
+  indexa <- trimm(gsub(".*Indexação: </b>(.*)","\\1",t0))
+  ##FIX: name
+  iua <- grep("Última Ação:",tmp)[1]+7
+  if (!is.na(iua)) {
+    t0 <- tmp[iua]
+    uadate <- trimm(gsub("<b>([^<]*).*","\\1",  tmp[iua]))
+    iua.e <- grep("</table>",tmp[-c(1:iua)])[1]+iua
+    t0 <- paste(tmp[(iua+1):iua.e],  collapse=" ")
+    t0 <- trimm(gsub("<[^<]*>|\t",  "",  t0))
+    uadesc <- trimm(gsub("<b>([^<]*).*","\\1",  tmp[iua+7]))
+  } else {
+    uadate <- NA
+    uadesc <- NA
+  }
+  ## FIX: what else? despacho? table with tramitação?
+  f <- function(x) ifelse (length(x)==0,NA,remove.tags(x))
   res <- try(data.frame(## billtype=f(sigla), ##FIX GET FROM FILE
                         ## billno=f(numero),
                         ## billyear=f(ano),
                         propno=f(propno),
                         author=f(author),
+                        authorid=f(authorid),
                         date=f(date),
                         aprec=f(aprec),
                         tramit=f(tramit),
@@ -454,6 +592,8 @@ readbill <- function(tmp) {
                         ementa=f(ementa),
                         ementashort=f(ementashort),
                         indexa=f(indexa),
+                        lastactiondate=f(uadate),
+                        lastaction=f(uadesc),
                         stringsAsFactors=FALSE))
   if (("try-error"%in%class(res))) {   
     res <- NULL

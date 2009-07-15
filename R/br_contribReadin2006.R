@@ -40,7 +40,17 @@ rm(list=ls(all=TRUE))
 
 #####################################################################
 rm(list=ls(all=TRUE))
-run.from <-"C:/reps/CongressoAberto/DATA/CampaignContributions"
+
+## paths
+rf <- function() {
+  if (.Platform$OS.type!="unix") {
+    "C:/reps/CongressoAberto"
+  } else {
+    "~/reps/CongressoAberto"
+  }
+}
+run.from <- rf()
+
 setwd(run.from)
 load("contrib2006.Rdta")
 d <- contrib[contrib$office=="Deputado Federal",-14]
@@ -75,10 +85,10 @@ d$donortype <- ifelse(is.element(d$cpfcgc,c("00000000000","00000000000000")),NA,
                ifelse(nchar(d$cpfcgc)==11,"PF",
                ifelse(d$donationtype2=="RECURSOS DE PARTIDO POLÍTICO","PP",
                ifelse(nchar(d$cpfcgc)==14,"PJ",
-               ifelse(d$donationtype2=="Rendimentos de aplicações financeiras","Other",NA)))))
+                      ifelse(d$donationtype2=="Rendimentos de aplicações financeiras","Other",NA)))))
 d$cpfcgc<- ifelse(d$cpfcgc=="",NA,#Use NA for invalid or no CPF-CGC
-           ifelse(is.element(d$cpfcgc,c("00000000000","00000000000000")),NA,
-           ifelse(nchar(d$cpfcgc==11)|nchar(d$cpfcgc==14),as.character(d$cpfcgc),NA)))
+                  ifelse(is.element(d$cpfcgc,c("00000000000","00000000000000")),NA,
+                         ifelse(nchar(d$cpfcgc==11)|nchar(d$cpfcgc==14),as.character(d$cpfcgc),NA)))
 
 #INTERNAL CHECK: Check for cases with  "invalid" CPF/CGCs that also appear with valid CPF/CGCs: 
 #This is done before name replacement to make use of different spellings!!!!

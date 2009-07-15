@@ -73,11 +73,13 @@ CREATE TABLE  `br_votos` (
     `rcvoteid` int,
     `bioid` int,
     PRIMARY KEY  (`bioid`,`rcfile`(30),`legis`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=''
-PARTITION BY HASH(legis);
--- FIX add KEY 
+    ) 
+-- ENGINE=InnoDB 
+DEFAULT CHARSET=utf8 COMMENT=''
+PARTITION BY HASH(legis)
+PARTITIONS 6
+;
 alter table br_votos add key rcfile_index(rcfile);
--- alter table br_votos add key bioid_index(bioid)") (not needed because of the primary key)
 
 
 DROP TABLE IF EXISTS `br_votacoes`;
@@ -98,13 +100,97 @@ CREATE TABLE  `br_votacoes` (
     `rcfile` varchar(30),
     PRIMARY KEY  (`rcfile`(30),`legis`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
-PARTITION BY HASH(legis);
+;
 alter table br_votacoes add key legis_index(legis);
 
+  res <- try(data.frame(## billtype=f(sigla), ##FIX GET FROM FILE
+                        ## billno=f(numero),
+                        ## billyear=f(ano),
+                        billid=f(propno),
+                        author=f(author),
+                        date=f(date),
+                        aprec=f(aprec),
+                        tramit=f(tramit),
+                        status=f(status),
+                        ementa=f(ementa),
+                        ementashort=f(ementashort),
+                        indexa=f(indexa),
+                        stringsAsFactors=FALSE))
 
---- todo
+DROP TABLE IF EXISTS `br_billid`;
+CREATE TABLE  `br_billid` (
+    `billyear` int,
+    `billno` int,
+    `billtype` varchar(10),
+    `billid` int,
+    `billurl` varchar(100),
+    PRIMARY KEY  (`billtype`,`billyear`,`billno`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+;
 
 
+DROP TABLE IF EXISTS `br_bills`;
+CREATE TABLE  `br_bills` (
+    `session` varchar(9), 
+    `billyear` int,
+    `billauthor` varchar(100),
+    `billdate` varchar(10),
+    `billno` int,
+    `billtype` varchar(10),
+    `legis` int,
+    `aprec` text,
+    `tramit` text,
+    `status` text,    
+    `ementa` text,
+    `ementashort` text,
+    `indexa` text,
+    `url` varchar(100),
+    PRIMARY KEY  (`billtype`,`billyear`,`billno`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+;
+
+
+
+-- ELECTORAL TABLES
+
+DROP TABLE IF EXISTS `br_vote_section`;
+CREATE TABLE  `br_vote_section` (
+    `year` int(11) NOT NULL DEFAULT '0',
+    `elec_round` int(11) DEFAULT NULL,
+    `municipality` int(11) NOT NULL DEFAULT '0',
+    `office` varchar(20) NOT NULL DEFAULT '',
+    `type` int(11) DEFAULT NULL,
+    `candidate_code` int(11) NOT NULL DEFAULT '0',
+    `section` int(11) NOT NULL DEFAULT '0',
+    `zone` int(11) NOT NULL DEFAULT '0',
+    `votes` int(11) DEFAULT NULL,
+    `state` varchar(2) DEFAULT NULL,
+    PRIMARY KEY (`year`,`office`,`candidate_code`,`municipality`,`zone`,`section`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `br_vote_mun`;
+CREATE TABLE  `br_vote_mun` (
+    `year` int(11) NOT NULL DEFAULT '0',
+    `elec_round` int(11) DEFAULT NULL,
+    `municipality` int(11) NOT NULL DEFAULT '0',
+    `office` varchar(20) NOT NULL DEFAULT '',
+    `type` int(11) DEFAULT NULL,
+    `candidate_code` int(11) NOT NULL DEFAULT '0',
+    `votes` int(11) DEFAULT NULL,
+    `state` varchar(2) DEFAULT NULL,
+    PRIMARY KEY (`year`,`office`,`candidate_code`,`municipality`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `br_vote_parties`;
+CREATE TABLE  `br_vote_parties` (
+    `party` int(11) NOT NULL DEFAULT '0',
+    `partyl` varchar(10) DEFAULT NULL,
+    `partyname` varchar(100) DEFAULT NULL,
+    `year` int(11) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`party`,`year`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
