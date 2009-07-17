@@ -123,12 +123,12 @@ medians <- (subset(medians,!(legisyear<2000 & median1<.55)))
 medians$yearmonth <- (as.character(format(medians$rcdate,"%Y%m")))
 
 
-medians.c <- recast(subset(medians, ct>505),
+medians.c <- recast(subset(medians, ct>510),
                     legisyear+legis+yearmonth~.,
                     measure.var="median1",
                     fun.aggregate=function(x) c(median=median(x),count=length(x)))
 
-write.csv(medians, file="~/Desktop/medians.csv")
+write.csv(medians.c, file="~/Desktop/medians.csv")
 
 
 ## p <- qplot(rcdate,median1,data=subset(medians,ct>500),geom=c("smooth"),group=legis)+scale_y_continuous(limits=c(-1,1))+geom_point(aes(colour=factor(legis)),alpha=1/3,size=2)
