@@ -118,7 +118,7 @@ for(i in 1:nrow(rcnow)) {
 }
 medians$rcdate <- as.Date(as.character(medians$rcdate))
 medians$sup1 <- with(medians,ifelse(legisyear>=2003,median1*-1,median1))
-## there is a roll call with too many missing party information, so we take it out.
+### there is a roll call with too many missing party information, so we take it out.
 medians <- (subset(medians,!(legisyear<2000 & median1<.55)))
 medians$yearmonth <- (as.character(format(medians$rcdate,"%Y%m")))
 
