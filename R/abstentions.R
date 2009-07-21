@@ -44,6 +44,7 @@ votall <- NULL
 tofix <- NULL
 ##for (i in 1:2) {
 for (i in 1:nrow(matched)) {
+  if (i%%10==0) print(i)
   ## get the rcs for the legis i
   vot.i <- subset(vot,rcdate>=matched$beg[i] & rcdate<=matched$end[i],select=c(rcfile,rcdate,rcvoteid))
   rc.i <- dbGetQuery(connect,paste("select *  from br_votos where legis=50 AND bioid=",matched$bioid[i],sep=''))
@@ -51,32 +52,27 @@ for (i in 1:nrow(matched)) {
   if (nrow(vot.i)==0) next
   vot.i$bioid <- matched$bioid[i]
   ## merge
-  vot.i <- merge(vot.i,rc.i,all.x=TRUE)
+  vot1 <- merge(vot.i,rc.i,all.x=TRUE)
+  if (sum(is.na(vot1$state))==nrow(vot1)) {
+    print("not enough obs in the period to impute. getting more data.")
+    vot1 <- merge(vot.i,rc.i,all=TRUE)
+  }
+  vot.i <- vot1
   ## order by date
   vot.i <- vot.i[order(vot.i$rcdate),]
+  nas <- which(is.na(vot.i$state))
   ## mark as absent when NA
   vot.i$rc[is.na(vot.i$rc)] <- "Ausente"
   ## fill in missing values with previous vote ##FIX should we use the closest vote?
-  nas <- which(is.na(vot.i$state))
   vs <- c("id","legis","namelegis","party","state")
   ## fix if  first obs is empty
   if((1%in%nas)) {
     vot.i[1,vs] <- vot.i[which(!is.na(vot.i$state))[1],vs]
-    ## if there is no data to use
-    if (is.na(vot.i[1,"state"])) {
-      tofix <- c(tofix,i)
-      next
-    } 
   }
-  ## recursively fill in
+  ## fill in
   nn <- which(is.na(vot.i$state))
-  while (length(nn)>0) {
-    for (j in nn) {  
-      vot.i[j,vs] <- vot.i[j-1,vs]
-    }
-    nn <- which(is.na(vot.i$state))
-    nn <- nn[nn>1]
-    print(length(nn))
+  for (j in nn) {  
+    vot.i[j,vs] <- vot.i[j-1,vs]
   }
   vot.i <- vot.i[nas,]
   vot.i$rcdate <- NULL

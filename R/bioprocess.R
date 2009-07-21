@@ -12,8 +12,21 @@
 ##but we search for new legislators every day 
 
 library(plyr)
-library(RMySQL)
-source("~/reps/CongressoAberto/R/caFunctions.R")
+rf <- function(x=NULL) {
+  if (.Platform$OS.type!="unix") {
+    run.from <- "C:/reps/CongressoAberto"
+  } else {
+    run.from <- "~/reps/CongressoAberto"
+  }
+  ## side effect: load functions
+  source(paste(run.from,"/R/caFunctions.R",sep=""))
+  if (is.null(x)) {
+    run.from
+  } else {
+    paste(run.from,"/",x,sep='')
+  }
+}
+setwd(rf())
 
 ## need variable download.now set
 
@@ -23,6 +36,7 @@ gb <- function(x) trim(toupper(gsub(".*<b>(.*)<.*b>.*","\\1",x)))
 
 get.bio <- function(file.now) {
   id <- gsub(".*id=([0-9]+)&.*","\\1",file.now)
+  cat(id,"\n")
   text.now <- readLines(file.now,encoding="latin1")
   namelong <- gb(text.now[83])
   bdate <- text.now[grep("Nascimento",text.now)]
@@ -31,8 +45,12 @@ get.bio <- function(file.now) {
                    text.now[84]
                    )
                )
-  imagefile <- gsub(".*\"(.*)\".* width.*","\\1",text.now[grep("img",text.now)[1]])
-  imagefile <- gsub(".*/(depnovos.*)&nome.*","\\1",imagefile)
+  ##imagefile <- gsub(".*\"(.*)\".* width.*","\\1",text.now[grep("img",text.now)[1]])
+  ##imagefile <- gsub("/internet/deputado/","",imagefile)
+  ##imagefile <- gsub(".*/(depnovos.*)&nome.*","\\1",imagefile)
+  oldimagefile <- dir(rf("data/bio/all"),pattern=paste("foto.asp\\?id=",id,".*",sep=''))[1]
+  imagefile <- paste("foto",id,".jpg",sep="")
+  file.copy(rf(paste("data/bio/all/",oldimagefile,sep="")),rf(paste("data/images/bio/",imagefile,sep='')),overwrite=TRUE) 
   birthplace <- gb((gsub(".* - ","",birth)))
   birthdate <-  as.Date(gb(gsub(" - .*","",birth)),format="%d/%m/%Y")
   sessions <- gb(text.now[grep("Legislaturas:",text.now)[1]])
@@ -67,10 +85,13 @@ get.bio <- function(file.now) {
   ##print(sessions)
   file.now <- gsub(".*/(DepNovos.*)","\\1",file.now)
   parties <- gsub("\t+| +|^ +|^\t+","",parties)
-  mandates <- gsub("\t+| +|^ +|^\t+","",mandates)
+  mandates <- gsub("\t+|^ +|^\t+","",mandates)
   gc()
   data.frame(namelegis=nameshort, name=namelong, party=party, state=state, birthdate, birthplace, legisserved=sessions, prevparties=parties , mandates,bioid=id,biofile=file.now,imagefile)
 }
+## bio.all.list <- lapply(files.list[1:2],get.bio)  
+## bio.all <- do.call(rbind,bio.all.list)
+
 
 ##to download all  (perhaps do this once a week?)
 ##FIX:  we should also look for new legislators every day, so create a comparison between the old and new files
@@ -78,11 +99,12 @@ get.bio <- function(file.now) {
 ## should change this to be used only when not update.all
 ##dir('~/reps/CongressoAberto/data/bio/all/', pattern="DepNovos_Lista*")
 
-index.file <- "../data/bio/all/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim"
-oldfiles <- dir('~/reps/CongressoAberto/data/bio/all',pattern="DepNovos_Detalhe", full.names=TRUE)
+index.file <- rf("data/bio/all/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim")
+
+oldfiles <- dir(rf('data/bio/all'),pattern="DepNovos_Detalhe", full.names=TRUE)
 if (download.now) {
   try(file.remove(index.file))
-  tmp <- system(paste("wget -nd -r -nc -P ../data/bio/all 'http://www.camara.gov.br/internet/deputado/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim' 2>&1",sep=''), intern=TRUE)
+  tmp <- system(paste("wget -nd -r -nc -P ", rf("data/bio/all"), " 'http://www.camara.gov.br/internet/deputado/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim' 2>&1",sep=''), intern=TRUE)  
   newfiles <- dir('~/reps/CongressoAberto/data/bio/all',pattern="DepNovos_Detalhe",full.names=TRUE)
   if (update.all) {
     files.list <- newfiles
@@ -182,7 +204,7 @@ dbSendQuery(connect,"update br_bioidname set state='MG' where (bioid='98291') AN
 dbGetQuery(connect,"select * from  br_bioidname where bioid='98291'")
 
 
-##tatico deputi in both DF and GO
+##tatico deputy in both DF and GO
 dbSendQuery(connect,"update br_bioidname set state='DF' where (bioid='108697') AND (legis=52)")
 dbSendQuery(connect,"update br_bioidname set state='GO' where (bioid='108697') AND (legis=53)")
 dbGetQuery(connect,"select * from  br_bioidname where bioid='108697'")

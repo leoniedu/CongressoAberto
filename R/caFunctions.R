@@ -4,15 +4,30 @@
 ##                    delete relevant rows explicitly
 ##UPDATE summary AS t, (query) AS q SET t.C=q.E, t.D=q.F WHERE t.X=q.X
 
+options(stringsAsFactors=FALSE)
 
-## paths
-rf <- function() {
-  if (.Platform$OS.type!="unix") {
-    "C:/reps/CongressoAberto"
-  } else {
-    "~/reps/CongressoAberto"
+
+notrun <- TRUE
+if (!notrun) {
+
+  ## paths (put on the beg of R scripts)
+  rf <- function(x=NULL) {
+    if (.Platform$OS.type!="unix") {
+      run.from <- "C:/reps/CongressoAberto"
+    } else {
+      run.from <- "~/reps/CongressoAberto"
+    }
+    ## side effect: load functions
+    source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+    if (is.null(x)) {
+      run.from
+    } else {
+      paste(run.from,"/",x,sep='')
+    }
   }
+  
 }
+
 
 
 
@@ -604,7 +619,7 @@ readbill <- function(file) {
 factors2strings <- function(x) data.frame(lapply(x,function(z) {
   if (is.factor(z)) z <- as.character(z)
   z
-}))
+}),stringsAsFactors=FALSE)
 
 
 ##manual fixes
@@ -736,5 +751,71 @@ merge.sp <- function(tmp,data,by="uf") {
   tmp@data <- data.frame(tmp@data,
                          data[match(tmp@data[,by],by.data),]
                          )
+  tmp
+}
+
+
+
+##write a kml file for the vote map
+tokml <- function(sw,file.now,name="NOME_MUNIC",white=FALSE, compress=3) {
+  if (white) sw@data$zCat <- "white"
+  swd <- sw@data
+  xa <- slot(sw, "polygons")
+  out2 <- vector(length=length(xa)*2,mode="list")
+  dim(out2) <- c(2,length(xa))
+  dimnames(out2) <- list(c("style","content"))
+  ##Ordering does not work for display in google maps (but does for g earth)
+  ##FIX: Alphabetical order is screwed up by accents in google maps.
+  j <- 1
+  for (i in order(-sw@data$votes_total)) {
+    x <- xa[[i]]
+    ## FIX: compress?
+    x@Polygons[[1]]@coords <- round(x@Polygons[[1]]@coords,compress)
+    res <- kmlPolygon(x,
+                      name=swd[slot(x, "ID"), name], 
+                      col=as.character(swd[slot(x, "ID"), "zCat"]), 
+                      lwd=0, border=as.character(swd[slot(x, "ID"), "zCat"])
+                      ,description=with(swd[slot(x, "ID"),],
+                         paste("Total: ",votes_total, "; Candidato: ",round(votes/votes_total*100),"%",sep='')
+                         ))
+    out2[[1,j]] <- res[[1]]
+    out2[[2,j]] <- res[[2]]
+    j <- j +1
+  }
+  out <- out2
+  tf <- paste(dir.now,file.now,".kml",sep='')
+  kmlFile <- file(tf, "w")
+  cat(kmlPolygon(kmlname="Eleições 2006", kmldescription="<i>Votos para Presidente, 1o. Turno: Lula</i>")$header, 
+      file=kmlFile, sep="\n")
+  cat(unlist(out["style",]), file=kmlFile, sep="\n")
+  cat(unlist(out["content",]), file=kmlFile, sep="\n")
+  cat(kmlPolygon()$footer, file=kmlFile, sep="\n")
+  close(kmlFile)
+  system(paste("zip -r ",dir.now,file.now,".kmz ",dir.now,file.now,".kml",sep=''))
+  system(paste("scp ",dir.now,file.now,".kmz leoniedu@cluelessresearch.com:files.eduardoleoni.com/",file.now,".kmz",sep=''))
+}
+
+
+## color scales for map
+color.heat <- function(tmp,z,breaks=NULL,reverse=FALSE,col.vec=NULL) {
+  ##Break down the vote proportions
+  if (is.null(breaks)) {
+    breaks=
+      seq(
+          floor(min(tmp@data[,z],na.rm=TRUE)*10)/10
+          ,
+          ceiling(max(tmp@data[,z],na.rm=TRUE)*10)/10
+          ,.1)
+  }
+  tmp@data$zCat <- cut(tmp@data[,z],breaks,include.lowest=TRUE)
+  cutpoints <- levels(tmp@data$zCat)
+  if (is.null(col.vec)) col.vec <- heat.colors(length(levels(tmp@data$zCat)))
+  if (reverse) {
+    cutpointsColors <- rev(col.vec)
+  } else {
+    cutpointsColors <- col.vec
+  }
+  levels(tmp@data$zCat) <- cutpointsColors
+  tmp@data$zCat <- as.character(tmp@data$zCat)
   tmp
 }
