@@ -15,6 +15,7 @@ rf <- function(x=NULL) {
     paste(run.from,"/",x,sep='')
   }
 }
+source(rf("R/mergeapprox.R"))
 run.from <- rf("data/camara/rollcalls")
 
 ##Get current year
