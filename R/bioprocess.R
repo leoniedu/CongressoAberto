@@ -235,3 +235,17 @@ tmp <- unique(tmp)
 dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
              row.names = F, eol = "\r\n" )
 ##dedup.db('br_bioidname')
+
+
+## approx merge is failing to get these guys right
+tmp <- iconv.df(dbGetQuery(connect,"select * from  br_bioidname where bioid='109223'"))
+tmp$name <- 'PAULO PIMENTA'
+tmp <- unique(tmp)
+dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
+             row.names = F, eol = "\r\n" )
+
+tmp <- iconv.df(dbGetQuery(connect,"select * from  br_bioidname where bioid='160419'"))
+tmp$name <- 'PAULO ROBERTO'
+tmp <- unique(tmp)
+dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
+             row.names = F, eol = "\r\n" )

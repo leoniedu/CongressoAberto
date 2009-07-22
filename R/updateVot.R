@@ -1,3 +1,4 @@
+##FIX The process order is changing everytime this is run, which creates the possibility that results will differ due to approx merges.
 ##FIX USe Rcurl instead of system wget?
 ##need var "update.all" set to something
 ##need var "download.now" set to something
@@ -15,7 +16,7 @@ rf <- function(x=NULL) {
     paste(run.from,"/",x,sep='')
   }
 }
-source(rf("R/mergeapprox.R"))
+source(rf("R/mergeApprox.R"))
 run.from <- rf("data/camara/rollcalls")
 
 ##Get current year

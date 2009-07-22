@@ -19,15 +19,29 @@ $tqx = $_GET['tqx'];
 $resHandler = $_GET['responseHandler'];
 
 // Read the data from MySql
-$host  = $_SERVER['HTTP_HOST'];
-$con = mysql_connect($host,"root","e321109");
+$host  = "mysql.cluelessresearch.com";
+$con = mysql_connect($host,"monte","passwd");
 mysql_select_db("DB_Name", $con);
 // $sql = "SELECT distinct state, count(party) as count FROM congressoaberto.br_bio group by state";
+
 if($_GET["form"]=="votes") 
 {
     ##echo $_GET["form"];
-    $sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, a.rc as Voto,   b.billproc as Votacao from congressoaberto.br_votos as a, congressoaberto.br_votacoes as b  where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND a.legis=53 order by Data DESC " ;
+    ##$sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, a.rc as Voto,   b.billproc as Votacao from congressoaberto.br_votos as a, congressoaberto.br_votacoes as b  where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND a.legis=53 order by Data DESC limit 100 " ;
+    $sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, 
+Convert(Convert((b.billproc) using binary) using latin1)  as Votacao,
+Convert(Convert((a.rc) using binary) using latin1) as Voto  from congressoaberto.br_votos as a, congressoaberto.br_votacoes as b  where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND a.legis=53 order by Data DESC limit 30";
 }
+
+if($_GET["form"]=="allvotes") 
+{
+    ##echo $_GET["form"];
+    ##$sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, a.rc as Voto,   b.billproc as Votacao from congressoaberto.br_votos as a, congressoaberto.br_votacoes as b  where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND a.legis=53 order by Data DESC limit 100 " ;
+    $sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, 
+Convert(Convert((b.billproc) using binary) using latin1)  as Votacao,
+Convert(Convert((a.rc) using binary) using latin1) as Voto  from congressoaberto.br_votos as a, congressoaberto.br_votacoes as b  where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND a.legis=53 order by Data DESC" ;
+}
+
 //concat(DAY(b.rcdate),'/',MONTH(b.rcdate),'/',YEAR(b.rcdate)) as year,
 //+MONTH(b.rcdate)+'/'+YEAR(b.rcdate)
 $result = mysql_query($sql);
@@ -40,7 +54,7 @@ $gvJsonObj = new gvStreamerEx();
 if($gvJsonObj->init($tqx, $resHandler) == true);
 {
     //convert the entire query result into the compliant response
-    $gvJsonObj->convertMysqlRes(&$result, "%01.1f", "d/m/Y", "G:i:s","d/m/Y G:i:s");
+    $gvJsonObj->convertMysqlRes($result, "%01.1f", "d/m/Y", "G:i:s","d/m/Y G:i:s");
     $gvJsonObj->setColumnPattern(3,"#0.0########");
 }
 
