@@ -47,27 +47,25 @@ m1$y <- sapply(m1@polygons,function(poly) poly@labpt[2])
 
 
 ## select a state j
-snow <- "BA"
+snow <- "SP"
 
 
 for (snow in states[-c(1:12)]) {
 
+  convert.now <- FALSE
   ## number of seats
-  elected <- dbGetQueryU(connect,paste("select * from br_vote_candidates where  office='DEPUTADO FEDERAL' AND year='2006' AND state='",snow,"' AND sit in ('MÉDIA','ELEITO')",sep=''))
+  elected <- dbGetQueryU(connect,paste("select * from br_vote_candidates where  office='DEPUTADO FEDERAL' AND year='2006' AND state='",snow,"' AND sit in ('MÉDIA','ELEITO')",sep=''),convert=FALSE)
   nseats <- nrow(elected)  
-
-
   ## let's try to plot one deputy
   ## get votes for all candidates in each municip
-  res0 <- dbGetQueryU(connect,paste("select municipality, state, sum(votes) as votes_total from br_vote_mun where  office='DEPUTADO FEDERAL' AND year='2006' AND state='",snow,"' AND elec_round=1 AND (candidate_code not in (95,96))  group by municipality",sep=''))
-
+  res0 <- dbGetQueryU(connect,paste("select municipality, state, sum(votes) as votes_total from br_vote_mun where  office='DEPUTADO FEDERAL' AND year='2006' AND state='",snow,"' AND elec_round=1 AND (candidate_code not in (95,96))  group by municipality",sep=''),convert=FALSE)
   ## all deps in state
   ## with names
-  dep <- dbGetQueryU(connect,paste("select a.*, b.* from br_bioidtse as a, br_bio as b where a.bioid=b.bioid AND a.office='DEPUTADO FEDERAL' AND a.year='2006' AND a.state='",snow,"'",sep=''))  
+  dep <- dbGetQueryU(connect,paste("select a.*, b.* from br_bioidtse as a, br_bio as b where a.bioid=b.bioid AND a.office='DEPUTADO FEDERAL' AND a.year='2006' AND a.state='",snow,"'",sep=''),convert=TRUE)  
   ## table with all deps in state
-  res <- dbGetQueryU(connect,paste("select * from br_vote_mun where office='DEPUTADO FEDERAL' AND year='2006' AND  state='",snow,"'",sep=''))
-  res.it <-  dbGetQueryU(connect,paste("select * from br_bioidtse where office='DEPUTADO FEDERAL' AND year='2006' AND  state='",snow,"'",sep=''))
-  res.mun <-  dbGetQueryU(connect,paste("select * from br_municipios where year='2006' AND  state_tse06='",snow,"'",sep=''))
+  res <- dbGetQueryU(connect,paste("select * from br_vote_mun where office='DEPUTADO FEDERAL' AND year='2006' AND  state='",snow,"'",sep=''),convert=FALSE)
+  res.it <-  dbGetQueryU(connect,paste("select * from br_bioidtse where office='DEPUTADO FEDERAL' AND year='2006' AND  state='",snow,"'",sep=''),convert=TRUE)
+  res.mun <-  dbGetQueryU(connect,paste("select * from br_municipios where year='2006' AND  state_tse06='",snow,"'",sep=''),convert=FALSE)
   res.xy <- subset(m1@data,SIGLA==snow)
   res$municipality <- as.numeric(as.character(res$municipality))
   res.mun$municipalitytse <- as.numeric(as.character(res.mun$municipalitytse))
@@ -91,6 +89,7 @@ for (snow in states[-c(1:12)]) {
   bs <- c(0.01,.025,.05,.1,.2,.3,.5,1)    
   ##plot all
   res.m$`Votos conquistados\nno município (%)` <- round(res.m$vote_prop*100)  
+
   p <- qplot(x,y,colour=`Votos conquistados\nno município (%)`,data=res.m,
              label=municipality_tse06,alpha=I(2/3),
              size=eq,facets=~Nome)+theme_bw()+coord_equal() +
@@ -125,6 +124,7 @@ for (snow in states[-c(1:12)]) {
     print(snow)
     cand <- dep$candidate_code[i]
     fn <- rf(paste("data/images/elections/2006/","deputadofederal",snow,cand,".pdf",sep=""))
+
     pnew <- p+geom_point(aes(x=x,y=y,colour=`Votos conquistados\nno município (%)`,
                              label=municipality_tse06,size=eq),
                          ,alpha=I(2/3),
@@ -142,13 +142,13 @@ for (snow in states[-c(1:12)]) {
                                                   axis.text.x=theme_blank(),
                                                   axis.text.y=theme_blank())+
                                                     scale_x_continuous(name="")+
-                                                      scale_y_continuous(name="")
-    
+                                                      scale_y_continuous(name="")    
     dnow <- subset(res.m,candidate_code==cand)
     pnew <- pnew+scale_colour_continuous(limits=c(0,100))
+    pnew <- pnew+geom_text(mapping=aes(label=municipality_tse06),data=dnow[order(dnow$votes,decreasing=TRUE)[1:min(c(5,nrow(dnow)))],],size=3,vjust=2)
     
     pdf(file=fn,bg="transparent",width=8)      
-    print(pnew+geom_text(mapping=aes(label=municipality_tse06),data=dnow[order(dnow$votes,decreasing=TRUE)[1:min(c(5,nrow(dnow)))],],size=3,vjust=2))    
+    print(pnew)    
     dev.off()
     
     system(paste("convert -density 400x400 -resize 500x500 -quality 90 ", fn," ",gsub(".pdf",".png",fn)),wait=TRUE)
@@ -158,8 +158,43 @@ for (snow in states[-c(1:12)]) {
 }
 
 
+jencode <- function(x) gsub("'"," ",as.character(x))
+wktloc <- function(df,id="geocodig_m",lon="x",lat="y") {
+  c("var wkt_f = new OpenLayers.Format.WKT();",ddply(df,id,function(x) data.frame(loc=paste("var ",id,x[id]," = wkt_f.read('POINT(",x[lon]," ",x[lat],")');",sep='')))[,2])
+}
+
+wktloc <- function(df,id="geocodig_m",lon="x",lat="y") {
+  res <- as.vector(apply(df,1,function(x) paste("var ",id,x[id]," = wkt_f.read('POINT(",x[lon]," ",x[lat],")');",sep='')))
+  c("var wkt_f = new OpenLayers.Format.WKT();",
+    res)
+}
 
 
+wktdata <- function(df,id="geocodig_m",vars=c("municipality_ibge07","state_tse06"),layer="Votos") {
+  res <- ddply(df,id,
+               function(x)
+               data.frame(lab=paste(id,x[id],".data = {",paste("'",vars,"'",": '",jencode(x[vars]),"'",collapse=",",sep=''),"};",sep='')))[,2]
+  c(paste("var lon = ",median(dnow$x),";",sep=""),
+    paste("var lat = ",median(dnow$y),";",sep=""),
+    paste('var feature_layer = new OpenLayers.Layer.Vector("',layer,'");',sep=''),
+    res)
+}
+wktadd <- function(df,id="geocodig_m") {
+  ddply(df,id,
+        function(x)
+        data.frame(lab=paste("feature_layer.addFeatures([",id,x[id],"]);",sep="")))[,2]
+}
+
+
+dnow <- subset(res.m,bioid==96819)
+dnow$label <- dnow$municipality_ibge07
+dnow$value <- round(dnow$votes)
+dnow <- dnow[order(-dnow$value),]
+dnow$id <- 1:nrow(dnow)
+cat(wktloc(dnow,id="id"),file="~/Sites/maps/dataLoc.js",sep="\n")
+cat(wktdata(dnow,vars=c("value","label"),layer=dnow[1,"namelegis"],id="id"),file="~/Sites/maps/dataValue.js",sep="\n")
+cat(iconv(wktdata(dnow,vars=c("value","label"),layer=dnow[1,"namelegis"],id="id"),from="utf8",to="latin1"),file="~/Sites/maps/dataValue.js",sep="\n")
+cat(wktadd(dnow,id="id"),file="~/Sites/maps/dataAdd.js",sep="\n")
 
 
 
