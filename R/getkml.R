@@ -8,7 +8,7 @@ rf <- function(x=NULL) {
     run.from <- "~/reps/CongressoAberto"
   }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""))
+  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
   if (is.null(x)) {
     run.from
   } else {
@@ -17,7 +17,7 @@ rf <- function(x=NULL) {
 }
 
 setwd(rf())
-source(rf("R/ggShape.R"))
+usource(rf("R/ggShape.R"))
 
 
 
@@ -90,6 +90,9 @@ for (snow in states[-c(1:12)]) {
   ##plot all
   res.m$`Votos conquistados\nno município (%)` <- round(res.m$vote_prop*100)  
 
+
+
+  
   p <- qplot(x,y,colour=`Votos conquistados\nno município (%)`,data=res.m,
              label=municipality_tse06,alpha=I(2/3),
              size=eq,facets=~Nome)+theme_bw()+coord_equal() +
@@ -160,42 +163,68 @@ for (snow in states[-c(1:12)]) {
 
 jencode <- function(x) gsub("'"," ",as.character(x))
 wktloc <- function(df,id="geocodig_m",lon="x",lat="y") {
-  c("var wkt_f = new OpenLayers.Format.WKT();",ddply(df,id,function(x) data.frame(loc=paste("var ",id,x[id]," = wkt_f.read('POINT(",x[lon]," ",x[lat],")');",sep='')))[,2])
-}
-
-wktloc <- function(df,id="geocodig_m",lon="x",lat="y") {
   res <- as.vector(apply(df,1,function(x) paste("var ",id,x[id]," = wkt_f.read('POINT(",x[lon]," ",x[lat],")');",sep='')))
   c("var wkt_f = new OpenLayers.Format.WKT();",
     res)
 }
-
-
 wktdata <- function(df,id="geocodig_m",vars=c("municipality_ibge07","state_tse06"),layer="Votos") {
-  res <- ddply(df,id,
+  res <- as.vector(apply(df,1,
                function(x)
-               data.frame(lab=paste(id,x[id],".data = {",paste("'",vars,"'",": '",jencode(x[vars]),"'",collapse=",",sep=''),"};",sep='')))[,2]
-  c(paste("var lon = ",median(dnow$x),";",sep=""),
-    paste("var lat = ",median(dnow$y),";",sep=""),
+                         paste(id,x[id],".data = {",paste("'",vars,"'",": '",jencode(x[vars]),"'",collapse=",",sep=''),"};",sep='')))
+  c(paste("var lon = ",median(df$x),";",sep=""),
+    paste("var lat = ",median(df$y),";",sep=""),
     paste('var feature_layer = new OpenLayers.Layer.Vector("',layer,'");',sep=''),
     res)
 }
 wktadd <- function(df,id="geocodig_m") {
-  ddply(df,id,
-        function(x)
-        data.frame(lab=paste("feature_layer.addFeatures([",id,x[id],"]);",sep="")))[,2]
+  as.vector(apply(df,1,
+                  function(x)
+                  paste("feature_layer.addFeatures([",id,x[id],"]);",sep="")))
 }
 
 
-dnow <- subset(res.m,bioid==96819)
-dnow$label <- dnow$municipality_ibge07
-dnow$value <- round(dnow$votes)
-dnow <- dnow[order(-dnow$value),]
-dnow$id <- 1:nrow(dnow)
-cat(wktloc(dnow,id="id"),file="~/Sites/maps/dataLoc.js",sep="\n")
-cat(wktdata(dnow,vars=c("value","label"),layer=dnow[1,"namelegis"],id="id"),file="~/Sites/maps/dataValue.js",sep="\n")
-cat(iconv(wktdata(dnow,vars=c("value","label"),layer=dnow[1,"namelegis"],id="id"),from="utf8",to="latin1"),file="~/Sites/maps/dataValue.js",sep="\n")
-cat(wktadd(dnow,id="id"),file="~/Sites/maps/dataAdd.js",sep="\n")
+## get mun data
+res.mun <-  dbGetQueryU(connect,paste("select * from br_municipios where year='2006'",sep=''),convert=FALSE)
+res.mun <- merge(res.mun,m1@data,by.x="geocodig_m",by.y="GEOCODIG_M")
 
+## tmp0 <- subset(res.mun,state_tse06=="BA")[1:10,]
+## res <- list()
+## for (i in 1:nrow(tmp0)) {
+##   print(i)
+##   res[[i]] <- GNsearch(name=tmp0$municipality_ibge07[i], country="BR",featureCode="PPL")
+## }  
+
+
+
+## get votes and bio data
+
+
+##write
+
+write.wktdata <- function(bioid) {
+  ## Fix: Create state level files, so we the browser can cache the files more often
+  fn <- function(z) rf(paste("data/maps/eleicao2006/data",z,bioid,".js",sep=''))
+  dep <- dbGetQueryU(connect,paste("select a.*, b.* from br_bioidtse as a, br_bio as b where a.bioid=b.bioid AND a.bioid=",bioid," AND a.office='DEPUTADO FEDERAL' AND a.year='2006'",sep=''),convert=TRUE)
+  snow <- dep$state[1]
+  res <- dbGetQueryU(connect,paste("select * from br_vote_mun where office='DEPUTADO FEDERAL' AND year='2006' AND candidate_code=",dep$candidate_code[1]," AND  state='",snow,"'",sep=''),convert=FALSE)
+  ##merge
+  dnow <- merge(res,res.mun,by.x="municipality",by.y="municipalitytse")
+  if (nrow(dnow)!=nrow(res)) stop("problem!")
+  dnow$label <- dnow$municipality_ibge07
+  dnow$value <- round(dnow$votes)
+  dnow <- dnow[order(-dnow$value),]
+  idnow <- "geocodig_m"
+  ##cat(wktloc(dnow,id=idnow),file=rf(paste("data/maps/eleicao2006/dataLoc",snow,".js",sep='')),sep="\n")
+  cat(wktloc(dnow,id=idnow),file=fn("Loc"),sep="\n")
+  cat(wktdata(dnow,vars=c("value","label"),layer=dep$namelegis,id=idnow),file=fn("Value"),sep="\n")
+  ##cat(iconv(wktdata(dnow,vars=c("value","label"),layer=dnow[1,"namelegis"],id=idnow),from="utf8",to="latin1"),file="~/Sites/maps/dataValue.js",sep="\n")
+  cat(wktadd(dnow,id=idnow),file=fn("Add"),sep="\n")
+}
+
+write.wktdata(96819)
+
+
+lapply(c(104014,159708,96734,108355,96819),write.wktdata)
 
 
 

@@ -5,7 +5,7 @@ rf <- function(x=NULL) {
     run.from <- "~/reps/CongressoAberto"
   }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""))
+  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
   if (is.null(x)) {
     run.from
   } else {

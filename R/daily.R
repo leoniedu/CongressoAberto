@@ -1,5 +1,4 @@
 ## daily cron job for R
-
 download.now <- TRUE
 update.all <- FALSE
 rf <- function(x=NULL) {
@@ -16,5 +15,6 @@ rf <- function(x=NULL) {
     paste(run.from,"/",x,sep='')
   }
 }
-
-source(rf("R/updateVot.R"),echo=TRUE)
+rf()
+usource(rf("R/updateVot.R"),echo=TRUE)
+##usource(rf("R/deputados.R"),echo=TRUE)

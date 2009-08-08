@@ -1,3 +1,5 @@
+## Needs session.now. set to "QQ" if downloading all sessions/legislaturas
+
 ##FIX: This uses too much memory. Any way to break down the analysis into chuncks? Or to make it more efficient memorywise?
 
 ##FIX: Download pics or not?
@@ -19,7 +21,7 @@ rf <- function(x=NULL) {
     run.from <- "~/reps/CongressoAberto"
   }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""))
+  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
   if (is.null(x)) {
     run.from
   } else {
@@ -99,17 +101,28 @@ get.bio <- function(file.now) {
 ## should change this to be used only when not update.all
 ##dir('~/reps/CongressoAberto/data/bio/all/', pattern="DepNovos_Lista*")
 
-index.file <- rf("data/bio/all/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim")
+
+index.url <- paste("DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=",session.now,"&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim",sep="")
+index.file <- rf(paste("data/bio/all/",index.url,sep=""))
+
 
 oldfiles <- dir(rf('data/bio/all'),pattern="DepNovos_Detalhe", full.names=TRUE)
 if (download.now) {
   try(file.remove(index.file))
-  tmp <- system(paste("wget -nd -r -nc -P ", rf("data/bio/all"), " 'http://www.camara.gov.br/internet/deputado/DepNovos_Lista.asp?fMode=1&forma=lista&SX=QQ&Legislatura=QQ&nome=&Partido=QQ&ordem=nome&condic=QQ&UF=QQ&Todos=sim' 2>&1",sep=''), intern=TRUE)  
+  ## -nd put in same directory. this doesnt work because it implies -nc (rename files to .1,.2, etc)
+  ## -nH --cut-dirs=2 takes out the directories
+  ## -r recursive
+  ## -P directory path to put files
+  ## -R pattern : reject files matching pattern
+  tmp <- system(paste("wget -nH --cut-dirs=2 -r -l 1 -A \"DepNovos_*\" -R \"*foto.asp*\" -P ", rf("data/bio/all"), " 'http://www.camara.gov.br/internet/deputado/",index.url,"' 2>&1",sep=''), intern=TRUE)
   newfiles <- dir('~/reps/CongressoAberto/data/bio/all',pattern="DepNovos_Detalhe",full.names=TRUE)
   if (update.all) {
     files.list <- newfiles
   }  else {
+    fi <- file.info(newfiles)
     files.list <- setdiff(newfiles, oldfiles)
+    ## update the bioids updated in the last week as well
+    files.list <- unique(c(files.list,newfiles[(as.Date(fi$mtime)>Sys.Date()-7)]))
   }
 }
 
@@ -146,8 +159,10 @@ if (length(files.list)>0) {
                             ##state,
                             legisserved))
   idname <- merge(idname,data.legis)
+  idname <- unique(idname)
   
   bio.all <- merge(subset(bio.all,select=-state),data.legis)##,by="bioid")
+
   
   ##FIX: This could be faster by creating just the legis vector and duplicating
   ## the rows of bio
@@ -161,7 +176,8 @@ if (length(files.list)>0) {
                                     legis=get.legis.n(legisserved)
                                     )
                        ),
-                  .progress="text") 
+                  .progress="text")
+  
   
   idname <- with(idname,rbind(
                               data.frame(bioid,name=as.character(name),state,legis),
@@ -170,12 +186,6 @@ if (length(files.list)>0) {
                  )
   
   idname <- unique(idname)
-  
-  ##idname$id <- "" ## Why did I put this here????
-  if (update.all) {
-    save(idname,file="~/reps/CongressoAberto/data/idname.RData")
-    save(bio.all,file="~/reps/CongressoAberto/data/bio.all.RData")
-  }
 }
   
 connect.db()
@@ -188,7 +198,17 @@ connect.db()
 
 ##write tables
 dbWriteTableU(connect, "br_bioidname", idname, append=TRUE)
+
+## upsert the values.
+## write ids to tmp table
+dbRemoveTable(connect,"tmp")
+dbWriteTableU(connect,"tmp",data.frame(bioid=bio.all$bioid))
+
+## first delete the bioids to be updated
+dbGetQuery(connect,"delete from br_bio where bioid in (select bioid from tmp)")
+## then send the rows
 dbWriteTableU(connect, "br_bio", bio.all, append=TRUE)
+
 
 
 

@@ -32,7 +32,7 @@ updatedBy=bioprocess.R
 '
 ;
 
---PARTITION BY HASH( YEAR(hired) )
+-- PARTITION BY HASH( YEAR(hired) )
 -- ALTER TABLE br_bio ADD INDEX (columns_to_index)
 
 DROP TABLE IF EXISTS `br_bioidname`;
@@ -76,8 +76,8 @@ CREATE TABLE  `br_votos` (
     ) 
 -- ENGINE=InnoDB 
 DEFAULT CHARSET=utf8 COMMENT=''
-PARTITION BY HASH(legis)
-PARTITIONS 6
+-- PARTITION BY HASH(legis)
+-- PARTITIONS 6
 ;
 alter table br_votos add key rcfile_index(rcfile);
 
@@ -103,19 +103,6 @@ CREATE TABLE  `br_votacoes` (
 ;
 alter table br_votacoes add key legis_index(legis);
 
-  res <- try(data.frame(## billtype=f(sigla), ##FIX GET FROM FILE
-                        ## billno=f(numero),
-                        ## billyear=f(ano),
-                        billid=f(propno),
-                        author=f(author),
-                        date=f(date),
-                        aprec=f(aprec),
-                        tramit=f(tramit),
-                        status=f(status),
-                        ementa=f(ementa),
-                        ementashort=f(ementashort),
-                        indexa=f(indexa),
-                        stringsAsFactors=FALSE))
 
 DROP TABLE IF EXISTS `br_billid`;
 CREATE TABLE  `br_billid` (
@@ -123,7 +110,7 @@ CREATE TABLE  `br_billid` (
     `billno` int,
     `billtype` varchar(10),
     `billid` int,
-    `billurl` varchar(100),
+    --    `billurl` varchar(100),
     PRIMARY KEY  (`billtype`,`billyear`,`billno`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ;
@@ -131,23 +118,67 @@ CREATE TABLE  `br_billid` (
 
 DROP TABLE IF EXISTS `br_bills`;
 CREATE TABLE  `br_bills` (
-    `session` varchar(9), 
+    -- `session` varchar(9), 
     `billyear` int,
     `billauthor` varchar(100),
+    `billauthorid` int,
     `billdate` varchar(10),
     `billno` int,
+    `billid` int,
+    `propno` int,
     `billtype` varchar(10),
-    `legis` int,
+    --    `legis` int,
     `aprec` text,
     `tramit` text,
     `status` text,    
     `ementa` text,
     `ementashort` text,
     `indexa` text,
-    `url` varchar(100),
+    `lastaction` text,
+    `lastactiondate` text,
     PRIMARY KEY  (`billtype`,`billyear`,`billno`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ;
+
+
+
+ -- Table with the current deputies name and address information 
+DROP TABLE IF EXISTS `br_deputados_current`;
+CREATE TABLE IF NOT EXISTS `br_deputados_current` (
+  `namelegis` varchar(100),
+  `party` varchar(10),
+  `state` varchar(2),
+  `type` varchar(1),
+  `address` varchar(50),
+  `building` varchar(11),
+  `address2` varchar(50),
+  `office` varchar(10),
+  `address3` varchar(50),
+  `phone` varchar(20),
+  `fax` varchar(20),
+  `birthmonth` int(2) default NULL,
+  `birthdate` int(2) default NULL,
+  `mailaddress` varchar(100),
+  `namelegisclean` varchar(100),
+  `title` varchar(50),
+  `profession` varchar(200),
+  `name` varchar(100),
+  `loaddate` varchar(10),
+  --   PRIMARY KEY (`name`,`party`,`state`,`address`,`building`,`address2`,`office`	,`address3`,`phone`,`fax`,`birthmonth`,`birthdate`,`mailaddress`,`title`,`profession`)
+  PRIMARY KEY (`name`,`party`,`state`,`loaddate`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `br_bioidtse`;	
+CREATE TABLE IF NOT EXISTS `br_bioidtse` (
+  `state` varchar(2),
+  `candidate_code` int(10),
+  `bioid` int(10) default NULL,
+  `year` int(4) default NULL,
+  `office` varchar(30),
+  PRIMARY KEY (`candidate_code`,`state`,`year`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  
 
 
 
@@ -191,6 +222,31 @@ CREATE TABLE  `br_vote_parties` (
     `year` int(11) NOT NULL DEFAULT '0',
     PRIMARY KEY (`party`,`year`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

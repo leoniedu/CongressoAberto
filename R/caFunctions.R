@@ -3,12 +3,14 @@
 ##                    write a function that creates a new temp table and updates from there with a join 
 ##                    delete relevant rows explicitly
 ##UPDATE summary AS t, (query) AS q SET t.C=q.E, t.D=q.F WHERE t.X=q.X
+tmptable <- function() gsub("/","",tempfile("table",tmpdir=""))
+
+usource <- function(...) source(...,encoding="utf8")
 
 options(stringsAsFactors=FALSE)
 
-notrun <- TRUE
-if (!notrun) {
-
+run <- FALSE
+if (run) {
   ## paths (put on the beg of R scripts)
   rf <- function(x=NULL) {
     if (.Platform$OS.type!="unix") {
@@ -24,7 +26,6 @@ if (!notrun) {
       paste(run.from,"/",x,sep='')
     }
   }
-  
 }
 
 
@@ -184,7 +185,26 @@ dbWriteTableU <- function(conn,name,value,convert=FALSE,...) {
   dbWriteTable(conn, name, value,...,row.names = FALSE, eol = "\r\n")
 }
 
-dbReadTableU <- function(conn,name,...,convert=dbConvert(conn)) {
+
+## check to see if charset conversion is needed
+dbConvert <- function(connect) {
+  a <- data.frame(word="MaçãMAÇÓES")
+  tmp <- tmptable()
+  dbGetQuery(connect, paste("drop table if exists ", tmp))
+  dbWriteTable(connect, tmp, a)
+  if ((dbReadTable(connect, tmp)==a)[1]) {
+    res <- FALSE
+  } else {
+    res <- TRUE
+  }
+  dbGetQuery(connect, paste("drop table if exists ", tmp))
+  res
+}
+
+dbReadTableU <- function(conn,name,...,
+                         ##convert=FALSE
+                         convert=dbConvert(conn)
+                         ) {
   df <- dbReadTable(conn, name,...)
   if (convert) {
     df <- iconv.df(df)
@@ -192,20 +212,11 @@ dbReadTableU <- function(conn,name,...,convert=dbConvert(conn)) {
   df
 }
 
-## check to see if charset conversion is needed
-dbConvert <- function(connect) {
-  a <- data.frame(word="MaçãMAÇÓES")
-  dbSendQuery(connect, "drop table if exists tmp")
-  dbWriteTable(connect, "tmp", a)
-  if ((dbReadTable(connect, "tmp")==a)[1]) {
-    FALSE
-  } else {
-    TRUE
-  }
-}
 
-
-dbGetQueryU <- function(conn,statement,...,convert=dbConvert(conn)) {
+dbGetQueryU <- function(conn,statement,...,
+                        ##convert=FALSE
+                        convert=dbConvert(conn)
+                        ) {
   df <- dbGetQuery(conn, statement,...)
   if (convert) {
     df <- iconv.df(df)
@@ -263,7 +274,7 @@ readOne <- function(LVfile,post=FALSE) {
   data.votos$rc <- gsub("^Art.*","Abstenção",as.character(data.votos$rc))
   data.votos$legis <- data.votacoes$legis[1]
   if (!post) {
-    list(data.votos=data.votos,data.votacoes=data.votacoes)    
+    return(list(data.votos=data.votos,data.votacoes=data.votacoes))
   } else {
     connect.db()
     session.now <- as.character(data.votacoes$legis[1])
@@ -279,12 +290,13 @@ readOne <- function(LVfile,post=FALSE) {
     } else {
       tomatch <- data.votos
     }
+    ## Remove deputies without state
+    tomatch.nostate <- subset(tomatch,is.na(state))
+    tomatch <- subset(tomatch,!is.na(state))
     ##try to find the bioid for new deps
-    if (nrow(tomatch)>0) {
-      idname$namelegis <- idname$name
-      ##browser()
-      res <- merge.approx(states,idname,
-                          tomatch,"state","namelegis")
+    idname$namelegis <- idname$name
+    res <- res.nostate <- NULL
+    check <- function(res,tomatch) {
       ##might have multiple matches. We discard if the 
       ##tripple (id,bioid, session) is still unique
       res <- unique(with(res,data.frame(bioid,id,legis)))
@@ -296,18 +308,31 @@ readOne <- function(LVfile,post=FALSE) {
         print(res[with(res,bioid%in%bioid[which(duplicated(bioid))]),])
         stop("Some ids are duplicated ")
       }
-      ##write new matches to db
-      dbWriteTableU(connect, "br_idbioid",res,append=TRUE)
+      res
     }
-    ## read table again
-    ids <- dbReadTableU(connect,"br_idbioid")
-    data.votos <- merge(data.votos,ids,by=c("id","legis"),all.x=TRUE)
-    if (sum(is.na(data.votos$bioid))>0) stop("there are missing ids")
-    dbWriteTableU(connect, "br_votos",data.votos, append=TRUE)
-    dbWriteTableU(connect, "br_votacoes",data.votacoes, append=TRUE)
+    if (nrow(tomatch)>0) {
+      ##browser()
+      res <- merge.approx(states,idname,
+                          tomatch,"state","namelegis")
+      res <- check(res,tomatch)
+    }
+    ## does this actually happen?
+    if (nrow(tomatch.nostate)>0) {
+      res.nostate <- merge.one(idname,tomatch.nostate,"namelegis",maxd=0.2)
+      res.nostate <- check(res.nostate,tomatch.nostate)
+    }
+    res <- unique(rbind(res,res.nostate))
+    ##write new matches to db
+    if (!is.null(nrow(res))) dbWriteTableU(connect, "br_idbioid",res,append=TRUE)
   }
+  ## read table again
+  ids <- dbReadTableU(connect,"br_idbioid")
+  data.votos <- merge(data.votos,ids,by=c("id","legis"),all.x=TRUE)
+  if (sum(is.na(data.votos$bioid))>0) stop("there are missing ids")
+  dbWriteTableU(connect, "br_votos",data.votos, append=TRUE)
+  dbWriteTableU(connect, "br_votacoes",data.votacoes, append=TRUE)
 }
-
+##readOne(LVfile,post=TRUE)
   
 ## write.csv(LV,file=paste(gsub("txt$","csv",LVfile,ignore.case=TRUE)),row.names = FALSE) #save fil 
 ## write.csv(HE,file=paste(gsub("txt$","csv",HEfile,ignore.case=TRUE)),row.names = FALSE)
@@ -423,8 +448,13 @@ get.legis <- function(x) {
   vec
 }
 
-##given a legislatura (e.g. 1991-1995) returns the legislaturan number (49)
+##given a legislatura (e.g. 1991-1995) returns the legislatura number (49)
 get.legis.n <- function(x) get.legis(as.numeric(substr(strsplit(as.character(x), ",")[[1]], 1, 4)))
+
+##given a legislatura number (49) returns the first legis year
+get.legis.year <- function(x=49) {
+  1795+x*4
+}
 
 ## recast votos
 get.votos <- function(data.votos) {
@@ -516,15 +546,18 @@ getbill <- function(sigla="MPV",numero=447,ano=2008,overwrite=TRUE, deletefirst=
   ## -N for overwriting, -nc for not overwriting
   ##tmp <- system(paste("wget -r -l1 -t 15  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/www.camara.gov.br/sileg  2>&1",sep=''),intern=TRUE)
   ##if (deletefirst)   unlink(paste("~/reps/data/", billurl, sep=''))
-  tmp <- system(paste("wget -r -l2 -t 15 --force-html --base=url  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/  2>&1",sep=''),intern=TRUE)
+  tmp <- system(paste("wget -r -l1 -t 15 --force-html --base=url  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/  2>&1",sep=''),intern=TRUE)
   tmp <- iconv(tmp,from="latin1")
-  links <- 
-  url <- gsub(".*`.*(www.camara.gov.br.*)'.*","\\1",tmp[length(tmp)-1])
-  id <- gsub(".*id=(.*)", "\\1", url)
+  urlloc <- grep(".*www.camara.gov.br/sileg/.*id=.*",tmp)[1]
+  ##url <- Prop_Detalhe.asp?id=
+  ##id <- gsub(".*id=(.*)", "\\1", url)
+  url <- tmp[urlloc]
+  id <- gsub(".*id=([0-9]*).*", "\\1", url)
   if (length(grep("id=", url))==0) {
     id <- NA
   }
-  c(url, id)
+  ##c(url, id)
+  id
 }
 
 ##http://www.camara.gov.br/sileg/MostrarIntegra.asp?CodTeor=83624
@@ -597,9 +630,9 @@ readbill <- function(file) {
                         ## billno=f(numero),
                         ## billyear=f(ano),
                         propno=f(propno),
-                        author=f(author),
-                        authorid=f(authorid),
-                        date=f(date),
+                        billauthor=f(author),
+                        billauthorid=f(authorid),
+                        billdate=f(date),
                         aprec=f(aprec),
                         tramit=f(tramit),
                         status=f(status),
@@ -756,7 +789,7 @@ merge.sp <- function(tmp,data,by="uf") {
 
 
 ##write a kml file for the vote map
-tokml <- function(sw,file.now,name="NOME_MUNIC",white=FALSE, compress=3) {
+tokml <- function(sw,file.now,dir.now="",name="NOME_MUNIC",white=FALSE, compress=3,order=FALSE) {
   if (white) sw@data$zCat <- "white"
   swd <- sw@data
   xa <- slot(sw, "polygons")
@@ -766,7 +799,12 @@ tokml <- function(sw,file.now,name="NOME_MUNIC",white=FALSE, compress=3) {
   ##Ordering does not work for display in google maps (but does for g earth)
   ##FIX: Alphabetical order is screwed up by accents in google maps.
   j <- 1
-  for (i in order(-sw@data$votes_total)) {
+  if (order) {
+    ov <- order(-sw@data$votes_total)
+    } else {
+      ov <- 1:nrow(swd)
+    }
+  for (i in ov) {
     x <- xa[[i]]
     ## FIX: compress?
     x@Polygons[[1]]@coords <- round(x@Polygons[[1]]@coords,compress)
@@ -775,7 +813,8 @@ tokml <- function(sw,file.now,name="NOME_MUNIC",white=FALSE, compress=3) {
                       col=as.character(swd[slot(x, "ID"), "zCat"]), 
                       lwd=0, border=as.character(swd[slot(x, "ID"), "zCat"])
                       ,description=with(swd[slot(x, "ID"),],
-                         paste("Total: ",votes_total, "; Candidato: ",round(votes/votes_total*100),"%",sep='')
+                         ##paste("Total: ",votes_total, "; Candidato: ",round(votes/votes_total*100),"%",sep='')
+                         "HERe"
                          ))
     out2[[1,j]] <- res[[1]]
     out2[[2,j]] <- res[[2]]
@@ -790,6 +829,7 @@ tokml <- function(sw,file.now,name="NOME_MUNIC",white=FALSE, compress=3) {
   cat(unlist(out["content",]), file=kmlFile, sep="\n")
   cat(kmlPolygon()$footer, file=kmlFile, sep="\n")
   close(kmlFile)
+  system(paste("scp ",dir.now,file.now,".kml leoniedu@cluelessresearch.com:files.eduardoleoni.com/",file.now,".kml",sep=''))
   system(paste("zip -r ",dir.now,file.now,".kmz ",dir.now,file.now,".kml",sep=''))
   system(paste("scp ",dir.now,file.now,".kmz leoniedu@cluelessresearch.com:files.eduardoleoni.com/",file.now,".kmz",sep=''))
 }

@@ -1,3 +1,5 @@
+## produces the kml file for google maps for each candidate
+## to start we get those with bioids
 rf <- function(x=NULL) {
   if (.Platform$OS.type!="unix") {
     run.from <- "C:/reps/CongressoAberto"
@@ -5,41 +7,48 @@ rf <- function(x=NULL) {
     run.from <- "~/reps/CongressoAberto"
   }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""))
+  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
   if (is.null(x)) {
     run.from
   } else {
     paste(run.from,"/",x,sep='')
   }
 }
-rf()
+setwd(rf())
 
 ## FIX: 1st load SQL script to create tables
 
 ## R scripts
 update.all <- TRUE
-##download.now <- TRUE
+##update.all <- FALSE
+##download.now <- FALSE
 download.now <- TRUE
 
-## bio tables
-source(rf("R/bioprocess.R"), echo=TRUE)
+## bio tables (weekly?)
+session.now <- "QQ" ## download all files for all sessions
+##session.now <- 53
 
-##  roll call tables
-source("updateVot.R", echo=TRUE)
+usource(rf("R/bioprocess.R"), echo=TRUE)
 
-## update ausencias for pre 1999 data
-source(rf("R/abstentions.R"), echo=TRUE)
+## get bioid for TSE file (when new deps assume office) 
+usource(rf("R/biotse.R"),echo=TRUE)
 
-## bill info from Camara download 
-source("downloadbills.R", echo=TRUE)
+##  roll call tables (daily)
+usource(rf("R/updateVot.R"), echo=TRUE)
 
-## bill info from Camara process
-source("processbills.R", echo=TRUE)
+## update ausencias for pre 1999 data (once)
+usource(rf("R/abstentions.R"), echo=TRUE)
+
+## bill info from Camara download  (daily)
+usource(rf("downloadbills.R"), echo=TRUE)
+
+## bill info from Camara process (daily)
+usource("processbills.R", echo=TRUE)
+
 
 ## election tables
-
-## electoral finance tables
-source("/Users/eduardo/reps/CongressoAberto/R/br_contribAssemble.R",echo=TRUE,encoding="latin1")
+## electoral finance tables (by election)
+##usource("/Users/eduardo/reps/CongressoAberto/R/br_contribAssemble.R",echo=TRUE,encoding="latin1")
 
 ## post legislators to wp db (finance,  rcs,  bio, bills)
 

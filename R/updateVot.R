@@ -9,24 +9,41 @@ rf <- function(x=NULL) {
     run.from <- "~/reps/CongressoAberto"
   }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="UTF8")
+  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
   if (is.null(x)) {
     run.from
   } else {
     paste(run.from,"/",x,sep='')
   }
 }
-source(rf("R/mergeApprox.R"))
 run.from <- rf("data/camara/rollcalls")
+usource(rf("R/mergeApprox.R"))
 
 ##Get current year
 current.year <- format(Sys.time(), "%Y")
+
+## get file names for current and past month
 years <- 1995:current.year
+meses <- as.list(c("Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"))
+meses[[3]] <- c("Marco","Mar%C3%A7o")
+
+current.date <- as.Date(Sys.time())
+last.date <- as.Date(Sys.time())-30
+current.file <- paste(meses[as.numeric(format(current.date, "%m"))],
+                      format(current.date, "%y"),sep='')
+last.file <- paste(meses[as.numeric(format(last.date, "%m"))],
+                   format(last.date, "%y"),sep='')
 
 ##list of files to download
 years.f <- ifelse(years>1998,substr(years,3,4),years)
-zip.files <- apply(expand.grid(c("Janeiro","Fevereiro","Marco","Mar%C3%A7o","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"),years.f),1,paste,collapse="")
-zip.files <- unique(c(zip.files,c("Janeiro1999","1slo51l","2sle51l","2slo51l","4sle51l","3slo51l")))
+
+if (update.all) {
+  zip.files <- c("Janeiro1999","1slo51l","2sle51l","2slo51l","4sle51l","3slo51l")
+  zip.files <- unique(c(zip.files,apply(expand.grid(unlist(meses),years.f),1,paste,collapse="")))
+}  else {
+  zip.files <- c(current.file,last.file)
+}
+
 try(dir.create(paste(run.from,"/extracted",sep=""),recursive=TRUE)  )
 setwd(run.from)
 
@@ -60,15 +77,20 @@ if(length(SFfiles)>0){file.remove(SFfiles)} #Get rid of SENADO files, if they we
 unlink('*CD01E028O001905.TXT') ## Duplicated vote file LVCD01E028O001905 and LVCD01E028E001905
 new.LVfiles<- dir(pattern="LV.*txt$",ignore.case=TRUE)
 votes <- setdiff(new.LVfiles,old.LVfiles) #compare new files with old to flag recently downloaded
+## FIX: use file information to get what files recently modified.
 
+
+## load twitter user passwd
 if (update.all) votes <- new.LVfiles
 nvotes <- length(votes)
 file.table <- cbind(votes,gsub("^LV","HE",votes))
 if (nvotes>0) {
-  for(LVfile in votes[1:nvotes]) {  #for each new vote, create two new files
+  for(LVfile in votes[1625:nvotes]) {  #for each new vote, create two new files
     print(LVfile)
     ##Read data from VOTE LIST file for the vote
     readOne(LVfile,post=TRUE)
     ##dedup.db('br_votos')
-  }  
+  }
+  ## FIX: perhaps better to do a diff on the database itself?
 }
+
