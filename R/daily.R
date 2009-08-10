@@ -17,4 +17,4 @@ rf <- function(x=NULL) {
 }
 rf()
 usource(rf("R/updateVot.R"),echo=TRUE)
-##usource(rf("R/deputados.R"),echo=TRUE)
+usource(rf("R/deputados.R"),echo=TRUE)

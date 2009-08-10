@@ -141,10 +141,9 @@ CREATE TABLE  `br_bills` (
 ;
 
 
-
- -- Table with the current deputies name and address information 
-DROP TABLE IF EXISTS `br_deputados_current`;
-CREATE TABLE IF NOT EXISTS `br_deputados_current` (
+-- table to hold all deputados
+DROP TABLE IF EXISTS `br_deputados`;
+CREATE TABLE IF NOT EXISTS `br_deputados` (
   `namelegis` varchar(100),
   `party` varchar(10),
   `state` varchar(2),
@@ -164,10 +163,20 @@ CREATE TABLE IF NOT EXISTS `br_deputados_current` (
   `profession` varchar(200),
   `name` varchar(100),
   `loaddate` varchar(10),
+  `bioid` int(10)	 
   --   PRIMARY KEY (`name`,`party`,`state`,`address`,`building`,`address2`,`office`	,`address3`,`phone`,`fax`,`birthmonth`,`birthdate`,`mailaddress`,`title`,`profession`)
-  PRIMARY KEY (`name`,`party`,`state`,`loaddate`)
+  --  PRIMARY KEY (`name`,`party`,`state`,`bioid`)	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ -- Table with the current deputies
+DROP TABLE IF EXISTS `br_deputados_current`;
+CREATE TABLE br_deputados_current like br_deputados;	 
+
+
+-- add primary indexes to br_deputados tables
+alter table br_deputados_current add PRIMARY KEY (`bioid`);
+alter table br_deputados add PRIMARY KEY (`bioid`,`loaddate`);
+             
 
 DROP TABLE IF EXISTS `br_bioidtse`;	
 CREATE TABLE IF NOT EXISTS `br_bioidtse` (

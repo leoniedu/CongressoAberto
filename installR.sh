@@ -30,3 +30,18 @@ cd ~/soft
 wget http://cran.r-project.org/src/contrib/RCurl_0.98-1.tar.gz
 R CMD INSTALL RCurl_0.98-1.tar.gz --configure-args='exec_prefix=/home/leoniedu/run'
 
+
+##Install Python
+cd ~/soft
+wget http://www.python.org/ftp/python/2.5.1/Python-2.5.1.tgz
+tar xvzf Python-2.5.1.tgz
+cd Python-2.5.1
+./configure --prefix=$HOME/run/ --enable-unicode=ucs4
+make
+make install
+
+## install python mysql package
+easy_install MySQL_python
+
+
+
