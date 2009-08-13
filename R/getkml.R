@@ -161,6 +161,35 @@ for (snow in states[-c(1:12)]) {
 }
 
 
+
+##USING OPENLAYERS
+
+rf <- function(x=NULL) {
+  if (.Platform$OS.type!="unix") {
+    run.from <- "C:/reps/CongressoAberto"
+  } else {
+    run.from <- "~/reps/CongressoAberto"
+  }
+  ## side effect: load functions
+  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+  if (is.null(x)) {
+    run.from
+  } else {
+    paste(run.from,"/",x,sep='')
+  }
+}
+library(maptools)
+load(rf("data/maps/ibge2007.RData"))
+## take out lagoa dos patos (missing state sigla) from map
+m1 <- m1[!is.na(m1@data$SIGLA),]
+## get label x y positions, only largest polygon in each city is not NA
+m1$area <- sapply(m1@polygons,function(poly) poly@area)
+m1$x <- sapply(m1@polygons,function(poly) poly@labpt[1])
+m1$y <- sapply(m1@polygons,function(poly) poly@labpt[2])
+
+
+
+
 jencode <- function(x) gsub("'"," ",as.character(x))
 wktloc <- function(df,id="geocodig_m",lon="x",lat="y") {
   res <- as.vector(apply(df,1,function(x) paste("var ",id,x[id]," = wkt_f.read('POINT(",x[lon]," ",x[lat],")');",sep='')))
@@ -182,18 +211,12 @@ wktadd <- function(df,id="geocodig_m") {
                   paste("feature_layer.addFeatures([",id,x[id],"]);",sep="")))
 }
 
+connect.db()
 
 ## get mun data
 res.mun <-  dbGetQueryU(connect,paste("select * from br_municipios where year='2006'",sep=''),convert=FALSE)
+
 res.mun <- merge(res.mun,m1@data,by.x="geocodig_m",by.y="GEOCODIG_M")
-
-## tmp0 <- subset(res.mun,state_tse06=="BA")[1:10,]
-## res <- list()
-## for (i in 1:nrow(tmp0)) {
-##   print(i)
-##   res[[i]] <- GNsearch(name=tmp0$municipality_ibge07[i], country="BR",featureCode="PPL")
-## }  
-
 
 
 ## get votes and bio data
@@ -202,12 +225,14 @@ res.mun <- merge(res.mun,m1@data,by.x="geocodig_m",by.y="GEOCODIG_M")
 ##write
 
 write.wktdata <- function(bioid) {
+  require(ggplot2)
   ## Fix: Create state level files, so we the browser can cache the files more often
-  fn <- function(z) rf(paste("data/maps/eleicao2006/data",z,bioid,".js",sep=''))
+  fn <- function(z,ext=".js") rf(paste("data/maps/eleicao2006/data",z,bioid,ext,sep=''))
   dep <- dbGetQueryU(connect,paste("select a.*, b.* from br_bioidtse as a, br_bio as b where a.bioid=b.bioid AND a.bioid=",bioid," AND a.office='DEPUTADO FEDERAL' AND a.year='2006'",sep=''),convert=TRUE)
   snow <- dep$state[1]
   res <- dbGetQueryU(connect,paste("select * from br_vote_mun where office='DEPUTADO FEDERAL' AND year='2006' AND candidate_code=",dep$candidate_code[1]," AND  state='",snow,"'",sep=''),convert=FALSE)
   ##merge
+  res.mun$municipalitytse <- as.numeric(as.character(res.mun$municipalitytse))
   dnow <- merge(res,res.mun,by.x="municipality",by.y="municipalitytse")
   if (nrow(dnow)!=nrow(res)) stop("problem!")
   dnow$label <- dnow$municipality_ibge07
@@ -219,13 +244,58 @@ write.wktdata <- function(bioid) {
   cat(wktdata(dnow,vars=c("value","label"),layer=dep$namelegis,id=idnow),file=fn("Value"),sep="\n")
   ##cat(iconv(wktdata(dnow,vars=c("value","label"),layer=dnow[1,"namelegis"],id=idnow),from="utf8",to="latin1"),file="~/Sites/maps/dataValue.js",sep="\n")
   cat(wktadd(dnow,id=idnow),file=fn("Add"),sep="\n")
+  dnow$rr <- as.numeric(reorder(factor(dnow$municipality),-dnow$votes))
+  p <- qplot(ymin=0,ymax=votes,x=rr,votes,data=dnow,geom="linerange")
+  lapply(dnow$municipality,function(z) {
+    cat(z,"\n")
+    dnowsel <- subset(dnow,municipality==z)
+    fnow <- fn(paste("m",z,"b",sep=''),ext=".png")
+    fnow <- fn(paste("m",z,"b",sep=''),ext=".jpg")
+    ##pdf(file=fnow,width=4,height=4)
+    jpeg(file=fnow,width=200,height=200)
+    print(p+geom_vline(data=dnowsel,mapping=aes(xintercept=rr),col=rgb(.8,0,0,.5),size=1.5) + scale_x_continuous("")+theme_bw())
+    dev.off()
+    ##system(paste("convert -density 400x400 -resize 500x500 -quality 90 ", fnow," ",gsub(".pdf",".png",fnow)),wait=TRUE)
+  }
+         )
 }
 
-write.wktdata(96819)
+library(foreach)
+library(doMC)
+registerDoMC(cores=2)
+
+system.time(write.wktdata(161659))
 
 
 lapply(c(104014,159708,96734,108355,96819),write.wktdata)
 
+
+
+
+
+## tmp0 <- subset(res.mun,state_tse06=="BA")[1:10,]
+## res <- list()
+## for (i in 1:nrow(tmp0)) {
+##   print(i)
+##   res[[i]] <- GNsearch(name=tmp0$municipality_ibge07[i], country="BR",featureCode="PPL")
+## }  
+
+
+## plots
+## snow <- "RR"
+## tmp2 <- dbGetQueryU(connect,paste("select * from br_vote_mun_ag where state='",snow,"'",sep=""))
+
+## cnow <- paste(25,sep=",")
+## tmp1 <- dbGetQuery(connect,paste("select * from br_vote_mun where office=\"DEPUTADO FEDERAL\" and candidate_code in (",cnow,")  AND state='",snow,"'",sep=""))
+## tmp3 <- merge(tmp1,tmp2,by=c("year","state","municipality","office"),suffixes=c("",".ag"))
+
+
+##qplot(rank(votes,ties.method="random"),votes,data=tmp3,size=votes)+scale_x_continuous(formatter="comma")+facet_grid(~candidate_code)+theme_bw()
+
+
+## png(file="~/Sites/maps/tmp.png",width=240,height=240)
+## print(p)
+## dev.off()
 
 
 

@@ -27,7 +27,6 @@ download.now <- TRUE
 ## bio tables (weekly?)
 session.now <- "QQ" ## download all files for all sessions
 ##session.now <- 53
-
 usource(rf("R/bioprocess.R"), echo=TRUE)
 
 ## get bioid for TSE file (when new deps assume office) 
@@ -40,7 +39,7 @@ usource(rf("R/updateVot.R"), echo=TRUE)
 usource(rf("R/abstentions.R"), echo=TRUE)
 
 ## bill info from Camara download  (daily)
-usource(rf("downloadbills.R"), echo=TRUE)
+usource(rf("R/downloadbills.R"), echo=TRUE)
 
 ## bill info from Camara process (daily)
 usource("processbills.R", echo=TRUE)

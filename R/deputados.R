@@ -87,17 +87,13 @@ find.deps <- function(tomatch,session.now=53) {
 }
 
 if (new) {
-
   ## there might new deputies, process bio
   deps <- get.deps()
-  
   download.all <- TRUE
   update.all <- TRUE
   session.now <- 53
   usource(rf("R/bioprocess.R"), echo=TRUE)
-  
   deps.bioid <- find.deps(deps,session.now)
-
   ## delete rows in deputados current table
   dbGetQuery(connect,"truncate br_deputados_current")
   ##dbGetQuery(connect,"truncate br_deputados")
@@ -105,10 +101,7 @@ if (new) {
   dbWriteTableU(connect,"br_deputados_current",deps.bioid,append=TRUE)
   ## insert into all deputados deps, appending
   ## Fix: use insert from the current deputies table
-  dbWriteTableU(connect,"br_deputados",deps.bioid,append=TRUE)
-
-  ##TODO: update wordpress
-  
+  65  ##TODO: update wordpress  
 }
 
 

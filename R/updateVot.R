@@ -85,7 +85,7 @@ if (update.all) votes <- new.LVfiles
 nvotes <- length(votes)
 file.table <- cbind(votes,gsub("^LV","HE",votes))
 if (nvotes>0) {
-  for(LVfile in votes[1625:nvotes]) {  #for each new vote, create two new files
+  for(LVfile in votes[1440:nvotes]) {  #for each new vote, create two new files
     print(LVfile)
     ##Read data from VOTE LIST file for the vote
     readOne(LVfile,post=TRUE)
