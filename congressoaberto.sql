@@ -1,3 +1,7 @@
+--- In order for gvstreamer towork, and for efficiency reasons as well, we will not have "text" fields in the database (unless it is sorely needed.)
+
+
+
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"; -- Normally, you generate the next sequence number for the column by inserting either NULL or 0 into it. NO_AUTO_VALUE_ON_ZERO suppresses this behavior for 0 so that only NULL generates the next sequence number.
 
 --
@@ -17,9 +21,9 @@ CREATE TABLE  `br_bio` (
     `party` varchar(10),
     `birthdate` varchar(10),
     `birthplace` varchar(100),
-    `legisserved` text,
-    `prevparties` text,
-    `mandates` text,
+    `legisserved` varchar(255),
+    `prevparties` varchar(255),
+    `mandates` varchar(255),
     `biofile` varchar(100),
     `imagefile` varchar(100),
     `nameindex` varchar(100),
@@ -65,9 +69,9 @@ DROP TABLE IF EXISTS `br_votos`;
 CREATE TABLE  `br_votos` (
     `id` int,
     `legis` int,
-    `namelegis` text,
-    `party` text,
-    `state` text,
+    `namelegis` varchar(255),
+    `party` varchar(255),
+    `state` varchar(2),
     `rc` varchar(20),
     `rcfile` varchar(30),
     `rcvoteid` int,
@@ -86,15 +90,15 @@ DROP TABLE IF EXISTS `br_votacoes`;
 CREATE TABLE  `br_votacoes` (
     `rcvoteid` int default NULL,
     `session` varchar(9), 
-    `billtext` text,
-    `rcdate` text,
-    `billproc` text,
-    `billdescription` text,
-    `bill` text,
+    `billtext` varchar(255),
+    `rcdate` varchar(255),
+    `billproc` varchar(255),
+    `billdescription` varchar(255),
+    `bill` varchar(255),
     `legisyear` int,
     `rcyear` int,
     `billyear` int,
-    `billno` text,
+    `billno` varchar(255),
     `billtype` varchar(30),
     `legis` int,
     `rcfile` varchar(30),
@@ -128,14 +132,14 @@ CREATE TABLE  `br_bills` (
     `propno` int,
     `billtype` varchar(10),
     --    `legis` int,
-    `aprec` text,
-    `tramit` text,
-    `status` text,    
-    `ementa` text,
-    `ementashort` text,
-    `indexa` text,
-    `lastaction` text,
-    `lastactiondate` text,
+    `aprec` varchar(255),
+    `tramit` varchar(255),
+    `status` varchar(255),    
+    `ementa` varchar(1000),
+    `ementashort` varchar(1000),
+    `indexa` varchar(1000),
+    `lastaction` varchar(1000),
+    `lastactiondate` varchar(100),
     PRIMARY KEY  (`billtype`,`billyear`,`billno`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ;
@@ -250,111 +254,5 @@ CREATE TABLE  `br_vote_parties` (
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
---- TODO BELOW HERE
-
-
-CREATE TABLE  `br_cisidbioid` (
-    `row_names` text,
-    `bioid` text,
-    `cisid` text,
-    `dist` text
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE  `br_bioidtseid06` (
-    `row_names` text,
-    `bioid` text,
-    `tseid` text,
-    `dist` text
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE  `br_cis` (
-    `row_names` text,
-    `tseid` text,
-    `id` text,
-    `office` text,
-    `state` text,
-    `region` text,
-    `name` text,
-    `number` double default NULL,
-    `party` text,
-    `coalition` text,
-    `coalitcomp` text,
-    `birth` text,
-    `birthyear` double default NULL,
-    `age` double default NULL,
-    `ageag` text,
-    `sex` text,
-    `married` text,
-    `occupation` text,
-    `occupationag` text,
-    `education` text,
-    `nationality` text,
-    `citybith` text,
-    `statebirth` text,
-    `regionbirth` text,
-    `situation` text,
-    `spendmax` double default NULL,
-    `spendmaxag` text,
-    `wealth` double default NULL,
-    `wealthag` text,
-    `obs` text,
-    `votes` double default NULL,
-    `percovote` double default NULL,
-    `outcome` text,
-    `firstlast` text,
-    `cisid` text,
-    `cargo` text,
-    `nome2` text,
-    `nome` text,
-    `uf` text,
-    `situacao` text,
-    `votos` double default NULL
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE  `br_tse2006legis` (
-    `uf` text,
-    `municipio` text NOT NULL,
-    `zona` bigint(20) default NULL,
-    `cargo` text,
-    `nome` text,
-    `numero` bigint(20) default NULL,
-    `nome_urna` text,
-    `partido_sigla` text,
-    `legenda` text,
-    `votos` bigint(20) default NULL,
-    `situacao` text,
-    `office` text,
-    `tseid` text NOT NULL,
-    `zonachar` varchar(20) NOT NULL default '',
-    PRIMARY KEY  (`tseid`(30),`municipio`(30),`zonachar`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE  `br_tse2006mun` (
-    `uf` text,
-    `municipio` text NOT NULL,
-    `cargo` text,
-    `nome` text,
-    `numero` bigint(20) default NULL,
-    `nome_urna` text,
-    `partido_sigla` text,
-    `legenda` text,
-    `situacao` text NOT NULL,
-    `votos` bigint(20) default NULL,
-    `tseid` text NOT NULL,
-    PRIMARY KEY  (`tseid`(30),`municipio`(40),`situacao`(10))
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
