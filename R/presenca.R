@@ -100,37 +100,8 @@ phist <- function(data,i,oneplot=FALSE) {
   p1
 }
 
-i <- sample(1:nrow(pred),1)
-##i <- 373
-rel <- prop.table(table(pred$abs.score<pred$abs.score[i]))["TRUE"]
-if (is.na(rel)) rel <- 0
-p1 <- phist(pred,i)
-p1 <- p1+geom_text(data=data.frame(x=.75,y=max(table(cut(p1$data$pres.score,seq(0,1,.05))))*.9,label="",pres.score=.5),mapping=aes(x=x,y=y,label=label),size=20,colour="darkblue")
-p1
 
-ds <- subset(pred,party==pred$party[i])
-p2 <- phist(ds,i)
-p2 <- p2+geom_text(data=data.frame(x=.75,y=max(table(cut(p2$data$pres.score,seq(0,1,.05))))*.9,label=pred$party[i],pres.score=.5),mapping=aes(x=x,y=y,label=label),size=20,colour="darkblue")+
-  theme_bw()
-
-Layout <- grid.layout( nrow = 2, ncol = 1
-                      ,widths = unit(c(2,2), c("null","null") ),
-                      heights = unit (c(1,1), c("null", "null") )
-                      )
-vplayout <- function (...) {
-  grid.newpage()
-  pushViewport(viewport(
-                        layout= Layout
-                        ))
-}
-subplot <- function(x, y) viewport(layout.pos.row=x, layout.pos.col=y)
-vplayout()
-print(p1, vp=subplot(1,1))
-print(p2, vp=subplot(2,1))
-
-
-
-
+phist(pred,71,TRUE)
 
 ## Do simulations to get the percentile (and conf interv) of the legislators in
 ## terms of abstenteism
