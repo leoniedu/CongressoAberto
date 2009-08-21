@@ -49,7 +49,7 @@ get.deps <- function() {
                  ,"Correio.Eletrônico","mailaddress"
                  ,"Nome.sem.Acento","namelegisclean"        
                  ,"Tratamento","title"
-                 ,"Profissões","profession"
+                 ,"Profissões","occupation"
                  ,"Nome.Civil","name"
                  ),ncol=2,byrow=TRUE)  
   deps.rn <- rename.vars(deps,from=rn[,1],to=rn[,2])
@@ -101,8 +101,9 @@ if (new) {
   dbWriteTableU(connect,"br_deputados_current",deps.bioid,append=TRUE)
   ## insert into all deputados deps, appending
   ## Fix: use insert from the current deputies table
-  65  ##TODO: update wordpress  
+  ##TODO: update wordpress
+  library(twitteR)
+  load(rf("up.RData"))
+  sess <- initSession(user,password)
+  ns <- updateStatus(paste("List of deputies updated!",sess))
 }
-
-
-

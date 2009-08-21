@@ -83,14 +83,27 @@ votes <- setdiff(new.LVfiles,old.LVfiles) #compare new files with old to flag re
 ## load twitter user passwd
 if (update.all) votes <- new.LVfiles
 nvotes <- length(votes)
+print(nvotes)
 file.table <- cbind(votes,gsub("^LV","HE",votes))
 if (nvotes>0) {
-  for(LVfile in votes[1440:nvotes]) {  #for each new vote, create two new files
+  connect.db()
+  votes.old <- dbGetQuery(connect,"select count(*) from br_votacoes")[[1]][1]
+  for(LVfile in votes[1:nvotes]) {  #for each new vote, create two new files
     print(LVfile)
     ##Read data from VOTE LIST file for the vote
     readOne(LVfile,post=TRUE)
     ##dedup.db('br_votos')
   }
+  votes.new <- dbGetQuery(connect,"select count(*) from br_votacoes")[[1]][1]
+  nvotes <- votes.new-votes.old
   ## FIX: perhaps better to do a diff on the database itself?
+  library(twitteR)
+  load(rf("up.RData"))
+  print(user)
+  print(password)
+  sess <- initSession(user,password)
+  tw <- paste(nvotes,"new rollcalls uploaded!")
+  ns <- updateStatus(tw,sess)
+  print(ns)
 }
-
+warnings()

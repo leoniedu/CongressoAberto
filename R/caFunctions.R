@@ -3,7 +3,7 @@
 ##                    write a function that creates a new temp table and updates from there with a join 
 ##                    delete relevant rows explicitly
 ##UPDATE summary AS t, (query) AS q SET t.C=q.E, t.D=q.F WHERE t.X=q.X
-tmptable <- function() gsub("/","",tempfile("table",tmpdir=""))
+tmptable <- function() paste("t",paste(sample(c(letters,0:9),10,replace=TRUE), collapse=""),sep='')
 
 usource <- function(...) source(...,encoding="utf8")
 
@@ -392,12 +392,17 @@ state.l2a <- function(object) {
 
 ##connect to external db
 connect.db <- function() {
+  if (.Platform$OS.type!="unix") {
+    defaultfile <- "C:/my.cnf"
+  } else {
+    defaultfile <- "~/.my.cnf"
+  }
   library(RMySQL)
   if (exists("connect")) {
     testconnect <- class(try(dbListTables(connect)))
     if ("try-error"%in%testconnect) {
       try(dbDisconnect(connect))
-      connect<<-dbConnect(driver, group="congressoaberto")
+      connect<<-dbConnect(driver, group="congressoaberto",default.file=defaultfile)
     }
   } else {
     driver<<-dbDriver("MySQL")
@@ -858,3 +863,70 @@ color.heat <- function(tmp,z,breaks=NULL,reverse=FALSE,col.vec=NULL) {
   tmp@data$zCat <- as.character(tmp@data$zCat)
   tmp
 }
+
+
+
+# Gets the leadership votes for a specific voteid or vote.file
+# Returns matrix with voteid, name of leadership, and vote
+getLeaders <- function(x) {    #x is a string with the name of the vote.file (.txt), or the voteid field from 
+  if(nchar(x)>6){ vote.name <-as.numeric(substr(gsub("\\D","",x,perl=TRUE),6,11)) }else{vote.name<-as.numeric(x)}
+  the.url <- paste("http://www.camara.gov.br/internet/votacao/mostraVotacao.asp?ideVotacao=",vote.name,sep="") 
+  raw.data <-try(readLines(the.url,500,encoding="latin1"),silent=TRUE)
+  if(class(raw.data)=="try-error"){
+    cat("Connection problems",vote.id,"Will try again in 1min\n")
+    marker <- proc.time() 
+    while(((proc.time()-marker)[3])/60 < 0.99){flush.console()}
+    cat("\t Attempting to connect...\n")
+    flush.console()
+    raw.data<-try(readLines(the.url,500),silent=TRUE)
+    if(class(raw.data)=="try-error"){
+      cat("\t No data for",vote.id,"\n")
+      next}
+  }
+  orientation.line <- grep("Orientação",raw.data)                 #Check for encoding problems here
+  if(length(orientation.line)==0){cat("No data for",vote.id,"\n")
+                                  flush.console()
+                                  next} #No leadership votes
+  raw.orientation <- raw.data[grep("Orientação",raw.data):(grep("Parlamentar",raw.data)-10)]
+  raw.leadership <- raw.orientation[grep(":",raw.orientation)]#make sure all parties are caps, for later matches
+  raw.position <- raw.orientation[grep(":",raw.orientation)+1]
+  leadership <- gsub("^.*>(\\w*)\\W{1,2}<.*$","\\1",raw.leadership)
+  position <- gsub("^.*>(\\w*)\\s*<.*$","\\1",raw.position)
+  output <- data.frame(voteid=vote.name,name=leadership,rc=position)
+  return(output)
+}
+
+
+
+## ### subplotting
+## i <- sample(1:nrow(pred),1)
+## ##i <- 373
+## rel <- prop.table(table(pred$abs.score<pred$abs.score[i]))["TRUE"]
+## if (is.na(rel)) rel <- 0
+## p1 <- phist(pred,i)
+## p1 <- p1+geom_text(data=data.frame(x=.75,y=max(table(cut(p1$data$pres.score,seq(0,1,.05))))*.9,label="",pres.score=.5),mapping=aes(x=x,y=y,label=label),size=20,colour="darkblue")
+## p1
+
+## ds <- subset(pred,party==pred$party[i])
+## p2 <- phist(ds,i)
+## p2 <- p2+geom_text(data=data.frame(x=.75,y=max(table(cut(p2$data$pres.score,seq(0,1,.05))))*.9,label=pred$party[i],pres.score=.5),mapping=aes(x=x,y=y,label=label),size=20,colour="darkblue")+
+##   theme_bw()
+
+## Layout <- grid.layout( nrow = 2, ncol = 1
+##                       ,widths = unit(c(2,2), c("null","null") ),
+##                       heights = unit (c(1,1), c("null", "null") )
+##                       )
+## vplayout <- function (...) {
+##   grid.newpage()
+##   pushViewport(viewport(
+##                         layout= Layout
+##                         ))
+## }
+## subplot <- function(x, y) viewport(layout.pos.row=x, layout.pos.col=y)
+## vplayout()
+## print(p1, vp=subplot(1,1))
+## print(p2, vp=subplot(2,1))
+
+
+
+

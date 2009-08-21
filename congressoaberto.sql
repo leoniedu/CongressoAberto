@@ -65,6 +65,17 @@ CreatedBy=readOne
 updatedBy=readOne';
 
 
+DROP TABLE IF EXISTS `br_billidpostid`;
+CREATE TABLE  `br_billidpostid` (
+    `billid` int,		
+    `postid` int,
+    PRIMARY KEY  (`billid`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
+Content=Link table between wordpress posts and billid
+CreatedBy=
+updatedBy=';	
+
+
 DROP TABLE IF EXISTS `br_votos`;
 CREATE TABLE  `br_votos` (
     `id` int,

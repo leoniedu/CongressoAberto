@@ -1,4 +1,8 @@
 #! /usr/bin/python
+
+## FIX
+## If image is NA do not put this field
+
 import xmlrpclib
 import sys
 import datetime
@@ -10,12 +14,14 @@ post_id = sys.argv[1]
 title  = sys.argv[2]
 content = sys.argv[3]
 date =  xmlrpclib.DateTime(sys.argv[4])
-cats =  sys.argv[5]
-cats = cats.split()
+cats =  [sys.argv[5]]
+##cats = cats.split()
 tags = sys.argv[6]
 post_type = sys.argv[7]
 imagelink = sys.argv[8]
 parent_id = sys.argv[9]
+print parent_id
+
 
 ##open('imagelink.txt','r').read()
 custom_fields = [{ "key" : "Image", "value" : imagelink},
@@ -24,21 +30,26 @@ custom_fields = [{ "key" : "Image", "value" : imagelink},
                  {'key':"disable_convert_chars", "value" : "1"},
                  {"key": "disable_convert_smilies", "value" : "1"}]
 
+blog_id = 0
 user = 'admin'
 passwd = '&A9V$nunJAFS'
 url = 'http://congressoaberto.eduardoleoni.com/xmlrpc.php'
+server = xmlrpclib.ServerProxy(url)
 
 
 ##1. create post with xmlrpclin, since it can include custom fields
-
-##cats = [7,8]
 ##cats = ['test','PEC']
+
+for i in cats :
+    server.wp.newCategory(blog_id,user,passwd,{"name" : 'MPV'})
+    
+
+
 
 blog_content = { 'title' : title, 'description' : content, 'custom_fields' : custom_fields,'dateCreated' : date, 'categories' : cats , 'mt_keywords' : tags , 'post_type' : post_type}
 
 page_content = { 'title' : title, 'description' : content, 'custom_fields' : custom_fields,'dateCreated' : date, "wp_page_parent_id" : parent_id}
 
-server = xmlrpclib.ServerProxy(url)
 
 # wordpress pages
 # string wp_slug
@@ -59,12 +70,14 @@ server = xmlrpclib.ServerProxy(url)
 
 
 if post_id=='NA' :
+    ## no post id
     newpost=True
     if post_type=='page' : 
         post_id = server.wp.newPage(blog_id, user, passwd, page_content,1)
     else :
         post_id = int(server.metaWeblog.newPost(blog_id, user, passwd, blog_content,1))
 else :
+    ## post id is given
     newpost=False
     post_id=int(post_id)
     ## find image custom field
@@ -80,10 +93,9 @@ else :
         bc['custom_fields'][ji]['value'] = imagelink
     bc['title']=title
     bc['description']=content
-    bc['dateCreated']=date
+    bc['date_created_gmt']=date
     bc['categories']=cats
     bc['mt_keywords']=tags
     server.metaWeblog.editPost(post_id, user, passwd, bc,1)
-    
 sys.stdout.write(str(post_id))
 sys.stdout.flush()
