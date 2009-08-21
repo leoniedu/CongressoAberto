@@ -1,0 +1,146 @@
+## Model the most absent legislators
+## Basic idea: random effects model with legislator+roll call+party random effects.
+## to be Updated monthly?
+
+library(lme4)
+library(ggplot2)
+
+## paths (put on the beg of R scripts)
+rf <- function(x=NULL) {
+  if (.Platform$OS.type!="unix") {
+      run.from <- "C:/reps/CongressoAberto"
+    } else {
+      run.from <- "~/reps/CongressoAberto"
+    }
+  ## side effect: load functions
+  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+  if (is.null(x)) {
+    run.from
+  } else {
+    paste(run.from,"/",x,sep='')
+  }
+}
+rf()
+
+connect.db()
+
+
+sql <- paste("select  a.*, b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b, br_votos as a  where a.rcfile=b.rcfile  and  (rcdate>cast('",Sys.Date()-365,"' as date)) ",sep='')
+##FHC
+##sql <- paste("select  a.*, b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b, br_votos as a  where a.rcfile=b.rcfile  and  (rcdate>cast('1995-01-01' as date)) and (rcdate<cast('1996-01-01' as date))  ",sep='')
+res <- dbGetQueryU(connect,sql)
+
+dim(res)
+
+res$presente <- as.numeric(res$rc!="Ausente")
+res$party[res$party=="PFL"] <- "DEM"
+
+
+pres <- recast(res,bioid+party~variable,measure.var="presente",id.var=c("bioid","party"),fun.aggregate=function(x) sum(x)/length(x))
+
+##modal vote
+fx <- function(x) {
+  res <- names(which.max(table(x)))
+  if (is.null(res)) NA
+  else res
+}
+## take out "Ausente" as a possible choice
+##tmp <- subset(res,rc!="Ausente")
+tmp <- res
+## recast
+tmp0 <- tmp <- recast(tmp,rcfile~party,fun.aggregate=fx,measure.var="rc",id.var=c("rcfile","party"))
+## select PT!=DEM
+tmp <- subset(tmp,PT!=DEM)
+## select PT in Sim Nao and DEM in Sim Nao
+tmp <- subset(tmp,PT%in%c("Sim","Não"))
+tmp <- subset(tmp,DEM%in%c("Sim","Não"))
+dim(tmp)
+res.d <- merge(res,tmp[,c("PT","DEM","rcfile")])
+res.d$agdem <- with(res.d,rc==DEM)
+
+dem <- recast(res.d,bioid+party~variable,measure.var="agdem",id.var=c("bioid","party"),fun.aggregate=function(x) sum(x)/length(x))
+
+dempres <- merge(dem,pres)
+
+
+
+
+pred.glmer <- function(deps,m) {
+  deps$o <- seq_len(nrow(deps))
+  ## check if all parties are present
+  if (!all(unique(deps$party)%in%rownames(ranef(m)$party))) stop("parties missing")
+  ## party ranef as df
+  rparty <- data.frame(ranef(m)$party)
+  rparty$party <- rownames(rparty)
+  names(rparty)[1] <- c("party.ranef")
+  ## bioid ranef as df
+  rbio <- data.frame(ranef(m)$bioid)
+  rbio$bioid <- rownames(rbio)
+  names(rbio)[1] <- c("bioid.ranef")
+  ## generate predicted values
+  pred <- merge(deps,rparty)
+  pred <- merge(pred,rbio,all.x=TRUE)
+  ## impute missing values
+  ismiss <- is.na(pred$bioid.ranef)
+  pred$bioid.ranef[ismiss] <- with(pred,rnorm(sum(ismiss),mean(bioid.ranef,na.rm=TRUE),sd(bioid.ranef,na.rm=TRUE)))
+  if (nrow(pred)!=(nrow(deps))) stop("deps not matched")
+  pred$score <- fixef(m)[1]+with(pred,party.ranef+bioid.ranef)
+  pred$score <- round(plogis(pred$score)*100)/100
+  pred <- pred[order(pred$o),]
+  pred$score
+}
+
+
+
+
+
+
+
+
+
+
+## model3. party,bioid,rc
+## state does not help predict abstentions
+## date does not help either (just a linear term might help a little bit)
+## billtype neither
+m3<- glmer(presente~(1|party)+(1|bioid)+(1|rcfile),data=res,family=binomial)
+
+## similar model to predict agree with DEM
+mdem <- glmer(agdem~(1|bioid)+(1|rcfile)+(1|party),data=res.d,family=binomial)
+
+deps <- dempres
+deps$score.dem <- pred.glmer(deps,mdem)
+deps$score.pre <- pred.glmer(deps,m3)
+
+
+
+## A function to draw a histogram of the score
+
+phist <- function(data,bioid,score="score.pre",oneplot=FALSE,annotate=FALSE) {
+  data$score <- data[,score]
+  i <- which(bioid==data$bioid)
+  p1 <- ggplot(data,aes(score))
+  p1 <- p1+geom_histogram(aes(y = ..count..), binwidth = 0.05,fill="gray30")
+  p1 <- p1+scale_x_continuous(name="",limits=c(0,1),expand=c(0,0),formatter="percent")+scale_y_continuous(name="")+
+    theme_bw()
+  if (oneplot) {
+    ds <- subset(data,party==data$party[i])
+    p1 <- p1+geom_histogram(data=ds,fill="blue")
+  }
+  p1 <- p1+geom_vline(xintercept=data$score[i],col="red",size=2)
+  if (annotate) {
+    p1 <- p1+ geom_text(data=data.frame(x=.75,y=max(table(cut(p1$data$score,seq(0,1,.05))))*.9,label=paste(
+                                                                                                      ##data$namelegis[i],"\n",
+                                                                                                      tolower(data$party[i])),score=.5),mapping=aes(x=x,y=y,label=label),size=8,colour="darkblue")
+  }
+  p1
+}
+
+phist(deps,100046,oneplot=TRUE,annotate=TRUE,score="score.dem")
+
+## Do simulations to get the percentile (and conf interv) of the legislators in
+## terms of abstenteism
+
+
+
+
