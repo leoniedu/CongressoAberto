@@ -53,6 +53,20 @@ updatedBy=function readOne
 ';
 
 
+
+DROP TABLE IF EXISTS `br_leaders`;
+CREATE TABLE  `br_leaders` (
+    `rcvoteid` int,
+    `block` varchar(100),
+    `party` varchar(10),
+    `rc` varchar(10),
+    PRIMARY KEY  (`rcvoteid`,`block`,`party`)	
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
+Content=leaders vote table
+CreatedBy=
+updatedBy=';
+
+
 DROP TABLE IF EXISTS `br_idbioid`;
 CREATE TABLE  `br_idbioid` (
     `bioid` int,
