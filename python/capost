@@ -48,7 +48,7 @@ for i in cats :
 
 blog_content = { 'title' : title, 'description' : content, 'custom_fields' : custom_fields,'dateCreated' : date, 'categories' : cats , 'mt_keywords' : tags , 'post_type' : post_type}
 
-page_content = { 'title' : title, 'description' : content, 'custom_fields' : custom_fields,'dateCreated' : date, "wp_page_parent_id" : parent_id}
+page_content = { 'title' : title, 'description' : content, 'custom_fields' : custom_fields,'dateCreated' : date, "wp_page_parent_id" : parent_id, 'mt_keywords' : tags}
 
 
 # wordpress pages
@@ -74,6 +74,10 @@ if post_id=='NA' :
     newpost=True
     if post_type=='page' : 
         post_id = server.wp.newPage(blog_id, user, passwd, page_content,1)
+        ## add tags
+        bc = server.metaWeblog.getPost(post_id,user,passwd)
+        bc['mt_keywords']=tags
+        server.metaWeblog.editPost(post_id, user, passwd, bc,1)
     else :
         post_id = int(server.metaWeblog.newPost(blog_id, user, passwd, blog_content,1))
 else :
@@ -97,5 +101,11 @@ else :
     bc['categories']=cats
     bc['mt_keywords']=tags
     server.metaWeblog.editPost(post_id, user, passwd, bc,1)
+    if parent_id!="NA" :
+        page_content = { 'title' : title, 'description' : content,
+                         ##'custom_fields' : custom_fields,'dateCreated' : date, 
+                         "wp_page_parent_id" : parent_id}
+        server.wp.editPage(blog_id,post_id, user, passwd, page_content,1)
 sys.stdout.write(str(post_id))
 sys.stdout.flush()
+
