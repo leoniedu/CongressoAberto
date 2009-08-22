@@ -885,10 +885,7 @@ getLeaders <- function(x) {    #x is a string with the name of the vote.file (.t
   if(class(raw.data)=="try-error") {
     print(the.url)
     cat("Connection problems",vote.name,"Will try again soon\n")
-    marker <- proc.time() 
-    while(((proc.time()-marker)[3])/60 < 0.1) {
-      flush.console()
-    }
+    Sys.sleep(10)
     cat("\t Attempting to connect...\n")
     flush.console()
     raw.data<-try(readLines(the.url,500,encoding="latin1"),silent=TRUE)
@@ -913,6 +910,8 @@ getLeaders <- function(x) {    #x is a string with the name of the vote.file (.t
   output <- data.frame(rcvoteid=vote.name,block=leadership,rc=position)
   output <- splitBlocks(output)
   dbWriteTableU(connect,"br_leaders",output,append=TRUE)
+  ## wait a few seconds to let the server behave well
+  Sys.sleep(2)
   return(output)
 }
 
