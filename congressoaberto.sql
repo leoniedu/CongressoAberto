@@ -52,7 +52,27 @@ CreatedBy=bioprocess.R
 updatedBy=function readOne 
 ';
 
+DROP TABLE IF EXISTS `br_parties`;
+CREATE TABLE  `br_parties` (
+    `number` int,
+    `name` varchar(100),
+    `party` varchar(10),
+    `date` varchar(10),	
+    `year_extinct` int,	
+    `notes` varchar(100),
+    PRIMARY KEY  (`party`,`name`,`number`,`date`,`year_extinct`,`notes`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
+';
 
+DROP TABLE IF EXISTS `br_parties_current`;
+CREATE TABLE  `br_parties_current` (
+    `number` int,
+    `name` varchar(100),
+    `party` varchar(10),
+    `date` varchar(10),	
+    PRIMARY KEY  (`party`,`name`,`number`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
+';
 
 DROP TABLE IF EXISTS `br_leaders`;
 CREATE TABLE  `br_leaders` (
