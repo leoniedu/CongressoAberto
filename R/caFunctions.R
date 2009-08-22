@@ -869,26 +869,31 @@ color.heat <- function(tmp,z,breaks=NULL,reverse=FALSE,col.vec=NULL) {
 
 
 # Gets the leadership votes for a specific voteid or vote.file
-# Returns matrix with voteid, name of leadership, and vote
 getLeaders <- function(x) {    #x is a string with the name of the vote.file (.txt), or the voteid field from
   print(x)
-  st <- paste("select * from br_leaders where rcvoteid=",x,sep='')
-  res <- dbGetQuery(connect,st)
-  if (nrow(res)>0) return(NULL)
   if((nchar(x)>8))   {
     ## there is no data for these rcvoteid's
     return(NULL)
   }
+  st <- paste("select * from br_leaders where rcvoteid=",x,sep='')
+  res <- dbGetQuery(connect,st)
+  if (nrow(res)>0) return(NULL)
   vote.name<-as.numeric(x)
-  the.url <- paste("http://www.camara.gov.br/internet/votacao/mostraVotacao.asp?ideVotacao=",vote.name,sep="") 
-  raw.data <-try(readLines(the.url,500,encoding="latin1"),silent=TRUE)
+  the.url <- paste("http://www.camara.gov.br/internet/votacao/mostraVotacao.asp?ideVotacao=",vote.name,sep="")
+  ## download file
+  tfile <- tempfile()
+  ## we try downloading the file first because
+  ## readLines directly chokes when the page is missing an end of file code
+  down <- try(download.file(the.url,tfile))
+  raw.data <-try(readLines(tfile,500,encoding="latin1"),silent=TRUE)
   if(class(raw.data)=="try-error") {
     print(the.url)
     cat("Connection problems",vote.name,"Will try again soon\n")
     Sys.sleep(10)
     cat("\t Attempting to connect...\n")
     flush.console()
-    raw.data<-try(readLines(the.url,500,encoding="latin1"),silent=TRUE)
+    down <- try(download.file(the.url,tfile))
+    raw.data <-try(readLines(tfile,500,encoding="latin1"),silent=TRUE)
     if(class(raw.data)=="try-error") {
       cat("\t No data for",vote.name,"\n")
       return(NULL)
@@ -910,7 +915,7 @@ getLeaders <- function(x) {    #x is a string with the name of the vote.file (.t
   output <- data.frame(rcvoteid=vote.name,block=leadership,rc=position)
   output <- splitBlocks(output)
   dbWriteTableU(connect,"br_leaders",output,append=TRUE)
-  ## wait a few seconds to let the server behave well
+  print("waiting a few seconds to give time to server")
   Sys.sleep(2)
   return(output)
 }
@@ -940,14 +945,18 @@ splitBlocks <- function(data) {
   data$block <- gsub("DEM","Dem",data$block)
   datas <- data[singlep,]
   data <- data[!singlep,]
-  ## now the capital letter splits coalitions
-  res <- lapply(1:nrow(data),function(x) {
-    dx <- data[x,]
-    party <- splitBlock(dx$block)
-    np <- length(party)
-    data.frame(data[rep(x,np),],party)
-  })
-  res <- do.call(rbind,res)
+  if (nrow(data)>0) {
+    ## now the capital letter splits coalitions
+    res <- lapply(1:nrow(data),function(x) {
+      dx <- data[x,]
+      party <- splitBlock(dx$block)
+      np <- length(party)
+      data.frame(data[rep(x,np),],party)
+    })
+    res <- do.call(rbind,res)
+  } else {
+    res <- NULL
+  }
   datas$party <- datas$block
   res <- rbind(datas,res)  
   res$party <- car::recode(toupper(res$party),"'PTDOB'='PTdoB';'PCDOB'='PCdoB'")
