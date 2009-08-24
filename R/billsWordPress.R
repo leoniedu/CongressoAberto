@@ -12,9 +12,10 @@ rf <- function(x=NULL) {
     paste(run.from,"/",x,sep='')
   }
 }
-run.from <- rf("data/camara/")
-setwd(run.from)
+source(rf("R/wordpress.R"))
 
+connect.db()
+connect.wp()
 
 
 bills <- dbGetQueryU(connect, "select * from br_bills")
@@ -22,8 +23,6 @@ bills <- dbGetQueryU(connect, "select * from br_bills")
 ##prop <- dbGetQuery(connect,paste("select * from wp_hufib7_terms where slug ='proposicoes'"))
 ##prop <- dbGetQuery(connect,paste("select * from wp_hufib7_terms where name ='Projetos de lei'"))
 
-source(rf("R/wordpress.R"))
-connect.wp()
 
 tname <- function(name,us="sqkxlx_") paste("wp_",us,name,sep='') 
 
@@ -38,7 +37,7 @@ if (nrow(propid)==0) {
   propid <- propid$ID[1]
 }
 
-fx <- function(bill=37642,skip=FALSE) {
+postbill <- function(bill=37642,skip=FALSE) {
   dnow <- subset(bills,billid==bill)
   with(dnow,{
     ## look for the post in the link table

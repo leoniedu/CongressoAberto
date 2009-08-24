@@ -391,25 +391,39 @@ state.l2a <- function(object) {
 }
 
 
-
-##connect to external db
-connect.db <- function() {
+connect.mysql <- function(connection,group) {
   if (.Platform$OS.type!="unix") {
     defaultfile <- "C:/my.cnf"
   } else {
     defaultfile <- "~/.my.cnf"
   }
-  library(RMySQL)
-  if (exists("connect")) {
-    testconnect <- class(try(dbListTables(connect)))
+  new <- TRUE
+  library(RMySQL)  
+  if (exists(connection)) {
+    testconnect <- class(try(dbListTables(get(connection)),silent=TRUE))
     if ("try-error"%in%testconnect) {
-      try(dbDisconnect(connect))
-      connect<<-dbConnect(driver, group="congressoaberto",default.file=defaultfile)
+      try(dbDisconnect(get(connection)))
+    } else {
+      new <- FALSE
     }
-  } else {
-    driver<<-dbDriver("MySQL")
-    connect<<-dbConnect(driver, group="congressoaberto")
   }
+  if (new) {
+    driver <-dbDriver("MySQL")
+    assign(connection,dbConnect(driver,
+                                group=group,
+                                default.file=defaultfile)
+           ,envir = .GlobalEnv)
+  }
+}
+
+## connect to wordpress db
+connect.wp <- function() {
+  connect.mysql(connection="conwp",group="congressoabertobeta")
+}
+
+## connect to "data" db
+connect.db <- function() {
+  connect.mysql(connection="connect",group="congressoaberto")
 }
 
 ## reshape votos
@@ -420,6 +434,7 @@ gv <- function(filename) {
   dnow <- melt(dnow,id.var=c("id","name","party","state","filename"))
   dnow
 }
+
 ## reshape descriptions
 gd <- function(filename,encoding=TRUE) {
   if (encoding) {
@@ -965,8 +980,6 @@ splitBlocks <- function(data) {
 }
 
 
-
-
 ## ### subplotting
 ## i <- sample(1:nrow(pred),1)
 ## ##i <- 373
@@ -997,5 +1010,15 @@ splitBlocks <- function(data) {
 ## print(p2, vp=subplot(2,1))
 
 
+
+
+##function to decode accents from html format
+decode.html <- function(x) {
+  html.mat <- matrix(c("À","&Agrave", "à","&agrav", "Á","&Aacute", "á","&aacute", "Â","&Acirc", "â","&acirc", "Ã","&Atilde", "ã","&atilde", "Ç","&Ccedil", "ç","&ccedil", "È","&Egrave", "è","&egrave", "É","&Eacute", "é","&eacute", "Ê","&Ecirc", "ê","&ecirc", "Ì","&Igrave", "ì","&igrave", "Í","&Iacute", "í","&iacute", "Ï","&Iuml", "ï","&iuml", "Ò","&Ograve", "ò","&ograve", "Ó","&Oacute", "ó","&oacute", "Õ","&Otilde", "õ","&otilde", "Ù","&Ugrave", "ù","&ugrave", "Ú","&Uacute", "ú","&uacute", "Ü","&Uuml", "ü","&uuml"),ncol=2,byrow=TRUE)
+  for (i in 1:nrow(html.mat)) {
+    x <- gsub(paste(html.mat[i,2],";",sep=''),html.mat[i,1],x)
+  }
+  x
+}
 
 

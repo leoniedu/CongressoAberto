@@ -45,7 +45,10 @@ tx <- table(all.parties$party)
 amb <- names(tx[tx>1])
 print(paste("Ambiguous abbreviations: ",paste(amb,collapse=",")))
 
+
+
 ## write tables
+connect.db()
 ## all parties
 dbWriteTableU(connect,"br_parties",all.parties,append=TRUE)
 ## current parties
