@@ -128,7 +128,7 @@ clean.name<-function(x){
     return(y)
 }
 
-clean<-function(x){
+clean<-function(x,cleanmore=TRUE){
     #CLEANS ACCENTS AND OTHER MARKS FROM FIELD
     y<-toupper(x)
     y<-gsub("Â","A", y) 
@@ -145,9 +145,12 @@ clean<-function(x){
     y<-gsub("Ç","C", y)
     y<-gsub("'"," ", y)
     y<-gsub("."," ", y, fixed=TRUE)  
-    y<-gsub("-"," ", y, fixed=TRUE)    
+    if (cleanmore) {
+      y<-gsub("-"," ", y, fixed=TRUE)
+    }
     return(y)
-}
+  }
+
 
 ## get first and last name
 firstlast <- function(x) {

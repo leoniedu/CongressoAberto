@@ -18,6 +18,7 @@ connect.db()
 connect.wp()
 
 
+
 bills <- dbGetQueryU(connect, "select * from br_bills")
 ## parent page
 ##prop <- dbGetQuery(connect,paste("select * from wp_hufib7_terms where slug ='proposicoes'"))
@@ -26,13 +27,15 @@ bills <- dbGetQueryU(connect, "select * from br_bills")
 
 tname <- function(name,us="sqkxlx_") paste("wp_",us,name,sep='') 
 
+posts <- dbGetQuery(conwp, paste("select * from ",tname("posts")))
+
 ## create parent pages if they do not exist
 ## Proposicoes
 ## check that it does not exist
 propid <- dbGetQuery(conwp, paste("select * from ",tname("posts")," where post_title=",shQuote("Proposições")))
 if (nrow(propid)==0) {
   ## let's create it
-  propid <- wpAdd(conwp,post_title="Proposições",post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
+  propid <- wpAdd(conwp,post_title="Proposições",post_name="proposicoes",post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
 } else {
   propid <- propid$ID[1]
 }
@@ -52,11 +55,12 @@ postbill <- function(bill=37642,skip=FALSE) {
     }
     ## create post data
     title <- paste(billtype," ",billno,"/",billyear,sep='')
+    name <- encode(title)
     content <- paste('<script language="php">$billid = ',billid,';include( TEMPLATEPATH . "/bill.php");</script>')
     date <- wptime(billdate)
-    tagslug <- clean(c(toupper(billtype),tramit,billyear,
-                       if (billauthor=="Poder Executivo") "Executivo"))
-    tags <- data.frame(slug=tagslug,name=tagslug)
+    tagslug <- encode(c(toupper(billtype),tramit,billyear,
+                        if (billauthor=="Poder Executivo") "Executivo"))
+    tags <- data.frame(slug=encode(tagslug),name=tagslug)
     billtype <- toupper(billtype)
     posttype <- "page"
     ## check that pages with this name exist
@@ -64,15 +68,15 @@ postbill <- function(bill=37642,skip=FALSE) {
     ## if it does not exist, create one
     if (nrow(pp)==0) {
       ppcontent <- "<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( \"child_of=\".$thePostID.\"&title_li=\"); ?></ul>"
-      pp <- wpAdd(conwp,post_title=billtype,post_content=ppcontent,post_parent=propid)
+      pp <- wpAdd(conwp,post_title=billtype,post_name=encode(billtype),post_content=ppcontent,post_parent=propid)
     } else {
       ## if it exists get the ID
       pp <- pp$ID[1]
     }
-    postid <- wpAdd(conwp,postid=postid,post_title=title,post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,
+    postid <- wpAdd(conwp,postid=postid,post_title=title,post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,post_name=encode(name),
                     tags=tags,post_type=posttype, post_parent=pp)
     dbWriteTableU(connect,"br_billidpostid",data.frame(postid,billid=bill),append=TRUE)
   })
 }
 
-
+lapply(bills$billid[1:nrow(bills)],postbill)

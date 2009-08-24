@@ -3,6 +3,8 @@ if (!exists("tname")) {
   tname <- function(name,us="") paste("wp_",us,name,sep='') 
 }
 
+encode <- function(x) URLencode(tolower(clean(gsub(" +|/","-",tolower(x)),cleanmore=FALSE)))
+
 wpconfig <- function() {
   ## not needed
   ##dbGetQuery(con,paste("ALTER TABLE  ",`wp_postmeta`  ADD UNIQUE  `postmeta` (  `post_id` ,  `meta_key` );
