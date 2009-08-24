@@ -1,9 +1,23 @@
+## table name
+if (!exists("tname")) {
+  tname <- function(name,us="") paste("wp_",us,name,sep='') 
+}
+
+wpconfig <- function() {
+  ## not needed
+  ##dbGetQuery(con,paste("ALTER TABLE  ",`wp_postmeta`  ADD UNIQUE  `postmeta` (  `post_id` ,  `meta_key` );
+}
+
 getvalues <- function(x) paste("(",paste(shQuote(x),collapse=","),")")
-fx <- function(x=c("a","b")) 
+
+
+## time in ISO format
 wptime <- function(x=Sys.time()) {
+  if (is.na(x)|x=="NA") return(list(gmt=NULL,brasilia=NULL))
+  x <- as.Date(x)
   ## FIX: this does not take into account the dailight saving time
-  gmt <- as.POSIXlt(x, "GMT")
-  brasilia <- gmt-60*60*3
+  gmt <- as.POSIXlt(x, "GMT")+60*60*3
+  brasilia <- as.POSIXlt(x)+.001
   res <- list(gmt=gmt,brasilia=brasilia)
   res <- lapply(res,function(x) gsub(" GMT","",x))
   res
@@ -27,42 +41,68 @@ dbInsert <- function(con,df,table="tmp",update=FALSE,extra="") {
   dbGetQuery(con,st)
 }
 
-##dbInsert(connect,data.frame(post_title=c(1,2),post_content=c(3,4),post_status="publish",post_type="page",post_author=1,post_date="2009-08-23 11:33:46"),table="wp_posts")
-wpAdd <- function(...,tags=NULL,custom_fields=NULL,us="",do=TRUE) {
+
+wpAdd <- function(con,...,postid=NA,tags=NULL) {
+  ## FIX: the editing part is very limited. it does not do all it is supposed to. use with care.
+  newpost <- is.na(postid)
   fields <- list(...)
   ctime <- wptime()
-  if (is.null(fields$post_status)) fields$post_status <- "publish"
-  if (is.null(fields$post_author) ) fields$post_author <- "1"
-  if (is.null(fields$post_type) ) fields$post_type <- "page"
-  if (is.null(fields$post_date) ) fields$post_date <- ctime[["brasilia"]]
-  if (is.null(fields$post_date_gmt) ) fields$post_date_gmt <- ctime[["gmt"]]
   if (is.null(fields$post_modified) ) fields$post_modified <- ctime[["brasilia"]]
   if (is.null(fields$post_modified_gmt) ) fields$post_modified_gmt <- ctime[["gmt"]]
+  if (newpost) {
+    if (is.null(fields$post_status)) fields$post_status <- "publish"
+    if (is.null(fields$post_author) ) fields$post_author <- "1"
+    if (is.null(fields$post_type) ) fields$post_type <- "page"
+    if (is.null(fields$post_date) ) fields$post_date <- ctime[["brasilia"]]
+    if (is.null(fields$post_date_gmt) ) fields$post_date_gmt <- ctime[["gmt"]]
+  }
   print(fields)
-  tname <- function(name) paste("wp_",us,name,sep='') 
   ## adding a new page
   ## add the post to _posts
-  ##res <- dbGetQuery(connect,st)  
-  res <- dbInsert(connect,fields,table=tname("posts"))
-  postid <- dbGetQuery(connect,"select LAST_INSERT_ID()")[1,1]
+  if (newpost) {
+    res <- dbInsert(con,fields,table=tname("posts"))
+    postid <- dbGetQuery(con,"select LAST_INSERT_ID()")[1,1]
+  } else {
+    res <- dbInsert(con,c(id=postid,fields),table=tname("posts"),update=TRUE)
+  }
   if (length(tags)>0) {
+    oldtags <- dbGetQuery(con,paste("select term_taxonomy_id from ",tname("term_relationships"), " where object_id=",postid))
+    if (nrow(oldtags)>0) {
+      oldtags <- oldtags[,1]
+    } else {
+      oldtags <- NULL
+    }
+    print("oldtags")
+    print(oldtags)
     ## add tags if they do not exist
     ## Note:  slug is the unique identifier
-    dbInsert(connect,tags,table=tname("terms"),update=TRUE)
+    dbInsert(con,tags,table=tname("terms"),update=TRUE)
     ## get the term ids for all tags
-    termid <- unlist(lapply(tags$slug,function(x) dbGetQuery(connect,paste("select term_id from ",tname("terms"), " where slug=",shQuote(x)))))
+    termid <- unlist(lapply(tags$slug,function(x) dbGetQuery(con,paste("select term_id from ",tname("terms"), " where slug=",shQuote(x)))))
     ## update table linking posts to tags
-    dbInsert(connect,data.frame(object_id=postid,term_taxonomy_id=termid),table=tname("term_relationships"))
+    ## FIX: have to remove the old tags, categories and update counts before effectively editing the post
+    try(dbInsert(con,data.frame(object_id=postid,term_taxonomy_id=termid),table=tname("term_relationships")),silent=TRUE)
     ## update taxonomy and count
-    dbInsert(connect,data.frame(term_id=termid,taxonomy="post_tag",count=1),extra=" on duplicate key update count=count+1",table=tname("term_taxonomy"))
+    ## only update count if the tag is new for this post
+    newtags <- termid[!termid%in%oldtags]
+    if (length(newtags)>0) {
+      df <- data.frame(term_id=newtags,taxonomy="post_tag",count=1)
+      dbInsert(con,df,extra=" on duplicate key update count=count+1",table=tname("term_taxonomy"))
+    }
   }
-  list(postid,termid)
+  ## update  custom fields
+  cf <- data.frame(post_id=postid,meta_key=c("disable_wptexturize","disable_wpautop","disable_convert_chars","disable_convert_smilies"),meta_value=1)
+  ## delete if exists
+  res <- lapply(cf$meta_key,function(key) dbGetQuery(con,paste("delete from ",tname("postmeta")," WHERE meta_key=",shQuote(key)," AND post_id = ",postid)))
+  dbInsert(con,cf,table=tname("postmeta"),update=FALSE)
+  ## return the postid
+  postid
 }
 
 wpClean <- function() {
-  res <- lapply(c("truncate wp_postmeta","truncate wp_posts","truncate wp_term_relationships","truncate wp_term_taxonomy","truncate wp_terms"),function(x) dbGetQuery(connect,x))
+  res <- lapply(c("postmeta","posts","term_relationships","term_taxonomy","terms"),function(x) dbGetQuery(conwp,paste("truncate ",tname(x))))
+  dbGetQuery(connect,paste("truncate br_billidpostid"))
   return()
 }
 
-
-  
+##wp_delete_object_term_relationships($postid, array('category', 'post_tag'));
