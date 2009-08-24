@@ -396,7 +396,7 @@ state.l2a <- function(object) {
 
 connect.mysql <- function(connection,group) {
   if (.Platform$OS.type!="unix") {
-    defaultfile <- "C:/my.cnf"
+    defaultfile <- "C:/ProgramFiles/MySQL/MySQL Server 5.1/my.cnf"
   } else {
     defaultfile <- "~/.my.cnf"
   }

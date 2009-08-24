@@ -25,7 +25,7 @@ wptime <- function(x=Sys.time()) {
   res
 }
 
-dbInsert <- function(con,df,table="tmp",update=FALSE,extra="") {
+dbInsert <- function(con,df,table="tmp",update=FALSE,extra="",verbose=FALSE) {
   if (is.data.frame(df)) {
     values <- apply(df,1,getvalues)
   } else {
@@ -39,12 +39,12 @@ dbInsert <- function(con,df,table="tmp",update=FALSE,extra="") {
   values <- paste(" VALUES ",paste(values,collapse=" , "))
   names <- paste("(",paste(names(df),sep=' ',collapse=","),")")
   st <- paste("INSERT INTO ",table,names,values,update.st,extra)
-  cat(st,"\n")                             
+  if (verbose) cat(st,"\n")                             
   dbGetQuery(con,st)
 }
 
 
-wpAdd <- function(con,...,postid=NA,tags=NULL) {
+wpAdd <- function(con,...,fulltext=NULL,postid=NA,tags=NULL,verbose=FALSE) {
   ## FIX: the editing part is very limited. it does not do all it is supposed to. use with care.
   newpost <- is.na(postid)
   fields <- list(...)
@@ -58,7 +58,7 @@ wpAdd <- function(con,...,postid=NA,tags=NULL) {
     if (is.null(fields$post_date) ) fields$post_date <- ctime[["brasilia"]]
     if (is.null(fields$post_date_gmt) ) fields$post_date_gmt <- ctime[["gmt"]]
   }
-  print(fields)
+  if(verbose) print(fields)
   ## adding a new page
   ## add the post to _posts
   if (newpost) {
@@ -74,8 +74,6 @@ wpAdd <- function(con,...,postid=NA,tags=NULL) {
     } else {
       oldtags <- NULL
     }
-    print("oldtags")
-    print(oldtags)
     ## add tags if they do not exist
     ## Note:  slug is the unique identifier
     dbInsert(con,tags,table=tname("terms"),update=TRUE)
@@ -92,8 +90,12 @@ wpAdd <- function(con,...,postid=NA,tags=NULL) {
       dbInsert(con,df,extra=" on duplicate key update count=count+1",table=tname("term_taxonomy"))
     }
   }
-  ## update  custom fields
-  cf <- data.frame(post_id=postid,meta_key=c("disable_wptexturize","disable_wpautop","disable_convert_chars","disable_convert_smilies"),meta_value=1)
+  ## update  custom fields FIX: we delete and replace. anything better?
+  cf <- data.frame(post_id=postid,meta_key=c("disable_wptexturize","disable_wpautop","disable_convert_chars","disable_convert_smilies"),meta_value=1,stringsAsFactors=FALSE)
+  if (!is.null(fulltext)) {
+    ## add text to make the posts searchable
+    cf <- rbind(cf,data.frame(post_id=postid,meta_key="fulltext",meta_value=fulltext))
+  }
   ## delete if exists
   res <- lapply(cf$meta_key,function(key) dbGetQuery(con,paste("delete from ",tname("postmeta")," WHERE meta_key=",shQuote(key)," AND post_id = ",postid)))
   dbInsert(con,cf,table=tname("postmeta"),update=FALSE)

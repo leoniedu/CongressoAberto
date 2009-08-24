@@ -41,7 +41,9 @@ if (nrow(propid)==0) {
 }
 
 postbill <- function(bill=37642,skip=FALSE) {
+  print(bill)
   dnow <- subset(bills,billid==bill)
+  fulltext <- paste(dnow,collapse="\n")
   with(dnow,{
     ## look for the post in the link table
     postid <- dbGetQuery(connect,paste("select * from br_billidpostid where billid=",billid,sep=""))
@@ -61,8 +63,8 @@ postbill <- function(bill=37642,skip=FALSE) {
     tagsname <- sapply(c(billtype,tramit,billyear,
                          if (billauthor=="Poder Executivo") "Executivo"),
                        encode)
-    tagslug <- tagsname
-    tags <- data.frame(slug=tagslug,name=tagname)
+    tagslug <- gsub("[-,.]+","_",tagsname)
+    tags <- data.frame(slug=tagslug,name=tagsname)
     billtype <- toupper(billtype)
     posttype <- "page"
     ## check that pages with this name exist
@@ -75,10 +77,10 @@ postbill <- function(bill=37642,skip=FALSE) {
       ## if it exists get the ID
       pp <- pp$ID[1]
     }
-    postid <- wpAdd(conwp,postid=postid,post_title=title,post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,post_name=encode(name),
+    postid <- wpAdd(conwp,postid=postid,post_title=title,post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,post_name=encode(name),fulltext=fulltext,
                     tags=tags,post_type=posttype, post_parent=pp)
     dbWriteTableU(connect,"br_billidpostid",data.frame(postid,billid=bill),append=TRUE)
   })
 }
 
-lapply(bills$billid[sample(1:nrow(bills),100)],postbill)
+lapply(bills$billid[sample(1:nrow(bills),10)],postbill)
