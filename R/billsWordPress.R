@@ -58,9 +58,11 @@ postbill <- function(bill=37642,skip=FALSE) {
     name <- encode(title)
     content <- paste('<script language="php">$billid = ',billid,';include( TEMPLATEPATH . "/bill.php");</script>')
     date <- wptime(billdate)
-    tagslug <- encode(c(toupper(billtype),tramit,billyear,
-                        if (billauthor=="Poder Executivo") "Executivo"))
-    tags <- data.frame(slug=encode(tagslug),name=tagslug)
+    tagsname <- sapply(c(billtype,tramit,billyear,
+                         if (billauthor=="Poder Executivo") "Executivo"),
+                       encode)
+    tagslug <- tagsname
+    tags <- data.frame(slug=tagslug,name=tagname)
     billtype <- toupper(billtype)
     posttype <- "page"
     ## check that pages with this name exist
@@ -79,4 +81,4 @@ postbill <- function(bill=37642,skip=FALSE) {
   })
 }
 
-lapply(bills$billid[1:nrow(bills)],postbill)
+lapply(bills$billid[sample(1:nrow(bills),100)],postbill)

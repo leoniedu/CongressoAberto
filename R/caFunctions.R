@@ -144,8 +144,8 @@ clean<-function(x,cleanmore=TRUE){
     y<-gsub("Ü","U", y)
     y<-gsub("Ç","C", y)
     y<-gsub("'"," ", y)
-    y<-gsub("."," ", y, fixed=TRUE)  
     if (cleanmore) {
+      y<-gsub("."," ", y, fixed=TRUE)  
       y<-gsub("-"," ", y, fixed=TRUE)
     }
     return(y)
