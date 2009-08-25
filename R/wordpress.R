@@ -57,6 +57,7 @@ wpAdd <- function(con,...,fulltext=NULL,postid=NA,tags=NULL,verbose=FALSE) {
     if (is.null(fields$post_type) ) fields$post_type <- "page"
     if (is.null(fields$post_date) ) fields$post_date <- ctime[["brasilia"]]
     if (is.null(fields$post_date_gmt) ) fields$post_date_gmt <- ctime[["gmt"]]
+    if (is.null(fields$post_name)) fields$post_name <- encode(fields$post_title)
   }
   if(verbose) print(fields)
   ## adding a new page
@@ -64,6 +65,7 @@ wpAdd <- function(con,...,fulltext=NULL,postid=NA,tags=NULL,verbose=FALSE) {
   if (newpost) {
     res <- dbInsert(con,fields,table=tname("posts"))
     postid <- dbGetQuery(con,"select LAST_INSERT_ID()")[1,1]
+    if (postid==0) stop("there was a problem in the mysql connection")
   } else {
     res <- dbInsert(con,c(id=postid,fields),table=tname("posts"),update=TRUE)
   }
@@ -99,6 +101,7 @@ wpAdd <- function(con,...,fulltext=NULL,postid=NA,tags=NULL,verbose=FALSE) {
   ## delete if exists
   res <- lapply(cf$meta_key,function(key) dbGetQuery(con,paste("delete from ",tname("postmeta")," WHERE meta_key=",shQuote(key)," AND post_id = ",postid)))
   dbInsert(con,cf,table=tname("postmeta"),update=FALSE)
+  print(postid)
   ## return the postid
   postid
 }
@@ -106,6 +109,11 @@ wpAdd <- function(con,...,fulltext=NULL,postid=NA,tags=NULL,verbose=FALSE) {
 wpClean <- function() {
   res <- lapply(c("postmeta","posts","term_relationships","term_taxonomy","terms"),function(x) dbGetQuery(conwp,paste("truncate ",tname(x))))
   dbGetQuery(connect,paste("truncate br_billidpostid"))
+  dbGetQuery(connect,paste("truncate br_bioidpostid"))
+  dbDisconnect(conwp)
+  dbDisconnect(connect)
+  connect.wp()
+  connect.db()
   return()
 }
 

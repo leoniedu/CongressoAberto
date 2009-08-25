@@ -60,7 +60,7 @@ CREATE TABLE  `br_parties` (
     `date` varchar(10),	
     `year_extinct` int,	
     `notes` varchar(100),
-    PRIMARY KEY  (`party`,`name`,`number`,`date`,`year_extinct`,`notes`)
+    PRIMARY KEY  (`party`,`name`,`number`,`year_extinct`,`notes`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
 ';
 
@@ -108,6 +108,18 @@ CREATE TABLE  `br_billidpostid` (
 Content=Link table between wordpress posts and billid
 CreatedBy=
 updatedBy=';	
+
+
+DROP TABLE IF EXISTS `br_bioidpostid`;
+CREATE TABLE  `br_bioidpostid` (
+    `bioid` int,		
+    `postid` int,
+    PRIMARY KEY  (`bioid`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
+Content=Link table between wordpress posts and bioid
+CreatedBy=
+updatedBy=';	
+
 
 
 DROP TABLE IF EXISTS `br_votos`;

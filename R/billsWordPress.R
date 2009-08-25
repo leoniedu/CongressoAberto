@@ -41,7 +41,6 @@ if (nrow(propid)==0) {
 }
 
 postbill <- function(bill=37642,skip=FALSE) {
-  print(bill)
   dnow <- subset(bills,billid==bill)
   fulltext <- paste(dnow,collapse="\n")
   with(dnow,{
@@ -80,7 +79,12 @@ postbill <- function(bill=37642,skip=FALSE) {
     postid <- wpAdd(conwp,postid=postid,post_title=title,post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,post_name=encode(name),fulltext=fulltext,
                     tags=tags,post_type=posttype, post_parent=pp)
     dbWriteTableU(connect,"br_billidpostid",data.frame(postid,billid=bill),append=TRUE)
-  })
+    res <- c(bill,postid)
+    print(res)
+    res
+  })  
 }
 
-lapply(bills$billid[sample(1:nrow(bills),10)],postbill)
+t(sapply(bills$billid[sample(1:nrow(bills),10)],postbill))
+
+t(sapply(bills$billid[1:nrow(bills)],postbill))
