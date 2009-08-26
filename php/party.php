@@ -23,21 +23,35 @@ $sharegovall = $row[4];
 $sharegovdiv = $row[5];
 $nameparty = $row[8];
 
+##Get Ranks
+$result = mysql_query("select t1.*, t2.name, t2.number from br_partyindices_rank as t1, br_parties_current as t2 where t1.partyid={$partyid} AND t2.number={$partyid}");
+$row = mysql_fetch_row($result);
+$ranksizeparty = $row[0];
+$rankshareabsent = $row[3];
+$ranksharegovall = $row[4];
+$ranksharegovdiv = $row[5];
+
+##Get number of ranked parties
+$result = mysql_query("select count(*) as row_ct from br_partyindices");
+$row = mysql_fetch_row($result);
+$nparties = $row[0];
+
  echo '<table border="0">';
 echo '<tr>';
 print("<td><img src=\"../../partylogos/".$partyacronym.".jpg\"  width=100/></td>");
 print("<td><p>$nameparty<br></p>
-            Numer of Federal Deputies: $sizeparty of 513<br>
-            Average Absentee Rate:     $shareabsent%<br>
-            Average Share Voting with Executive: $sharegovall% of all votes; $sharegovdiv% of divisive votes<br>
+            Tamanho da Bancada: $sizeparty/513 ($ranksizeparty dentre os $nparties maiores partidos)<br>
+            Taxa de Absenteismo  $shareabsent% ($rankshareabsent dentre os $nparties maiores partidos)<br>
+            Taxa de Governismo: $sharegovdiv% em votações contenciosas ($ranksharegovdiv dentre os $nparties maiores partidos) <br>
 </td></tr></table>");
-
 </script>
 
 <script language="javascript" type="text/javascript">
   var partyid = "<?php echo $partyid; ?>";
 </script>
 
+
+#d<-dbGetQueryU(connect,"select count(*) as row_ct from br_partyindices")
 
 #d<-dbGetQueryU(connect, "SELECT partyname FROM br_partyindices where partyid=13 limit 1")
 #d<-dbGetQueryU(connect, "select t1.*, t2.name, t2.number from br_partyindices as t1, br_parties_current as t2 where t1.partyid=13 AND t2.number=13"

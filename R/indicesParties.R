@@ -50,7 +50,7 @@ recode.party1 <- function(x) {
 ## ASSEMBLE THE WIDE TABLE ######################################################
 rf()
 connect.db()
-j<-53
+legis <- j <-53
 wnall <- vector(mode="list",length=length(legis))
 names(wnall) <- legis
 
@@ -110,9 +110,18 @@ comp.rice <- function(rollcalls,vote.string="\\d",party.var="partyR"){ #x is a t
         nay <- as.numeric(by(x[,i]==0,rollcalls$partyR,sum,na.rm=TRUE))
         rice.matrix[,i] <- (abs(yea-nay))/(yea+nay)
     }
+    #Plot cohesion over all votes?
+    #windows(width=10,height=3)
+    #par(mar=c(3,3,0.5,0.5))
+    #plot(rice.matrix[i,],type="l",ylab="",xlab="",xaxt="n",ylim=c(0,1))
+    #low.discipline <- which(rice.matrix[i,]<quantile(rice.matrix[i,], probs = 0.025))
+    #axis(side=1,at=low.discipline,labels=names(low.discipline),las=2,cex=0.7)
+    #save this
     mean.by.party <- apply(rice.matrix,1,mean,na.rm=TRUE)
     return(mean.by.party)
 }
+
+
 comp.abs <- function(rollcalls,vote.string="\\d",party.var="partyR"){ #x is a typical roll call matrix, 
             parties <- levels(factor(rollcalls[,party.var])) 
             x <- rollcalls[,grep(vote.string,names(rollcalls),perl=TRUE)]
@@ -130,7 +139,7 @@ comp.abs <- function(rollcalls,vote.string="\\d",party.var="partyR"){ #x is a ty
             output<-list(current.size=size.last.vote,ave.size=size.by.party,absentees=abs.by.party,share.absent=relabs.by.party)
             return(output)
 }
-comp.withexec <- function(rollcalls,leaders,vote.string="\\d",party.var="partyR"){ #x is a typical roll call matrix, 
+comp.withexec <- function(rollcalls,leaders,vote.string="\\d",party.var="partyR",save.plot=FALSE){ #x is a typical roll call matrix, 
             parties <- levels(factor(rollcalls[,party.var])) 
             x <- rollcalls[,grep(vote.string,names(rollcalls),perl=TRUE)]
             x.leaders <- leaders[,grep(vote.string,names(leaders),perl=TRUE)]
@@ -144,17 +153,29 @@ comp.withexec <- function(rollcalls,leaders,vote.string="\\d",party.var="partyR"
                 relwe.matrix[,i] <- we.matrix[,i] / #number of votes with president
                                           as.numeric(by(is.na(x[,i])==FALSE,rollcalls$partyR,sum,na.rm=TRUE)) #size of party in EACH VOTE
                 relvotingwe.matrix[,i] <- we.matrix[,i] / #number of votes with president
-                                          as.numeric(by(is.element(x[,i],c(0,1)),rollcalls$partyR,sum,na.rm=TRUE)) #size of party in EACH VOTE
+                                          as.numeric(by(is.element(x[,i],c(0,1)),rollcalls$partyR,sum,na.rm=TRUE)) #legislators actually voting in each vote
               
-              }
+              }            
             we.by.party <-apply(we.matrix[,exec.declared],1,mean,na.rm=TRUE)
-            relwe.by.party <- apply(relwe.matrix[,exec.declared],1,mean,na.rm=TRUE)
+            relwe.by.party <- apply(relwe.matrix[,exec.declared],1,mean,na.rm=TRUE)        
             relwedivisive.by.party <-  apply(relwe.matrix[,intersect(exec.declared,divisive.votes)],1,mean,na.rm=TRUE)
             relvotingwedivisive.by.party <-  apply(relvotingwe.matrix[,intersect(exec.declared,divisive.votes)],1,mean,na.rm=TRUE)
             output<-list(we= we.by.party ,
                         relwe=relwe.by.party, 
                         relwedivise=relwedivisive.by.party,
                         relvotingwedivise=relvotingwedivisive.by.party)
+            if(save.plot==TRUE){    
+            #Plot governmentness over all votes?
+            for(i in rownames(relwe.matrix)){
+            windows(width=10,height=3)
+            par(mar=c(3,3,1.5,0.5))
+            plot(relwe.matrix[i,exec.declared],type="l",ylab="",xlab="",xaxt="n",ylim=c(0,1))
+            if(sum(is.na(relwe.matrix[i,exec.declared]))==0){lines(lowess(relwe.matrix[i,exec.declared], f=4),  col = 2)}
+            mtext(i,side=3)
+            low.gvtness <- which(relwe.matrix[i,exec.declared]<=quantile(relwe.matrix[i,exec.declared], probs = 0.005,na.rm=TRUE))
+            axis(side=1,at=low.gvtness,labels=names(low.gvtness),las=2,cex=0.7)
+            savePlot(paste(i,"governmentsupport",type="png"))  #get path!!!!!!!!!!!!!!!!!!!!
+            }}
             return(output)
 }
 
@@ -164,10 +185,11 @@ comp.leadership <- function(rollcalls,leaders,vote.string="\\d",party.var="party
             x.leaders <- leaders[,grep(vote.string,names(leaders),perl=TRUE)]
             if(ncol(x)!=ncol(x.leaders)) stop("Roll call matrix does not match leadership matrix")
             decl.matrix <- matrix(NA,nrow=length(parties),ncol=ncol(x),dimnames=list(c(parties),c(names(x))))
-            for(i in 1:ncol(x)){
-                 decl.matrix[,i] <- as.numeric(by(x[,i]==x.leaders[exec.line,i],rollcalls$partyR,sum,na.rm=TRUE)) #number of votes with president
-            
-            }
+            #for(i in 1:ncol(x)){
+            #     decl.matrix[,i] <-  #number of votes with president
+            #}
+            declared.votes <- apply(is.na(leaders)==FALSE,1,sum,na.rm=TRUE)
+            names(declared.votes) <- leaders[,1]
             return(output)           
 }
 
@@ -180,7 +202,7 @@ comp.leadership <- function(rollcalls,leaders,vote.string="\\d",party.var="party
 
 party.data <- data.frame(current.size = comp.abs(rcc)[["current.size"]],
                          ave.size = round(comp.abs(rcc)[["ave.size"]],1),
-                         cohesionALL = round(comp.rice(rcc),1),
+                         cohesionALL = round(comp.rice(rcc),2),
                          share.absentALL = round(100*comp.abs(rcc)[["share.absent"]],1),
                          with.execALL = round(100*comp.withexec(rcc,rcc.leaders)[[3]],1),
                          with.execDIVISIVE = round(100*comp.withexec(rcc,rcc.leaders)[[4]],1))
@@ -190,11 +212,17 @@ party.data$partyid <-  car::recode(party.data$partyname,"
                        'PSC'=20;'PR'=22;'PPS'=23;'DEM'=25;'PAN'=26;'PRTB'=28;'PHS'=31;'PMN'=33;'PTC'=36;'PRP'=38;
                        'PSB'=40;'PSD'=41;'PV'=43;'PRP'=44;'PSDB'=45;'PSOL'=50;'PST'=52;
                        'PCdoB'=65;'PTdoB'=70;'PMSD'=75;'PPN'=76;'PCDN'=78;'PFS'=84;else=0")
+party.data <- party.data[-which(party.data$partyname=="S.Part."),]
+party.data <- party.data[which(party.data$ave.size>5),]  #report only parties greater than 5 legislators
+party.data.ranks <- data.frame(round(nrow(party.data)-apply(party.data,2,rank)+1))
+party.data.ranks$partyname <-party.data$partyname
+party.data.ranks$partyid <-  party.data$partyid
 
 dbRemoveTable(connect,"br_partyindices")
 dbWriteTableU(connect,"br_partyindices",party.data)
 
-
+dbRemoveTable(connect,"br_partyindices_rank")
+dbWriteTableU(connect,"br_partyindices_rank",party.data.ranks)
 
 
 ##################### LEFT OVERS AND TEMPLATES ########################################################
