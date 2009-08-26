@@ -22,11 +22,12 @@ connect.wp()
 ## the tname function to match the current wordpress installation
 tname <- function(name,us="sqkxlx_") paste("wp_",us,name,sep='') 
 
+## the parties we want to post (current) 
+## we should post only the ones that it is meaningful to present data for. Hence, get these from the party indices list with the names from party_curent
+dp <- dbGetQueryU(connect,"select t1.*, t2.name, t2.number from br_partyindices as t1, br_parties_current as t2 where t2.number=t1.partyid")
 
-## the parties we want to post (current)
-dp <- dbGetQueryU(connect,"SELECT * FROM br_parties_current")
 ## we will use party label + party number as party page names (note: not titles)
-dp$pagename <- paste(dp$party,dp$number,sep="_")
+dp$pagename <- paste(dp$partyname,dp$number,sep="_")
 
 ## add the parent page "Partidos"
 pid <- dbGetQuery(conwp, paste("select * from ",tname("posts")," where post_title=",shQuote("Partidos")))
@@ -49,8 +50,8 @@ for (i in 1:nrow(dp)) {
   } else {
     postid <- pp$ID[1]
   }
-  pp <- wpAdd(conwp,post_title=dp$party[i],post_name=dp$pagename[i],postid=postid,
-              post_content='insert php/html code here',post_parent=pid)
+  the.content <- paste('<script language="php">$partyid = ',dp$number[i],';include( TEMPLATEPATH . "/party.php");</script>',sep="")
+  
+  pp <- wpAdd(conwp,post_title=dp$partyname[i],post_name=dp$pagename[i],postid=postid,
+              post_content=the.content,post_parent=pid)
 }
-
-
