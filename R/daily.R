@@ -16,6 +16,6 @@ rf <- function(x=NULL) {
   }
 }
 rf()
-usource(rf("R/updateVot.R"),echo=TRUE)
-usource(rf("R/deputados.R"),echo=TRUE)
-usource(rf("R/parties.R"),echo=TRUE)
+usource(rf("R/updateVot.R"),echo=FALSE)
+usource(rf("R/deputados.R"),echo=FALSE)
+usource(rf("R/parties.R"),echo=FALSE)

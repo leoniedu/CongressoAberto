@@ -173,6 +173,15 @@ iconv.df <- function(df,encoding="windows-1252") {
   df
 }
 
+print.png <- function(p,file="tmp.pdf",...,density="150x150",resize="400x400",quality=90) {
+  pdf(...,file=file)
+  print(p)
+  dev.off()
+  command <- paste("convert -density ",density," -resize ", resize," -quality ",quality, file," ",gsub(".pdf",".png",file))
+  print(command)  
+  system(command,wait=TRUE)
+}
+
 
 ## MySQL utils - These save factors and characters
 ## that are utf8, convert the_codes_ into latin1 (three bytes per non ascii char)
@@ -451,6 +460,34 @@ gd <- function(filename,encoding=TRUE) {
   data.votacoes$filename <- filename
   data.votacoes
 }
+
+
+
+
+getweek <- function(x) {
+  origin <- as.Date(x)-as.numeric(as.Date(x))
+  as.Date(round(as.numeric(as.Date(x))/7)*7,origin=origin)
+}
+
+
+##FIX: make just _one_ legis convert function to take care of the date translations.
+
+## given the date, returns the number of days since the first legislative session (feb 1st)
+getlegisdays <- function(x) {
+  session <- get.legis(get.legis.year.date(x))
+  year1 <- get.legis.year(session)
+  as.numeric(as.Date(x)-as.Date(paste(year1,02,01,sep="-")))
+}
+
+## given a date, return the legislative year
+get.legis.year.date <- function(x) {
+  x <- as.Date(x)
+  ## year in x
+  year <- as.numeric(format(x,"%Y"))
+  ## if date less than feb 1st year is year-1
+  ifelse(x<as.Date(paste(year,"-02-01",sep='')),year-1,year)
+}
+
 
 ##given a _legislative_ year (ends Feb 1st) give the legislative
 ## session  (e.g. 1991-1994)

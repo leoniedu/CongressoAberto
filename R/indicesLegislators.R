@@ -22,13 +22,29 @@ rf <- function(x=NULL) {
 }
 rf()
 
+source(rf("R/wordpress.R"))
+
 connect.db()
 
+connect.wp()
+tname <- function(name,us="sqkxlx_") paste("wp_",us,name,sep='') 
 
-sql <- paste("select  a.*, b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b, br_votos as a  where a.rcfile=b.rcfile  and  (rcdate>cast('",Sys.Date()-365,"' as date)) ",sep='')
+
+sql <- paste("select  b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b where   (rcdate>cast('",Sys.Date()-365,"' as date)) ",sep='')
+##Lula 1st year
+##sql <- paste("select  a.*, b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b, br_votos as a  where a.rcfile=b.rcfile  and  (rcdate>cast('2003-02-01' as date)) and (rcdate<cast('2004-01-01' as date))  ",sep='')
+
 ##FHC
 ##sql <- paste("select  a.*, b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b, br_votos as a  where a.rcfile=b.rcfile  and  (rcdate>cast('1995-01-01' as date)) and (rcdate<cast('1996-01-01' as date))  ",sep='')
 res <- dbGetQueryU(connect,sql)
+
+                                
+
+## fill in with zeros
+
+library(zoo)
+rc <- as.zoo(rcbydate)
+
 
 dim(res)
 
@@ -44,9 +60,10 @@ fx <- function(x) {
   if (is.null(res)) NA
   else res
 }
+
 ## take out "Ausente" as a possible choice
-##tmp <- subset(res,rc!="Ausente")
-tmp <- res
+tmp <- subset(res,rc!="Ausente")
+##tmp <- res
 ## recast
 tmp0 <- tmp <- recast(tmp,rcfile~party,fun.aggregate=fx,measure.var="rc",id.var=c("rcfile","party"))
 ## select PT!=DEM
@@ -55,10 +72,21 @@ tmp <- subset(tmp,PT!=DEM)
 tmp <- subset(tmp,PT%in%c("Sim","Não"))
 tmp <- subset(tmp,DEM%in%c("Sim","Não"))
 dim(tmp)
-res.d <- merge(res,tmp[,c("PT","DEM","rcfile")])
+res.d <- merge(subset(res,rc%in%c("Sim","Não")),tmp[,c("PT","DEM","rcfile")])
 res.d$agdem <- with(res.d,rc==DEM)
+## select out the ausentes
+res.d <- subset(res.d,rc!="Ausente")
+
+
 
 dem <- recast(res.d,bioid+party~variable,measure.var="agdem",id.var=c("bioid","party"),fun.aggregate=function(x) sum(x)/length(x))
+
+
+
+
+## dem1 <- recast(res.d,bioid+party~variable,measure.var=c("agdem"),id.var=c("bioid","party"),fun.aggregate=function(x) sum(x)/length(x))
+## dem2 <- recast(res.d,bioid+party~variable,measure.var=c("presente"),id.var=c("bioid","party"),fun.aggregate=function(x) sum(x)/length(x))
+## dem3 <- recast(res.d,bioid+party~variable,measure.var=c("agdem","presente"),id.var=c("bioid","party"),fun.aggregate=function(x) sum(x)/length(x))
 
 dempres <- merge(dem,pres)
 
@@ -104,9 +132,10 @@ pred.glmer <- function(deps,m) {
 ## date does not help either (just a linear term might help a little bit)
 ## billtype neither
 m3<- glmer(presente~(1|party)+(1|bioid)+(1|rcfile),data=res,family=binomial)
-
 ## similar model to predict agree with DEM
-mdem <- glmer(agdem~(1|bioid)+(1|rcfile)+(1|party),data=res.d,family=binomial)
+##mdem <- glmer(agdem~(1|bioid)+(1|rcfile)+(1|party),data=subset(res.d,rc!="Ausente"),family=binomial)
+mdem <- glmer(agdem~(1|bioid)+(1|rcfile)+(1|party),data=subset(res.d,rc!="Ausente"),family=binomial)
+
 
 deps <- dempres
 deps$score.dem <- pred.glmer(deps,mdem)

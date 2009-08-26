@@ -45,3 +45,18 @@ easy_install MySQL_python
 
 
 
+
+## Install Cairo (not working)
+##install pixman 
+wget http://cairographics.org/releases/pixman-0.15.20.tar.gz
+tar -vxzf pixman-0.15.20.tar.gz
+cd pixman-0.15.20 
+./configure --prefix=$HOME/run/
+make 
+make install
+
+cd ~/soft
+wget http://cairographics.org/releases/cairo-1.8.8.tar.gz
+tar -vxzf cairo-1.8.8.tar.gz
+cd cairo-1.8.8
+./configure --prefix=$HOME/run/
