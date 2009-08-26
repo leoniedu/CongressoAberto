@@ -50,9 +50,10 @@ recode.party1 <- function(x) {
 ## ASSEMBLE THE WIDE TABLE ######################################################
 rf()
 connect.db()
+j<-53
 wnall <- vector(mode="list",length=length(legis))
 names(wnall) <- legis
-j<-53
+
 
 
   rcnow <- dbGetQuery(connect,    ### Turned "off" the "conversion" function (dgGetQueryU) due to incompatibility with my system
@@ -122,10 +123,11 @@ comp.abs <- function(rollcalls,vote.string="\\d",party.var="partyR"){ #x is a ty
                 relabs.matrix[,i]   <- as.numeric(by(x[,i]==9,rollcalls$partyR,sum,na.rm=TRUE))/
                                         size.matrix[,i]#size of parties in each vote
             }
+            size.last.vote <- size.matrix[,ncol(size.matrix)]
             size.by.party <-  apply(size.matrix,1,mean,na.rm=TRUE)
             abs.by.party <-apply(abs.matrix,1,mean,na.rm=TRUE)
             relabs.by.party <- apply(relabs.matrix,1,mean,na.rm=TRUE)
-            output<-list(size=size.by.party,absentees=abs.by.party,share.absent=relabs.by.party)
+            output<-list(current.size=size.last.vote,ave.size=size.by.party,absentees=abs.by.party,share.absent=relabs.by.party)
             return(output)
 }
 comp.withexec <- function(rollcalls,leaders,vote.string="\\d",party.var="partyR"){ #x is a typical roll call matrix, 
@@ -176,11 +178,12 @@ comp.leadership <- function(rollcalls,leaders,vote.string="\\d",party.var="party
 # Think: difference in these votes is a proxy for whiping power!!!!
 #           output<-list(leader.declares=,with.leader=) 
 
-party.data <- data.frame(size = comp.abs(rcc)[["size"]],
-                         cohesionALL = comp.rice(rcc),
-                         share.absentALL = comp.abs(rcc)[["share.absent"]],
-                         with.execALL = comp.withexec(rcc,rcc.leaders)[[3]],
-                         with.execDIVISIVE = comp.withexec(rcc,rcc.leaders)[[4]])
+party.data <- data.frame(current.size = comp.abs(rcc)[["current.size"]],
+                         ave.size = round(comp.abs(rcc)[["ave.size"]],1),
+                         cohesionALL = round(comp.rice(rcc),1),
+                         share.absentALL = round(100*comp.abs(rcc)[["share.absent"]],1),
+                         with.execALL = round(100*comp.withexec(rcc,rcc.leaders)[[3]],1),
+                         with.execDIVISIVE = round(100*comp.withexec(rcc,rcc.leaders)[[4]],1))
 party.data$partyname <- rownames(party.data)
 party.data$partyid <-  car::recode(party.data$partyname,"
                        'PRB'=10;'PP'=11;'PDT'=12;'PT'=13;'PTB'=14;'PMDB'=15;'PSTU'=16;'PDC'=17;
