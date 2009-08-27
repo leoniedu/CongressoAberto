@@ -44,6 +44,23 @@ dbInsert <- function(con,df,table="tmp",update=FALSE,extra="",verbose=FALSE) {
 }
 
 
+wpAddByTitle <- function(con,post_title,new_post_title=NULL,...) {
+  pid <- dbGetQuery(conwp, paste("select * from ",tname("posts")," where post_title=",shQuote(post_title)))
+  if (nrow(pid)==0) {  
+    ## let's create it
+    pid <- NA
+  } else {
+    pid <- pid$ID[1]
+  }
+  if (!is.null(new_post_title)) {
+    post_title <- new_post_title
+  }
+  ## add/edit page
+  pid <- wpAdd(conwp,post_title=post_title,...,postid=pid)
+  pid
+}
+
+
 wpAdd <- function(con,...,fulltext=NULL,postid=NA,tags=NULL,verbose=FALSE) {
   ## FIX: the editing part is very limited. it does not do all it is supposed to. use with care.
   newpost <- is.na(postid)
