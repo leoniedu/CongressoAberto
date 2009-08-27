@@ -428,7 +428,14 @@ connect.mysql <- function(connection,group) {
 ## connect to wordpress db
 connect.wp <- function() {
   connect.mysql(connection="conwp",group="congressoabertobeta")
+  table.names <-   dbListTables(conwp)
+  pattern <- "^wp_(.*)_posts$"
+  ## the name in the wordpress databases include a random string. So we redefine
+  ## the tname function to match the current wordpress installation
+  uid <- gsub(pattern,"\\1",table.names[grep(pattern,table.names)])
+  tname <<- function(name) paste("wp_",uid,"_",name,sep='') 
 }
+
 
 ## connect to "data" db
 connect.db <- function() {
