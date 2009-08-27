@@ -173,10 +173,7 @@ iconv.df <- function(df,encoding="windows-1252") {
   df
 }
 
-print.png <- function(p,file="tmp.pdf",...,density="150x150",resize="400x400",quality=90) {
-  pdf(...,file=file)
-  print(p)
-  dev.off()
+convert.png <- function(file="tmp.pdf",density="150x150",resize="400x400",quality=90) {
   command <- paste("convert -density ",density," -resize ", resize," -quality ",quality, file," ",gsub(".pdf",".png",file))
   print(command)  
   system(command,wait=TRUE)

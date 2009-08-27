@@ -18,9 +18,6 @@ source(rf("R/wordpress.R"))
 connect.db()
 connect.wp()
 
-## the name in the wordpress databases include a random string. So we redefine
-## the tname function to match the current wordpress installation
-tname <- function(name,us="sqkxlx_") paste("wp_",us,name,sep='') 
 
 ## the parties we want to post (current) 
 ## we should post only the ones that it is meaningful to present data for. Hence, get these from the party indices list with the names from party_curent
