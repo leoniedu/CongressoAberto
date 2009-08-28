@@ -259,7 +259,6 @@ readOne <- function(LVfile,post=FALSE) {
   ##FIX: really need the following line? does it crash other things?
   options(encoding="ISO8859-1")
   HEfile <- gsub("^LV","HE",LVfile)
-  cat(".")
   ##Read data from VOTE LIST file for the vote
   ##if(nchar(vote)==24){ #formato antigo: titulo tinha 24 characters, no novo so 21
   ##Fixed the following line (I think)

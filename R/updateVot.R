@@ -86,25 +86,28 @@ nvotes <- length(votes)
 file.table <- cbind(votes,gsub("^LV","HE",votes))
 connect.db()
 votes.old <- dbGetQuery(connect,"select count(*) from br_votacoes")[[1]][1]
-for(LVfile in votes[1:nvotes]) {  #for each new vote, create two new files
-  print(paste("uploading file ",LVfile))
-  ##Read data from VOTE LIST file for the vote
-  readOne(LVfile,post=TRUE)
-  ##dedup.db('br_votos')
+if (length(votes)>0) {
+  for(LVfile in votes[1:nvotes]) {  #for each new vote, create two new files
+    print(paste("uploading file ",LVfile))
+    ##Read data from VOTE LIST file for the vote
+    readOne(LVfile,post=TRUE)
+    ##dedup.db('br_votos')
+  }
+  votes.new <- dbGetQuery(connect,"select count(*) from br_votacoes")[[1]][1]
+  nvotes <- votes.new-votes.old
+  ## FIX: perhaps better to do a diff on the database itself?
+  library(twitteR)
+  load(rf("up.RData"))
+  ##print(user)
+  ##print(password)
+  if (nvotes>0) {
+    sess <- initSession(user,password)
+    tw <- paste(nvotes,"new rollcalls uploaded!")
+    print(tw)
+    ns <- updateStatus(tw,sess)
+  }
+  print(paste(nvotes, "effectively updated"))
 }
-votes.new <- dbGetQuery(connect,"select count(*) from br_votacoes")[[1]][1]
-nvotes <- votes.new-votes.old
-## FIX: perhaps better to do a diff on the database itself?
-library(twitteR)
-load(rf("up.RData"))
-##print(user)
-##print(password)
-if (nvotes>0) {
-  sess <- initSession(user,password)
-  tw <- paste(nvotes,"new rollcalls uploaded!")
-  print(tw)
-  ns <- updateStatus(tw,sess)
-}
-print(paste(nvotes, "effectively updated"))
+
 ##print(ns)
 warnings()

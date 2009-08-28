@@ -15,7 +15,9 @@
 # 5) Return three objects with the previous issue for SQL storage and webpage usage
 ##
 library(ggplot2)
-library(wnominate)
+
+## FIX: WNOMINATE DOES NOT WORK ON THE SERVER (YET)
+##library(wnominate)
 
 
 rf <- function(x=NULL) {
@@ -69,28 +71,34 @@ names(wnall) <- legis
 
 
 
-  rcnow <- dbGetQuery(connect,    ### Turned "off" the "conversion" function (dgGetQueryU) due to incompatibility with my system
-                       paste("select * from br_votacoes where legis=",j)
-                       )
-  rc <- dbGetQuery(connect,
-                    paste("select t1.*, t2.legis  from br_votos as t1, br_votacoes as t2 where  t1.rcvoteid=t2.rcvoteid AND t2.legis=",j)   #rcfile
+rcnow <- dbGetQuery(connect,    ### Turned "off" the "conversion" function (dgGetQueryU) due to incompatibility with my system
+                    paste("select * from br_votacoes where legis=",j)
                     )
-  rc$quorum <- with(rc, ave(!(rc%in%c("Ausente","Obstrução")),rcfile,FUN=sum))
-  #rc <- subset(rc,quorum>256)   #Turned off subseting
-  rc$secret <- with(rc, ave(!(rc%in%c("Presente","Ausente")),rcfile,FUN=sum))==0  #TRUE IS SECRET VOTE
-  rc <- subset(rc,secret==FALSE)   #Droping secret votes
-  rc$partyR <- recode.party1(rc$party)
-  rc$rcr <- car::recode(rc$rc,"'Sim'=1;'Ausente'=9;else=0")  #orgiinal coding is Abtenção, Não, Sim, Obstrução, and for secret votes Presente, Ausente.
-                                                             #Here we're lumping Absteção, Não, Obstrucao and Presente together
-  rc$biopartyR <- with(rc,paste(bioid,partyR,sep=";"))
-  rcc <- recast(rc,bioid+partyR+biopartyR~rcvoteid,measure.var="rcr")
-  #get leaders votes into wide format
-  rc.leaders <- dbGetQuery(connect,
-                    paste("select t1.*, t2.legis  from br_leaders as t1, br_votacoes as t2 where  t1.rcvoteid=t2.rcvoteid AND t2.legis=",j)
-                    )
-  rc.leaders$rcr <- car::recode(rc.leaders$rc,"'Sim'=1;'Liberado'=9;else=0")  #note que estou colocando liberado como 9, para ser diferente de NA (sem indicacao)
-  rc.leaders$partyR <- recode.party1(rc.leaders$party)
-  rcc.leaders <- recast(rc.leaders,partyR~rcvoteid,measure.var="rcr") #leaving block out because otherwise we get more ovservations by party
+rc <- dbGetQuery(connect,
+                 paste("select t1.*, t2.legis  from br_votos as t1, br_votacoes as t2 where  t1.rcvoteid=t2.rcvoteid AND t2.legis=",j)   #rcfile
+                 )
+rc$quorum <- with(rc, ave(!(rc%in%c("Ausente","Obstrução")),rcfile,FUN=sum))
+                                        #rc <- subset(rc,quorum>256)   #Turned off subseting
+rc$secret <- with(rc, ave(!(rc%in%c("Presente","Ausente")),rcfile,FUN=sum))==0  #TRUE IS SECRET VOTE
+rc <- subset(rc,secret==FALSE)   #Droping secret votes
+rc$partyR <- recode.party1(rc$party)
+rc$rcr <- car::recode(rc$rc,"'Sim'=1;'Ausente'=9;else=0")  #orgiinal coding is Abtenção, Não, Sim, Obstrução, and for secret votes Presente, Ausente.
+                                        #Here we're lumping Absteção, Não, Obstrucao and Presente together
+rc$biopartyR <- with(rc,paste(bioid,partyR,sep=";"))
+
+gc()
+## FIX: The following line is too heavy for the server.
+rcc <- recast(rc,bioid+partyR~rcvoteid,measure.var="rcr")
+##get leaders votes into wide format
+rcc <- dlply(rc,"rcvoteid",function(rc) recast(rc,bioid+partyR+biopartyR~rcvoteid,measure.var="rcr"))
+
+
+rc.leaders <- dbGetQuery(connect,
+                         paste("select t1.*, t2.legis  from br_leaders as t1, br_votacoes as t2 where  t1.rcvoteid=t2.rcvoteid AND t2.legis=",j)
+                         )
+rc.leaders$rcr <- car::recode(rc.leaders$rc,"'Sim'=1;'Liberado'=9;else=0")  #note que estou colocando liberado como 9, para ser diferente de NA (sem indicacao)
+rc.leaders$partyR <- recode.party1(rc.leaders$party)
+rcc.leaders <- recast(rc.leaders,partyR~rcvoteid,measure.var="rcr") #leaving block out because otherwise we get more ovservations by party
 
 ####### ESTIMATE IDEAL POINTS ##################################################################################
 #  rcr <- rollcall(data.frame(rcc)[,-c(1:3)],yea=1, nay=0, missing=NA, notInLegis=9,legis.names=rcc[,3],legis.data=rcc[,1:3])
