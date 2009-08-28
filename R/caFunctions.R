@@ -1,8 +1,9 @@
 ##FIX: dbWriteTable , append=TRUE does NOT update the table
-##Possible solutions: write a function that deletes the data beforehand
-##                    write a function that creates a new temp table and updates from there with a join 
-##                    delete relevant rows explicitly
+## possible solutions
+## delete table before hand
 ##UPDATE summary AS t, (query) AS q SET t.C=q.E, t.D=q.F WHERE t.X=q.X
+## use dbInsert (in wordpress.R)
+
 tmptable <- function() paste("t",paste(sample(c(letters,0:9),10,replace=TRUE), collapse=""),sep='')
 
 usource <- function(...) source(...,encoding="utf8")
