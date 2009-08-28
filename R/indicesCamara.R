@@ -65,6 +65,8 @@ tmp <- subset(tmp,!((Legislatura==get.legis.text(get.legis.year.date(today))) & 
 ## data has 1 if there was a vote in that day, 0 otherwise
 ## in terms of session days with votes per week
 tmp$votesweek <- tmp$dayvotes*7
+tmp$votesmonth <- tmp$dayvotes*30
+tmp$votes <- tmp$dayvotes*30
 
 
 
@@ -78,12 +80,12 @@ pe <- function(p,year=2008,label="") {
   p <- p+geom_rect(xmin=getlegisdays(paste(year,"-10-01",sep='')),
                    xmax=getlegisdays(paste(year,"-10-30",sep='')),
                    ymin=-10,
-                   ymax=10,fill=alpha("gray80",.1)
+                   ymax=1000,fill=alpha("gray80",.1)
                    )
-  p <- p+geom_text(data=data.frame(legisday=getlegisdays(paste(year,"-04-01",sep='')), votesweek= 3.5,label=label,Legislatura=1),aes(label=label),hjust=0, vjust=0,size=3.5)
+  p <- p+geom_text(data=data.frame(legisday=getlegisdays(paste(year,"-04-01",sep='')), votes= 15,label=label,Legislatura=1),aes(label=label),hjust=0, vjust=0,size=3.5)
   p
 }
-p <- ggplot(data=tmp,aes(x=legisday,y=votesweek,group=Legislatura))
+p <- ggplot(data=tmp,aes(x=legisday,y=votes,group=Legislatura))
 p <- pe(p,year=2008,label="Eleições\nlocais")
 p <- pe(p,year=2010,label="Eleições\nnacionais")
 ##p <- p+stat_smooth(se=FALSE,size=2)
@@ -94,19 +96,19 @@ p <- p +scale_colour_manual(values = c(alpha("darkgreen",alphan),alpha("darkblue
 ## function for labels
 fx <- function(x=1,year=2006) paste("Dez ",x+year,"\n(",x,'o. ano)',sep='')
 p <- p+scale_x_continuous(name="",breaks=as.numeric(getlegisdays(paste(2008:2010,"-02-01",sep=''))),labels=fx(1:3),expand=c(0,0))
-p <- p+coord_cartesian(ylim=c(0,5))
+p <- p+coord_cartesian(ylim=c(0,25))
 p <- p+scale_y_continuous(name="Dias com votaçoes por semana")
 p <- p+theme_bw()
-##p <- p + geom_point(data=rcbymonth,aes(x=legismonth,y=(rcdate/30)*7+(legis-51)/20-.03, colour=Legislatura),size=1)
 ## we add a little noise to rcdate=0 to make it show in the graph
-p <- p + geom_point(data=rcbymonth,aes(x=legismonth,y=ifelse(rcdate==0,0.02,(rcdate/30)*7), colour=Legislatura),size=1.5)
+p <- p + geom_point(data=rcbymonth,aes(x=legismonth,y=ifelse(rcdate==0,0.05,(rcdate)), colour=Legislatura),size=1.5)
 
 pdf(file=rf("images/camara/rcbyweek.pdf"),width=6,height=4)
 print(p)
 dev.off()
 
-convert.png(file=rf("images/camara/rcbyweek.pdf"), density="150x150",resize="480x320",quality="90")
+convert.png(file=rf("images/camara/rcbyweek.pdf"))
 
+gs -q -dNOPAUSE -dBATCH -sDEVICE=pngalpha -r300 -dEPSCrop -sOutputFile=/Users/eduardo/reps/CongressoAberto/images/camara/rcbyweek.png /Users/eduardo/reps/CongressoAberto/images/camara/rcbyweek.pdf
 
 dx <- function(x) with(x,{
   x$votes <- 1
@@ -115,6 +117,18 @@ dx <- function(x) with(x,{
   x
 })
 tmp <- ddply(res2,"legis",dx)
-alphan <- .25
+alphan <- 1
 tmp$Legislatura <- get.legis.text(get.legis.year(tmp$legis))
-qplot(legisday,votes,data=tmp, colour=Legislatura,group=Legislatura,geom=c("line"),size=I(1.2))+scale_x_continuous(name="",breaks=as.numeric(getlegisdays(paste(2008:2010,"-02-01",sep=''))),labels=fx(1:3),expand=c(0,0))+theme_bw()+scale_colour_manual(values = c(alpha("darkgreen",alphan),alpha("darkblue",alphan), alpha("darkred",alphan),"red"))
+
+p2 <- qplot(legisday,votes,data=tmp, colour=Legislatura,group=Legislatura,geom=c("point"),size=I(1.2))+scale_x_continuous(name="",breaks=as.numeric(getlegisdays(paste(2008:2010,"-02-01",sep=''))),labels=fx(1:3),expand=c(0,0))+theme_bw()+scale_colour_manual(values = c(alpha("darkgreen",alphan),alpha("darkblue",alphan), alpha("darkred",alphan),"red"))
+
+
+pdf(file=rf("images/camara/cumulativerc.pdf"),width=6,height=4)
+print(p2)
+dev.off()
+
+convert.png(file=rf("images/camara/cumulativerc.pdf"), density="150x150",resize="480x320",quality="90")
+
+
+## add page
+votid <- wpAddByTitle(conwp,post_title="Número de Votações", post_parent=pid, post_content='<p><img src="/images/camara/rcbyweek.png" alt="Número de votações por semana" /></p><img src="/images/camara/cumulativerc.png" alt="Número de votações acumuladas" /> ', )

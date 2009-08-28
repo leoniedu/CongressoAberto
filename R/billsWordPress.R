@@ -16,6 +16,7 @@ source(rf("R/wordpress.R"))
 
 connect.db()
 connect.wp()
+tname <- function(name,us="sqkxlx_") paste("wp_",us,name,sep='') 
 
 
 
@@ -25,7 +26,6 @@ bills <- dbGetQueryU(connect, "select * from br_bills")
 ##prop <- dbGetQuery(connect,paste("select * from wp_hufib7_terms where name ='Projetos de lei'"))
 
 
-tname <- function(name,us="sqkxlx_") paste("wp_",us,name,sep='') 
 
 posts <- dbGetQuery(conwp, paste("select * from ",tname("posts")))
 

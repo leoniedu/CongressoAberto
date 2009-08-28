@@ -10,17 +10,17 @@ rf <- function(x=NULL) {
     run.from
   } else {
     paste(run.from,"/",x,sep='')
-  }
+s  }
 }
-
+usource(rf("R/mergeApprox.R"))
 run.from <- rf()
 
-dnow <- read.csv(rf("data/camara/Deputados95-99_Camara.csv"))[,c(1,4,6,7)]
+dnow <- read.csv(rf("data/camara/Deputados95-99_Camara.csv"),encoding="utf8")[,c(1,4,6,7)]
 
 names(dnow) <- c("name","state","beg","end")
 dnow$beg <- as.Date(as.character(dnow$beg),format="%m/%d/%Y")
 dnow$end <- as.Date(as.character(dnow$end),format="%m/%d/%Y")
-dnow$namelegis <- trimm(as.character(dnow$name))
+dnow$namelegis <- clean(trimm(as.character(dnow$name)))
 dnow$tmpid <- as.numeric(factor(dnow$namelegis))
 
 
@@ -29,7 +29,8 @@ connect.db()
 tomatch <- unique(dnow[,c("namelegis","state","tmpid")])
 
 idname <- dbGetQueryU(connect,paste("select * from br_bioidname where legis=50"))
-idname$namelegis <- idname$name
+idname$namelegis <- clean(idname$name)
+
 
 res <- merge.approx(states,
                     tomatch,idname,"state","namelegis")

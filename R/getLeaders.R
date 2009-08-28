@@ -22,7 +22,10 @@ vot <- dbGetQueryU(connect,"select * from br_votacoes")
 
 ##vots <- ddply(vot,"rcyear",function(x) x[sample(1:nrow(x),3,replace=TRUE),])
 ##vots <- subset(vot,rcyear=="1998")
-res <- lapply(vot$rcvoteid,getLeaders)
+res <- lapply(sort(vot$rcvoteid),getLeaders)
 ## try again
 res <- lapply(vot$rcvoteid,getLeaders)
+
+
+res <- lapply(sort(vot$rcvoteid,dec=TRUE),getLeaders)
 
