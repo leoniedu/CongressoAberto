@@ -16,8 +16,8 @@ source(rf("R/wordpress.R"))
 
 ## connect to databases
 connect.db()
-connect.wp()
 
+connect.wp() #new wp function gets the random string in table names automatically
 
 ## the parties we want to post (current) 
 ## we should post only the ones that it is meaningful to present data for. Hence, get these from the party indices list with the names from party_curent
@@ -47,8 +47,10 @@ for (i in 1:nrow(dp)) {
   } else {
     postid <- pp$ID[1]
   }
-  the.content <- paste('<script language="php">$partyid = ',dp$number[i],';include( TEMPLATEPATH . "/party.php");</script>',sep="")
-  
+ the.content <- paste("<script language='php'>$partyid = ",dp$number[i],";include( 'php/party.php');</script>",sep="")
+ sub.content <- paste("
+ <ul><?php global $post;$thePostID = $post->ID;wp_list_pages( 'child_of='.$thePostID.'&title_li='); ?></ul>")
+ the.content <- paste(the.content,sub.content)
   pp <- wpAdd(conwp,post_title=dp$partyname[i],post_name=dp$pagename[i],postid=postid,
               post_content=the.content,post_parent=pid)
 }
