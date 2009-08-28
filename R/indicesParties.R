@@ -80,8 +80,8 @@ names(wnall) <- legis
   rc$secret <- with(rc, ave(!(rc%in%c("Presente","Ausente")),rcfile,FUN=sum))==0  #TRUE IS SECRET VOTE
   rc <- subset(rc,secret==FALSE)   #Droping secret votes
   rc$partyR <- recode.party1(rc$party)
-  rc$rcr <- car::recode(rc$rc,"'Sim'=1;'Ausente'=9;else=0")  #orgiinal coding is Abtenção, Não, Sim, Obstrução, and for secret votes Presente, Ausente.
-                                                             #Here we're lumping Absteçao, Não, Obstrucao and Presente together
+  rc$rcr <- car::recode(rc$rc,"'Sim'=1;'Ausente'=9;else=0")  #orgiinal coding is AbtenÃ§Ã£o, NÃ£o, Sim, ObstruÃ§Ã£o, and for secret votes Presente, Ausente.
+                                                             #Here we're lumping AbsteÃ§Ã£o, NÃ£o, Obstrucao and Presente together
   rc$biopartyR <- with(rc,paste(bioid,partyR,sep=";"))
   rcc <- recast(rc,bioid+partyR+biopartyR~rcvoteid,measure.var="rcr")
   #get leaders votes into wide format
