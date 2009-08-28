@@ -15,7 +15,7 @@ $row = mysql_fetch_row($result);
 $partyacronym = $row[0];
 
 #Get some summary statistics
-$result = mysql_query("select t1.*, t2.name, t2.number from br_partyindices as t1, br_parties_current as t2 where t1.partyid={$partyid} AND t2.number={$partyid}");
+$result = mysql_query("select t1.*, Convert(Convert((t2.name) using binary) using latin1), t2.number from br_partyindices as t1, br_parties_current as t2 where t1.partyid={$partyid} AND t2.number={$partyid}");
 $row = mysql_fetch_row($result);
 $sizeparty = $row[0];
 $cohesion = $row[2];
@@ -40,7 +40,7 @@ $nparties = $row[0];
 
  echo '<table border="0">';
 echo '<tr>';
-print("<td><img src=\"../../partylogos/".$partyacronym.".jpg\"  width=100/></td>");
+print("<td><img src=\"/images/partylogos/".$partyacronym.".jpg\"  width=100/></td>");
 print("<td><p>$nameparty<br></p>
             Tamanho da Bancada: $sizeparty/513 ($ranksizeparty dentre os $nparties maiores partidos)<br>
             Taxa de Absenteismo  $shareabsent% ($rankshareabsent dentre os $nparties maiores partidos)<br>
@@ -52,6 +52,6 @@ print("<td><p>$nameparty<br></p>
 echo '<table border="0">';
 echo '<tr>';
 print("<td><p>Votos com o Executivo em Cada Votação<br></p></tr>
-       <tr><img src=\"../../images/governism/".$partyacronym."governism.png\" width=800/></tr></td></table>");
+       <tr><img src=\"/images/governism/".$partyacronym."governism.png\" width=800/></tr></td></table>");
 
 </script>
