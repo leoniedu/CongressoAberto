@@ -3,7 +3,7 @@
 # Need to group Bring functions together
 # Redo all functions to operate on long table rather than wide one for speed gains?
 # Check the U functions, whether they are necessary and working
-# Using all roll calls, independent of quorum
+# Using all roll calls, independent of quorum, as long as not secrete votes
 # Withexec 
 #       Considers only votes that were actually taken. If legislator did not vote, he is counted as NA (could, conceivably, refine this)
 #       Relative voting with government is measured only over votes that the executive declared position
@@ -35,6 +35,19 @@ rf <- function(x=NULL) {
 
 
 ## FUNCTIONS TO COLLECT  ######################
+convert.png <- function(file="tmp.pdf") { #Convert pdf figures to, temporarily hear, but erase later., SHould be in caFunctions.R
+  file <- path.expand(file)
+  if (.Platform$OS.type!="unix") {
+    command <- paste('"c:/Program Files/gs/gs8.63/bin/gswin32.exe"'," -q -dNOPAUSE -dBATCH -sDEVICE=pngalpha -r300 -dEPSCrop -sOutputFile=",gsub(".pdf",".png",file)," ",file,sep='')
+  } else {
+    command <- paste(gs," -q -dNOPAUSE -dBATCH -sDEVICE=pngalpha -r300 -dEPSCrop -sOutputFile=",gsub(".pdf",".png",file)," ",file,sep='')
+  }
+  print(command)  
+  system(command,wait=TRUE)
+}
+
+
+
 f <- function(pnow=c("PFL","DEM")) {
   res <- lapply(pnow,function(n) {
     (names(which.max(table(subset(rc,partyR==n & rc%in%c("Sim","Não"),biopartyR)))))
@@ -99,7 +112,7 @@ comp.divisiveness <- function(rollcalls,vote.string="\\d",party.var="partyR",cri
     if(is.numeric(criteria)){rice<- rice<=criteria}
     return(rice)
 }
-comp.rice <- function(rollcalls,vote.string="\\d",party.var="partyR"){ #x is a typical roll call matrix, 
+comp.rice <- function(rollcalls,vote.string="\\d",party.var="partyR",save.plot=FALSE){ #x is a typical roll call matrix, 
                                                                 #vote.string is the string that identifies columns with votes
                                                                 #part.var is the column with the party names
     parties <- levels(factor(rollcalls[,party.var])) #has to be factor level to later match the "by" command. Cannot use unique()
@@ -110,14 +123,8 @@ comp.rice <- function(rollcalls,vote.string="\\d",party.var="partyR"){ #x is a t
         nay <- as.numeric(by(x[,i]==0,rollcalls$partyR,sum,na.rm=TRUE))
         rice.matrix[,i] <- (abs(yea-nay))/(yea+nay)
     }
-    #Plot cohesion over all votes?
-    #windows(width=10,height=3)
-    #par(mar=c(3,3,0.5,0.5))
-    #plot(rice.matrix[i,],type="l",ylab="",xlab="",xaxt="n",ylim=c(0,1))
-    #low.discipline <- which(rice.matrix[i,]<quantile(rice.matrix[i,], probs = 0.025))
-    #axis(side=1,at=low.discipline,labels=names(low.discipline),las=2,cex=0.7)
-    #save this
     mean.by.party <- apply(rice.matrix,1,mean,na.rm=TRUE)
+    #Plot cohesion over all votes?
     return(mean.by.party)
 }
 
@@ -155,7 +162,7 @@ comp.withexec <- function(rollcalls,leaders,vote.string="\\d",party.var="partyR"
                 relvotingwe.matrix[,i] <- we.matrix[,i] / #number of votes with president
                                           as.numeric(by(is.element(x[,i],c(0,1)),rollcalls$partyR,sum,na.rm=TRUE)) #legislators actually voting in each vote
               
-              }            
+            }          
             we.by.party <-apply(we.matrix[,exec.declared],1,mean,na.rm=TRUE)
             relwe.by.party <- apply(relwe.matrix[,exec.declared],1,mean,na.rm=TRUE)        
             relwedivisive.by.party <-  apply(relwe.matrix[,intersect(exec.declared,divisive.votes)],1,mean,na.rm=TRUE)
@@ -164,20 +171,26 @@ comp.withexec <- function(rollcalls,leaders,vote.string="\\d",party.var="partyR"
                         relwe=relwe.by.party, 
                         relwedivise=relwedivisive.by.party,
                         relvotingwedivise=relvotingwedivisive.by.party)
-            if(save.plot==TRUE){    
-            #Plot governmentness over all votes?
+            
+            if(save.plot==TRUE){    #Plot governmentness over all votes?
+            setwd(paste(rf("images"),"/governism",sep=""))
             for(i in rownames(relwe.matrix)){
-            windows(width=10,height=3)
-            par(mar=c(3,3,1.5,0.5))
-            plot(relwe.matrix[i,exec.declared],type="l",ylab="",xlab="",xaxt="n",ylim=c(0,1))
-            if(sum(is.na(relwe.matrix[i,exec.declared]))==0){lines(lowess(relwe.matrix[i,exec.declared], f=4),  col = 2)}
-            mtext(i,side=3)
-            low.gvtness <- which(relwe.matrix[i,exec.declared]<=quantile(relwe.matrix[i,exec.declared], probs = 0.005,na.rm=TRUE))
-            axis(side=1,at=low.gvtness,labels=names(low.gvtness),las=2,cex=0.7)
-            savePlot(paste(i,"governmentsupport",type="png"))  #get path!!!!!!!!!!!!!!!!!!!!
-            }}
+            if(sum(is.na(relwe.matrix[i,exec.declared]))!=0){next} #plot only for main parties
+                pdf(file=paste(rownames(relwe.matrix)[i],"governism.pdf",sep=""), bg="transparent", width=10, height=3) 
+                par(mar=c(3,3,0.5,0.5))
+                plot(relwe.matrix[i,exec.declared],type="l",ylab="",xlab="",xaxt="n",ylim=c(0,1))
+                lines(lowess(relwe.matrix[i,exec.declared], f=4),  col = 2)
+                mtext(i,side=3)
+                low.gvtness <- which(relwe.matrix[i,exec.declared]<=quantile(relwe.matrix[i,exec.declared], probs = 0.005,na.rm=TRUE))
+                axis(side=1,at=low.gvtness,labels=names(low.gvtness),las=2,cex=0.7)
+                dev.off()
+                convert.png(file=paste(rownames(relwe.matrix)[i],"governism.pdf",sep="")) #convert to png using ghostscript
+                print(i)
+                flush.console()
+            } }
             return(output)
 }
+
 
 comp.leadership <- function(rollcalls,leaders,vote.string="\\d",party.var="partyR"){ #x is a typical roll call matrix, 
             parties <- levels(factor(rollcalls[,party.var])) 
@@ -200,12 +213,18 @@ comp.leadership <- function(rollcalls,leaders,vote.string="\\d",party.var="party
 # Think: difference in these votes is a proxy for whiping power!!!!
 #           output<-list(leader.declares=,with.leader=) 
 
-party.data <- data.frame(current.size = comp.abs(rcc)[["current.size"]],
-                         ave.size = round(comp.abs(rcc)[["ave.size"]],1),
-                         cohesionALL = round(comp.rice(rcc),2),
-                         share.absentALL = round(100*comp.abs(rcc)[["share.absent"]],1),
-                         with.execALL = round(100*comp.withexec(rcc,rcc.leaders)[[3]],1),
-                         with.execDIVISIVE = round(100*comp.withexec(rcc,rcc.leaders)[[4]],1))
+
+### CALL FUNCTIONS AND  ASSEMBLE ACTUAL TABLES 
+we <- comp.withexec(rcc,rcc.leaders,save.plot=TRUE)
+ab <-  comp.abs(rcc)
+rc <- comp.rice(rcc)
+
+party.data <- data.frame(current.size = ab[["current.size"]],
+                         ave.size = round(ab[["ave.size"]],1),
+                         cohesionALL = round(rc,2),
+                         share.absentALL = round(100*ab[["share.absent"]],1),
+                         with.execALL = round(100*we[[3]],1),
+                         with.execDIVISIVE = round(100*we[[4]],1))
 party.data$partyname <- rownames(party.data)
 party.data$partyid <-  car::recode(party.data$partyname,"
                        'PRB'=10;'PP'=11;'PDT'=12;'PT'=13;'PTB'=14;'PMDB'=15;'PSTU'=16;'PDC'=17;
