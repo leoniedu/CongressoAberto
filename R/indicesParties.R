@@ -90,7 +90,6 @@ gc()
 ## FIX: The following line is too heavy for the server.
 rcc <- recast(rc,bioid+partyR~rcvoteid,measure.var="rcr")
 ##get leaders votes into wide format
-
 rc.leaders <- dbGetQuery(connect,
                          paste("select t1.*, t2.legis  from br_leaders as t1, br_votacoes as t2 where  t1.rcvoteid=t2.rcvoteid AND t2.legis=",j)
                          )
@@ -130,7 +129,23 @@ comp.rice <- function(rollcalls,vote.string="\\d",party.var="partyR",save.plot=F
         rice.matrix[,i] <- (abs(yea-nay))/(yea+nay)
     }
     mean.by.party <- apply(rice.matrix,1,mean,na.rm=TRUE)
-    #Plot cohesion over all votes?
+    
+    if(save.plot==TRUE){
+        setwd(paste(rf("images"),"/cohesion",sep=""))
+        require(vioplot)
+        to.plot <- rice.matrix[ which(comp.abs(rcc)$current.size>5),]   
+        pdf(file=paste("ALL","cohesion.pdf",sep=""), bg="transparent", width=10, height=3)   
+        #windows(width=10,height=3)
+        par(mar=c(3,3,1.5,0.5))  
+         plot(c(0.5,0.5+nrow(to.plot)), c(0,1), type="n",ylab="",xlab="",xaxt="n")
+         axis(side=1,at=1:nrow(to.plot),labels=rownames(to.plot))
+         mtext("Rice Index of Cohesion",line=2,side=2,cex=1.2)
+         for(i in 1:nrow(to.plot)){
+               vioplot(na.omit(to.plot[i,]), col="tomato", horizontal=FALSE, at=i, add=TRUE,lty=2, rectCol="gray")
+            }
+         dev.off()
+         convert.png(file=paste("ALL","cohesion.pdf",sep="")) #convert to png using ghostscript
+    }
     return(mean.by.party)
 }
 
@@ -184,18 +199,16 @@ comp.withexec <- function(rollcalls,leaders,vote.string="\\d",party.var="partyR"
                 rnames <- rownames(relwe.matrix)
                 if(sum(is.na(relwe.matrix[i,exec.declared]))!=0){next} #plot only for main parties
                 pdf(file=paste(rownames(relwe.matrix)[i],"governism.pdf",sep=""), bg="transparent", width=10, height=3) 
-            ##par(mar=c(3,3,0.5,0.5))
-            ## modified the top margin (wasn't fitting the party name
             par(mar=c(3,3,1.5,0.5))
             plot(relwe.matrix[i,exec.declared],type="l",ylab="",xlab="",xaxt="n",ylim=c(0,1))
                 lines(lowess(relwe.matrix[i,exec.declared], f=4),  col = 2)
                 mtext(rnames[i],side=3)
                 low.gvtness <- which(relwe.matrix[i,exec.declared]<=quantile(relwe.matrix[i,exec.declared], probs = 0.005,na.rm=TRUE))
-                axis(side=1,at=low.gvtness,labels=names(low.gvtness),las=2,cex=0.7)
+                high.gvtness <- which(relwe.matrix[i,exec.declared]>=quantile(relwe.matrix[i,exec.declared], probs = 0.995,na.rm=TRUE))
+                toplot.gvtness <- if(length(low.gvtness)<=length(high.gvtness)){low.gvtness}else{high.gvtness}
+                axis(side=1,at=toplot.gvtness,labels=names(toplot.gvtness),las=2,cex=0.7)
                 dev.off()
                 convert.png(file=paste(rownames(relwe.matrix)[i],"governism.pdf",sep="")) #convert to png using ghostscript
-                print(i)
-                flush.console()
             } }
             return(output)
 }
@@ -224,8 +237,8 @@ comp.leadership <- function(rollcalls,leaders,vote.string="\\d",party.var="party
 
 
 ### CALL FUNCTIONS AND  ASSEMBLE ACTUAL TABLES 
-we <- comp.withexec(rcc,rcc.leaders,save.plot=TRUE)
 ab <-  comp.abs(rcc)
+we <- comp.withexec(rcc,rcc.leaders,save.plot=TRUE)
 rc <- comp.rice(rcc)
 
 party.data <- data.frame(current.size = ab[["current.size"]],
