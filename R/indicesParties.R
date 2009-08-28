@@ -90,8 +90,6 @@ gc()
 ## FIX: The following line is too heavy for the server.
 rcc <- recast(rc,bioid+partyR~rcvoteid,measure.var="rcr")
 ##get leaders votes into wide format
-rcc <- dlply(rc,"rcvoteid",function(rc) recast(rc,bioid+partyR+biopartyR~rcvoteid,measure.var="rcr"))
-
 
 rc.leaders <- dbGetQuery(connect,
                          paste("select t1.*, t2.legis  from br_leaders as t1, br_votacoes as t2 where  t1.rcvoteid=t2.rcvoteid AND t2.legis=",j)
@@ -181,14 +179,17 @@ comp.withexec <- function(rollcalls,leaders,vote.string="\\d",party.var="partyR"
                         relvotingwedivise=relvotingwedivisive.by.party)
             
             if(save.plot==TRUE){    #Plot governmentness over all votes?
-            setwd(paste(rf("images"),"/governism",sep=""))
-            for(i in rownames(relwe.matrix)){
-            if(sum(is.na(relwe.matrix[i,exec.declared]))!=0){next} #plot only for main parties
+              setwd(paste(rf("images"),"/governism",sep=""))
+              for(i in 1:nrow(relwe.matrix)){
+                rnames <- rownames(relwe.matrix)
+                if(sum(is.na(relwe.matrix[i,exec.declared]))!=0){next} #plot only for main parties
                 pdf(file=paste(rownames(relwe.matrix)[i],"governism.pdf",sep=""), bg="transparent", width=10, height=3) 
-                par(mar=c(3,3,0.5,0.5))
-                plot(relwe.matrix[i,exec.declared],type="l",ylab="",xlab="",xaxt="n",ylim=c(0,1))
+            ##par(mar=c(3,3,0.5,0.5))
+            ## modified the top margin (wasn't fitting the party name
+            par(mar=c(3,3,1.5,0.5))
+            plot(relwe.matrix[i,exec.declared],type="l",ylab="",xlab="",xaxt="n",ylim=c(0,1))
                 lines(lowess(relwe.matrix[i,exec.declared], f=4),  col = 2)
-                mtext(i,side=3)
+                mtext(rnames[i],side=3)
                 low.gvtness <- which(relwe.matrix[i,exec.declared]<=quantile(relwe.matrix[i,exec.declared], probs = 0.005,na.rm=TRUE))
                 axis(side=1,at=low.gvtness,labels=names(low.gvtness),las=2,cex=0.7)
                 dev.off()
