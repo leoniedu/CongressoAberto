@@ -173,8 +173,15 @@ iconv.df <- function(df,encoding="windows-1252") {
   df
 }
 
-convert.png <- function(file="tmp.pdf",density="150x150",resize="400x400",quality=90) {
-  command <- paste("convert -density ",density," -resize ", resize," -quality ",quality, file," ",gsub(".pdf",".png",file))
+
+convert.png <- function(file="tmp.pdf") { #Convert pdf figures to, temporarily hear, but erase later., SHould be in caFunctions.R
+  file <- path.expand(file)
+  opts <-    paste(" -q -dNOPAUSE -dBATCH -sDEVICE=pngalpha -r300 -dEPSCrop -sOutputFile=",gsub(".pdf",".png",file)," ",file,sep='')
+  if (.Platform$OS.type!="unix") {
+    command <- paste('"c:/Program Files/gs/gs8.63/bin/gswin32.exe"',opts)
+  } else {
+    command <- paste("gs",opts)
+  }
   print(command)  
   system(command,wait=TRUE)
 }
@@ -249,6 +256,7 @@ dbWriteTableSeq <- function(conn,name,value,n=NULL,...) {
 
   
 readOne <- function(LVfile,post=FALSE) {
+  ##FIX: really need the following line? does it crash other things?
   options(encoding="ISO8859-1")
   HEfile <- gsub("^LV","HE",LVfile)
   cat(".")
@@ -474,6 +482,9 @@ getweek <- function(x) {
 }
 
 
+getmonth <- function(x) paste(as.character(format.Date(as.Date(x),"%Y-%m")),"-15",sep="")
+
+
 ##FIX: make just _one_ legis convert function to take care of the date translations.
 
 ## given the date, returns the number of days since the first legislative session (feb 1st)
@@ -631,15 +642,36 @@ getbill <- function(sigla="MPV",numero=447,ano=2008,overwrite=TRUE, deletefirst=
 
 remove.tags <- function(x) gsub("<[^<]*>|\t",  "",  x)
 
+read.tramit <- function(file, encoding="latin1") {
+  require(XML)
+  tidy <- readLines(pipe(paste("tidy -raw ",file),encoding="latin1"))
+  html <- htmlTreeParse(tidy, asText=TRUE, useInternalNodes=TRUE)
+  ##html <- htmlTreeParse(readLines(fnow), asText=TRUE, useInternalNodes=TRUE)
+  tmp <- xpathSApply(html,"//table[1]/tr[1]",xmlValue)
+  tmp <- tmp[grep("Andamento:",tmp):length(tmp)]
+  tmp <- strsplit(tmp[-1],"\n")
+  df <- data.frame(do.call(rbind,lapply(tmp,function(x) c(x[2],trimm(paste(x[3:length(x)],collapse=" "))))))
+  names(df) <- c("date","event")
+  df$id <- 1:nrow(df)
+  df
+}
+
 #FIX add to db, first checking that the results were updated.
 readbill <- function(file) {  
   if (length(grep("Prop_Erro|Prop_Lista",file))>0)  return(NULL)
-  ##FIX: figure out if encoding is necessary
-  tmp <- readLines(file,encoding="latin1"
-                   )
+  tmp <- readLines(file,encoding="latin1")  
   ## write file out for debugging
-  writeLines(tmp, con="~/reps/CongressoAberto/tmp/tmp.html")
+  ##writeLines(tmp, con="~/reps/CongressoAberto/tmp/tmp.html")
+  tramit.df <- read.tramit(file)
+  ##useful for debugging
+  ##cat(tidy,file="~/Desktop/tmp.html")
+  ##system("open ~/Desktop/tmp.html")
+  ##FIX: figure out if encoding is necessary
+
   if(length(grep("Nenhuma proposição encontrada",tmp))>0) return(NULL)
+  ## let's get the tramitacao table
+  tramit.df <- read.tramit(tmp)
+  ## now get other info
   tmp <-  gsub("\r|&nbsp","",tmp)
   tmp <-  gsub(";+"," ",tmp)
   t0 <- tmp[grep("Proposição",tmp)[1]]
@@ -711,7 +743,7 @@ readbill <- function(file) {
   if (("try-error"%in%class(res))) {   
     res <- NULL
   } 
-  res
+  list(info=res,tramit=tramit.df)
 }
 
 factors2strings <- function(x) data.frame(lapply(x,function(z) {
