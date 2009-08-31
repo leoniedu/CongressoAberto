@@ -26,6 +26,12 @@ mysql_select_db("DB_Name", $con);
 
 //mysql_query("set names utf8");
 
+if($_GET["form"]=="bills") {
+  $sql = "select   b.rcvoteid as 'Por partido',   b.rcvoteid as 'Resultado', CAST(b.rcdate AS DATE) as Data,   b.billdescription as Votacao  from (select * from congressoaberto.br_bills as c where c.billid=".$_GET["billid"].") as a,  congressoaberto.br_votacoes as b  where a.billyear=b.billyear and a.billno=b.billno and a.billtype=b.billtype  order by Data DESC" ;  
+  ##$sql = "select billyear from congressoaberto.br_bills  where billid=37642";
+ }
+
+
 if($_GET["form"]=="votes") {
 $sql = "select CAST(b.rcdate AS DATE) as Data, convert(cast(a.party as char) using binary) as Partido, convert(Convert(a.rc using binary) using latin1)  as Voto, b.bill as Proposicao, b.billdescription as Votacao  from congressoaberto.br_votos as a, congressoaberto.br_votacoes as b  where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND a.legis=53 order by Data DESC" ;  
  }
@@ -56,7 +62,7 @@ $gvJsonObj = new gvStreamerEx();
 if($gvJsonObj->init($tqx, $resHandler) == true);
 {
     //convert the entire query result into the compliant response
-    $gvJsonObj->convertMysqlRes($result, "%01.1f", "d/m/Y", "G:i:s","d/m/Y G:i:s");
+    $gvJsonObj->convertMysqlRes($result, "%01.0f", "d/m/Y", "G:i:s","d/m/Y G:i:s");
 //    $gvJsonObj->setColumnPattern(3,"#0.0########");
 }
 
