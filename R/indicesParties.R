@@ -164,8 +164,7 @@ dbWriteTableU(connect,"br_partyindices",party.data)
 dbRemoveTable(connect,"br_partyindices_rank")
 dbWriteTableU(connect,"br_partyindices_rank",party.data.ranks)                       
                        
-### Plot Some Graphs #####
-
+### Plot governism graphs #####
 for(i in 1:nrow(party.data)){
     setwd(paste(rf("images"),"/governism",sep=""))
     p<-rownames(party.data)[i]
@@ -181,3 +180,27 @@ for(i in 1:nrow(party.data)){
     dev.off()
     convert.png(file=paste(p,"governism.pdf",sep="")) #convert to png using ghostscript
 }
+
+
+### Plot typical party graphs #####
+for(i in 1:nrow(party.data)){
+    setwd(paste(rf("images"),"/typical",sep=""))
+    pty<-rownames(party.data)[i]
+    typical.pty <- data.frame(party=pty,
+                              rc=factor(c(rep("Ausente",party.data[pty,"current.size"]*party.data[pty,"share.absent"]/100),
+                                   rep("Com Governo",party.data[pty,"current.size"]*party.data[pty,"with.execALL"]/100),
+                                   rep("Contra Governo",party.data[pty,"current.size"]-
+                                                            (party.data[pty,"share.absent"]/100*party.data[pty,"current.size"]+
+                                                             party.data[pty,"current.size"]*party.data[pty,"with.execALL"]/100)))))
+    typical.pty$rc2 <- car::recode(typical.pty$rc,c("c('Com Governo','Contra Governo')='Votando';else='Não Votando'"))
+    colvec <-c("red","darkblue","orange")
+    colvec <- alpha(colvec,"1")
+    theme_set(theme_grey(base_size = 10))
+    pdf(file=paste(pty,"typical.pdf",sep=""), bg="transparent", width=8, height=3) 
+    the.plot<- ggplot(typical.pty, aes(x=rc2, fill=rc))  + 
+        geom_bar(width=1) + labs(x=" ", y=" ") +
+        coord_flip() # +  opts(legend.position="none")
+    print(the.plot + labs(y="Legisladores "))
+    dev.off()
+    convert.png(file=paste(pty,"typical.pdf",sep=""))
+} 
