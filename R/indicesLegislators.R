@@ -43,18 +43,10 @@ if (use.current) {
 
 
 sql <- paste("select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b where a.rcfile=b.rcfile and (rcdate>cast('",init.date,"' as date) ) and (rcdate<cast('",final.date,"' as date) ) ",sep='')
-##sql <- paste("select  b.*, cast(b.rcdate as date) as rcdate  from  br_votacoes as b where   (rcdate>cast('",Sys.Date()-30,"' as date)) ",sep='')
-##sql <- paste("select  b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b where   (rcdate>cast('",Sys.Date()-365,"' as date)) ",sep='')
-##Lula 1st year
-##sql <- paste("select  a.*, b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b, br_votos as a  where a.rcfile=b.rcfile  and  (rcdate>cast('2003-02-01' as date)) and (rcdate<cast('2004-01-01' as date))  ",sep='')
-##FHC
-##sql <- paste("select  a.*, b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b, br_votos as a  where a.rcfile=b.rcfile  and  (rcdate>cast('1995-01-01' as date)) and (rcdate<cast('1996-01-01' as date))  ",sep='')
 
 res <- dbGetQueryU(connect,sql)
 
 res <- subset(res,bioid%in%cdeps)
-
-                                
 
 dim(res)
 
@@ -74,8 +66,13 @@ ausente <- recast(res,bioid~variable,measure.var="ausente",id.var=c("bioid"),fun
 ## the top 10 in absenteism
 infodeps <- dbGetQueryU(connect,"select a.*, b.* from br_deputados_current as a, br_bio as b where a.bioid=b.bioid")
 
+##links
+links <- dbGetQuery(connect, "select * from br_bioidpostid")
+
 faltosos <- ausente[order(ausente$ausente_count, decreasing=TRUE)[1:10],]
 faltosos <- merge(faltosos,infodeps)
+faltosos <- merge(faltosos,links)
+
 
 ## their pics
 faltosos.pics <- rf("images/bio/polaroid/foto"%+%faltosos$bioid%+%".png")
@@ -127,15 +124,101 @@ convert.png(fn)
 
 
 pp <- dbGetQuery(conwp,"select * from "%+%tname("posts")%+%" where post_title="%+%shQuote("Desempenho da Câmara"))$ID[1]
+
+
+
+
+
+
+
+
+
+
+## Absenteism by date
+rcs <- dbGetQueryU(connect, "select count(*) as n, rcvoteid, rc from br_votos group by rcvoteid, rc")
+rcs$total <- with(rcs, ave(n, rcvoteid, FUN=sum))
+rcs <- subset(rcs, rc=="Ausente")
+rcs$ausente_prop <- with(rcs, n/total)
+rcs <- merge(rcs, res2)
+
+## plot elections
+tmp <- rcs
+tmp$votes <- 1-tmp$ausente_prop
+pe <- function(p,year=2008,label="") {
+  p <- p+geom_rect(xmin=getlegisdays(paste(year,"-10-01",sep='')),
+                   xmax=getlegisdays(paste(year,"-10-30",sep='')),
+                   ymin=-10,
+                   ymax=1000,fill=alpha("gray80",.1)
+                   )
+  p <- p+geom_text(data=data.frame(legisday=getlegisdays(paste(year,"-04-01",sep='')), votes= 15,label=label,Legislatura="1995-1999"),aes(label=label),hjust=0, vjust=0,size=3.5)
+  p
+}
+p <- ggplot(data=tmp,aes(x=legisday,y=votes,group=Legislatura))
+p <- pe(p,year=2008,label="Eleições\nlocais")
+p <- pe(p,year=2010,label="Eleições\nnacionais")
+p <- p+geom_point(aes(colour=Legislatura), size=0.7)
+##p <- p+stat_smooth(se=FALSE,size=2)
+alphan <- .2
+p <- p+stat_smooth(aes(colour=Legislatura),size=1.5,se=FALSE,method=lm,formula=y~splines::ns(x,5),alpha=.2)
+##p <- p+stat_smooth(aes(colour=Legislatura),size=1,se=FALSE,method=lm,formula=y~splines::ns(x,3),alpha=.2)
+p <- p ## +scale_colour_manual(values = c(alpha("darkgreen",alphan),alpha("darkblue",alphan), alpha("darkred",alphan),"red"))
+## function for labels
+fx <- function(x=1,year=2006) paste("Dez ",x+year,"\n(",x,'o. ano)',sep='')
+p <- p+scale_x_continuous(name="",breaks=as.numeric(getlegisdays(paste(2008:2010,"-02-01",sep=''))),labels=fx(1:3),expand=c(0,0))
+p <- p+coord_cartesian(ylim=c(0,1))
+p <- p+scale_y_continuous(name="Presença nas votações nominais", breaks=seq(0,1,.2), formatter="percent")
+p <- p+scale_colour_manual(values = c(alpha("darkgreen",alphan),alpha("darkblue",alphan), alpha("darkred",alphan),"red"))
+p <- p+theme_bw()
+
+
+fn <- "images/abstentions/byrc.pdf"
+pdf(file=rf(fn),height=4,width=5)
+print(p)
+dev.off()
+
+convert.png(rf(fn))
+
+
+
+
+
+
+
+
+
 ## page under "desempenho"
-wpAddByTitle(conwp,post_title="Presença em plenário", post_category=data.frame(name="Headline",slug="headline"), post_content='<p><img width=400 src="/images/camara/abstentions.png" alt="Presença em plenário" /></p>',post_type="page",post_parent=pp,
+wpAddByTitle(conwp,post_title="Presença em plenário", post_category=data.frame(name="Headline",slug="headline"),
+             post_content='<p><img width=400 src="/images/camara/abstentions.png" alt="Presença em plenário" /></p>
+             <p><img width=400 src="/images/abstentions/byrc.png" alt="Presença em plenário" /></p>'
+             ,
+             post_type="page",post_parent=pp,
              custom_fields=data.frame(meta_key="Image",meta_value="/images/camara/abstentions.png"))
 
 
 
 
 
+
+
 ## Most absent
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
