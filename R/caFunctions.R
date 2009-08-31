@@ -4,6 +4,8 @@
 ##UPDATE summary AS t, (query) AS q SET t.C=q.E, t.D=q.F WHERE t.X=q.X
 ## use dbInsert (in wordpress.R)
 
+"%+%" <-  function(x,y) paste(x,y,sep='')
+
 tmptable <- function() paste("t",paste(sample(c(letters,0:9),10,replace=TRUE), collapse=""),sep='')
 
 usource <- function(...) source(...,encoding="utf8")
@@ -107,7 +109,29 @@ get.billno <- function(x) {
 }
 
 
-recode.party <- function(x) x <- car::recode(x,'"PFL"="DEM"')
+## recode parties
+recode.party <- function(x,n=NULL,label.other="Outro",reorder=TRUE) {
+  x <- car::recode(x,'"PFL"="DEM"')  
+  if (!is.null(n)) {
+    tx <- sort(table(x),decreasing=TRUE)
+    tx <- tx[(n+1):length(tx)]
+    smallp <- names(tx)
+    recodes <- paste(shQuote(smallp),shQuote(label.other),sep="=",collapse="; ")
+    print(recodes)
+    x <- car::recode(x,recodes)
+  } 
+  if (reorder) {
+    tx <- sort(table(x),decreasing=TRUE)
+    np <- names(tx)
+    if (!is.null(n)) {
+      ## small parties at the end
+      np <- c(np[np!=label.other],np[np==label.other])
+    }
+    print(np)
+    x <- factor(x,levels=np,ordered=TRUE)
+  }
+  x
+}
 
 pad0 <- function(x,mx=NULL,fill=0) {
   lx <- nchar(as.character(x))
@@ -165,24 +189,32 @@ firstlast <- function(x) {
 
 ##convert character vectors from a df from latin1
 iconv.df <- function(df,encoding="windows-1252") {
-  cv <- which(sapply(df,is.character))
-  for (i in cv) df[,i] <- iconv(df[,i],from=encoding)
-  fv <- which(sapply(df,is.factor))
-  for (i in fv) {
-    levels(df[,i]) <- iconv(levels(df[,i]),from=encoding)    
+  cv <- try(which(sapply(df,is.character)),silent=TRUE)
+  if (!"try-error" %in% class(cv)) {
+    for (i in cv) df[,i] <- iconv(df[,i],from=encoding)
+    fv <- which(sapply(df,is.factor))
+    for (i in fv) {
+      levels(df[,i]) <- iconv(levels(df[,i]),from=encoding)    
+    }
   }
   df
 }
 
 
-convert.png <- function(file="tmp.pdf") { #Convert pdf figures to, temporarily hear, but erase later., SHould be in caFunctions.R
+convert.png <- function(file="tmp.pdf", crop=FALSE) { #Convert pdf figures to, temporarily hear, but erase later., SHould be in caFunctions.R
+  if (crop) {
+    nf <- file%+%'crop.pdf'
+    try(system(paste("pdfcrop ",file,nf)))
+    try(system(paste("mv ", nf, file)))
+  }
   file <- path.expand(file)
   opts <-    paste(" -q -dNOPAUSE -dBATCH -sDEVICE=pngalpha -r300 -dEPSCrop -sOutputFile=",gsub(".pdf",".png",file)," ",file,sep='')
   if (.Platform$OS.type!="unix") {
-    command <- paste('"c:/Program Files/gs/gs8.63/bin/gswin32.exe"',opts)
+    gs <- '"c:/Program Files/gs/gs8.63/bin/gswin32.exe"'
   } else {
-    command <- paste("gs",opts)
+    gs <- "gs"
   }
+  command <- paste(gs, opts)
   print(command)  
   system(command,wait=TRUE)
 }
@@ -667,7 +699,6 @@ readbill <- function(file) {
   ##cat(tidy,file="~/Desktop/tmp.html")
   ##system("open ~/Desktop/tmp.html")
   ##FIX: figure out if encoding is necessary
-
   if(length(grep("Nenhuma proposição encontrada",tmp))>0) return(NULL)
   ## let's get the tramitacao table
   tramit.df <- read.tramit(tmp)
@@ -795,14 +826,20 @@ map.rc <- function(filenow='',title='') {
 }
 
 
-barplot.rc <- function(pty="PT",title="") {
+barplot.rc <- function(rc, gov=NA, title="") {
   ## FIX: add reference lines for the required number of Yes votes.
   ## Look for quorum.
-  votop <- names(which.max(table(rc[rc$party==pty,"rc"])))
-  rc$votop <- rc$rc==votop
+  require(ggplot2)
   rc$rc2 <- factor(with(rc,car::recode(rc,"'Sim'='A Favor';else='Contra'")),levels=c("Contra","A Favor"))
-  colvec <- c("darkblue","red")[order(table(rc$votop))]
-  colvec <- alpha(colvec,"1")
+  if (is.na(gov)) {
+    colvec <- rep("transparent",2)
+  } else {
+    colvec <- c("red","darkblue")
+    if (gov=="A Favor") {
+      colvec <- rev(colvec)
+    }
+    colvec <- alpha(colvec,"1")
+  }
   ## Stacked barchart
   wd <- .97
   theme_set(theme_grey(base_size = 10))
@@ -822,11 +859,11 @@ barplot.rc <- function(pty="PT",title="") {
                    )
   p <- p+opts(title=title)
   ## pdf(file=paste(fname,"bar.pdf",sep=""),height=6,width=6)
-  print(p)
   ##   dev.off()
   ##   pdf(file=paste(fname,"barsmall.pdf",sep=""),height=6,width=4)
   ##   print(psmall)
-  ##   dev.off()  
+  ##   dev.off()
+  list(large=p, small=psmall)
 }
 
 
@@ -1095,4 +1132,79 @@ decode.html <- function(x) {
     x <- gsub(paste(html.mat[i,2],";",sep=''),html.mat[i,1],x)
   }
   x
+}
+
+
+
+
+
+mosaic.rc <- function(rc, pmedians) {
+  require(ggplot2)
+  require(RColorBrewer)
+  require(reshape)
+  rc1 <- merge(pmedians, rc,  by.y="party", by.x="Partido", all.y=TRUE)
+  rc1$Partido[is.na(rc1$coord1D)] <- "Outros partidos"
+  rc1$Partido <- factor(rc1$Partido,levels=pmedians$Partido)
+  ## order by size
+  ##rc1$Partido <- reorder(rc1$Partido,ave(rc1$legis,rc1$Partido,FUN=length))
+  rc1$ct <- 1
+  lrc <- (c("Sim","Não","Obstrução","Abstenção","Ausente"))
+  rc1$Voto <- factor(rc1$rc,levels=rev(lrc))
+  ##m1 <- readShape.cent("~/reps/CongressoAberto/data/maps/BRASIL.shp","UF")
+  rcc <- recast(rc1,Partido~Voto,measure.var="ct",margins="grand_col")
+  rcc <- rcc[order(rcc$Partido),]
+  rcc$xmax <- cumsum(rcc$`(all)`)
+  rcc$xmin <- with(rcc,xmax-`(all)`)
+  rcc$`(all)` <- NULL
+  rcc <- data.frame(rcc)
+  ## melt data
+  dfm <- melt(rcc,id=c("Partido", "xmin","xmax"))
+  ## calculate ymin and ymax
+  dfm$variable <- factor(dfm$variable,levels=(lrc))
+  dfm <- dfm[order(dfm$Partido,dfm$variable),]
+  dfm1 <- ddply(dfm,.(Partido),transform,ymax=cumsum(value/sum(value)))
+  dfm1 <- ddply(dfm1,.(Partido),transform,ymin=ymax-value/sum(value))
+  ##Position of text
+  dfm1$xtext <- with(dfm1, xmin + (xmax-xmin)/2)
+  ##dfm1$xtext <- with(dfm1, xmin)
+  dfm1$ytext <- with(dfm1, ymin + (ymax-ymin)/2)
+  ## Partido sizes
+  dfm1$Partidosize <- with(dfm1,xmax-xmin)
+  ## text only for large Partido size
+  dfm1$valuet <- with(dfm1,ifelse((Partidosize>(.02*513)) & (value>0),round(value),""))
+  dfm1$Partidot <- with(dfm1,ifelse(Partidosize>(.02*513),as.character(Partido),""))
+  dfm1$variable <- factor(dfm1$variable,levels=rev(lrc))
+  p <- ggplot(dfm1, aes(ymin=ymin, ymax=ymax, xmin=xmin, xmax=xmax, fill=variable))
+  ##Use grey border to distinguish between the Partidos
+  p <- p + geom_rect(colour="gray70")
+## Formatting adjustments
+  p <- p + theme_bw() + labs(x=NULL, y=NULL, fill=NULL) +
+    opts(##legend.position="none",
+         panel.border=theme_blank(),
+         panel.grid.major=theme_line(colour=NA),axis.text.x=theme_blank(),axis.text.y=theme_blank(),axis.ticks=theme_blank(),
+         panel.grid.minor=theme_line(colour=NA))+
+           coord_equal(ratio=1/508)+
+             scale_fill_manual(values=rev(c(
+                                 brewer.pal(3,"Set1")[1],
+                                 ##"grey20",
+                                 rev(brewer.pal(4,"Blues")[1:4]))
+                                 ##gray(c(.4,.6,.7,.9)))
+                      ))
+  ## party labels
+  textdf <- unique(dfm1[,c("xtext","Partidot")])
+  ##browser()
+  ## small (no legends, party names inside plot)
+  ## name just the large parties
+  tx <- table(rc$party)>30
+  lp <- names(tx)[tx]
+  print(lp)
+  textdfsmall <- textdf[textdf$Partidot%in%lp,]
+  psmall <- p + annotate("text",x=textdfsmall$xtext, y=.1, label=paste(textdfsmall$Partidot),size=8, angle=45,just="left")
+  psmall <- psmall + opts(plot.margin = unit(c(0, 0, 0, 0), "lines"), legend.position = "none")
+  ## large
+  ## Add text labels. Ifelse used for Partido A labels.
+  plarge <- p + geom_text(aes(x=xtext , y=ytext, label=valuet),size=3)
+  ## Add Partido labels.
+  plarge <- plarge + annotate("text",x=textdf$xtext, y=1.04, label=paste(textdf$Partidot),size=3, angle=90,just="left")
+  list(small=psmall, large=plarge)
 }

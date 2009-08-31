@@ -34,6 +34,9 @@ govwins <- function(rcnow, rcs, rcgov) {
   if (nrow(rcgov)==0) return(NA)
   res <- NA
   billtype <- rcs$billtype
+  if (any(grepl("requerimento", rcs$billdescription, ignore.case=TRUE))) {
+    thresh <- sum(rcnow$rc=="Não")
+  }
   if (billtype=="PEC") {
     thresh <- 308
   } else if (billtype=="PLP") {
@@ -44,20 +47,10 @@ govwins <- function(rcnow, rcs, rcgov) {
   pro <- sum(rcnow$rc=="Sim")-thresh
   if (rcgov$rc=="Sim") {
     progov <- pro
-    if (pro>=0) {
-      res <- TRUE
-    } else {
-      res <- FALSE
-    }
-  } else if (rcgov$rc=="Não") {
+  } else  { ## FIX: is this doing it right for abstentions and the like?
     progov <- -pro
-    if (pro<0) {
-      res <- TRUE
-    } else {
-      res <- FALSE
-    }      
-  }
-  list(win=res, margin=progov)       
+  } 
+  list(margin=progov)       
 }
 
 
@@ -68,32 +61,43 @@ govpos <- function(rcgov) {
   ifelse(rcgov$rc=="Sim", "A Favor", "Contra")
 }
 
-sumroll <- function(rcnow, govres, rcgov) {
+sumroll <- function(rcnow, margin, rcgov) {
   res <- NULL
-  quorum <- 257 ## FIX: what happens when there is less than 513 deputies?
-  if (sum(rcnow$rc%in%c("Ausente", "Obstrução"))>256) {
+  ## FIX: what happens when there is less than 513 deputies?
+  quorum <- sum(rcnow$rc%in%c("Ausente", "Obstrução"))<257
+  if (!quorum) {
     res <- c(res, "Não houve quorum.")
   }
   tx <- table(rcnow$rc)
-  if (!tx["Ausente"]%in%1) {
-    names(tx) <- car::recode(names(tx),"'Ausente'='Ausentes'")
-  }
-  if (!is.na(govres)) {    
-    if (govres) {
-      res <- c(res, "O governo venceu a votação.")
-    } else {
-      res <- c(res, "O governo foi derrotado.")
+  ntx <- c("Sim", "Não", "Obstrução", "Abstenção",  "Ausente")
+  tx <- tx[ntx]
+  tx[is.na(tx)] <- 0
+  ntx <- c("Sim", "Não", "Obstrução", "Abstenção",  "Ausentes")
+  names(tx) <- ntx
+  res <- c(res,paste(names(tx)%+%": ",tx,collapse="; "))  
+  if (!is.na(margin)) {
+    res <- c(res, paste("Posição do governo:",rcgov$rc, ". ", sep=''))
+    if (quorum) {
+      if (margin>0) {
+        res <- c(res, "O governo venceu a votação.")
+      } else {
+        res <- c(res, "O governo foi derrotado.")
+      }
     }
-    res <- c(res, paste("Posição do governo:",rcgov$rc, ". "))
+  } else {
+    res <- c(res, "Não houve indicação do governo.")
   }
-  res <- c(res,paste(names(tx)%+%": ",tx,collapse="; "))
-  paste(res, collapse="\n")
+  paste(paste("<p>", res, collapse="</p>"), "</p>", collapse=" ")
 }
-
-postroll <- function(rcid=2797) {
+  
+postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
+  print(rcid)
   rcs <- dbGetQueryU(connect, "select * from br_votacoes where rcvoteid="%+%rcid)
   rcnow <- dbGetQueryU(connect, "select * from br_votos where rcvoteid="%+%rcid)
-  rcgov <- dbGetQueryU(connect, "select * from br_leaders where block='GOV' and rcvoteid="%+%rcid)
+  ## fix pfl
+  rcnow$party <- recode.party(rcnow$party)
+  ## FIX: what to do with abstentions, etc
+  rcgov <- dbGetQueryU(connect, "select * from br_leaders where block='GOV' and rc!='Liberado' and rcvoteid="%+%rcid)
   fulltext <- paste(rcs,collapse="\n")
   ## create post data
   title <- rcs$billproc
@@ -105,17 +109,20 @@ postroll <- function(rcid=2797) {
   tagslug <- gsub("[-,.]+","_",tagsname)
   tags <- data.frame(slug=tagslug,name=tagsname)
   billtype <- toupper(rcs$billtype)
-  govres <- govwins(rcnow, rcs, rcgov)
-  closevote <- govres[["margin"]]<10
-  govres <- govres[["win"]]
-  post_excerpt <- sumroll(rcnow, govres, rcgov)
+  margin <- govwins(rcnow, rcs, rcgov)
+  post_excerpt <- sumroll(rcnow, margin, rcgov)
   post_category <- data.frame(slug="votacoes",name="Votações")
-  if (!is.na(govres))  {
+  img <- paste("images/rollcalls/bar",rcid, sep='')
+  if (!is.na(margin))  {
     barplots <- barplot.rc(rcnow, govpos(rcgov))
-    if (govres) {
+    if (margin>0) {
       post_category <- rbind(post_category, data.frame(slug="governo_venceu",name="Governo venceu"))
     } else {
       post_category <- rbind(post_category, data.frame(slug="governo_perdeu",name="Governo foi derrotado"))
+    }
+    if (margin<10) {
+      img <- paste("images/rollcalls/mosaic",rcid, sep='')
+      post_category <- rbind(post_category, data.frame(slug="Featured",name="Featured"))
     }
   }
   ## plots!
@@ -125,7 +132,7 @@ postroll <- function(rcid=2797) {
   print.png <- function(plots, fn) {
     fns <- rf(fn%+%"small.pdf")
     fnl <- rf(fn%+%"large.pdf")
-    pdf(file=fns, bg="white")
+    pdf(file=fns, bg="white", width=5)
     print(plots[["small"]])
     dev.off()
     convert.png(fns, crop=TRUE)
@@ -134,21 +141,27 @@ postroll <- function(rcid=2797) {
     dev.off()
     convert.png(fnl, crop=TRUE)
   }
-  img <- paste("images/rollcalls/bar",rcid, sep='')
-  print.png(barplots, paste("images/rollcalls/bar",rcid, sep=''))
-  print.png(mosaicplots, paste("images/rollcalls/mosaic",rcid, sep=''))
-  postid <- wpAddByTitle(conwp,post_title=title,post_type="post",post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=post_excerpt,post_category=post_category,
-                         custom_fields=data.frame(meta_key="Image",meta_value=img%+%"small.png"),
-                         post_name=name,tags=tags)
-  ##FIX: create table in mysql
-  dbWriteTableU(connect,"br_rcvoteidpostid",data.frame(postid,rcvoteid=rcs$rcvoteid),append=TRUE)
-  res <- c(rcid,postid)
-  print(res)
-  res  
+  if (saveplot) {
+    print.png(barplots, paste("images/rollcalls/bar",rcid, sep=''))
+    print.png(mosaicplots, paste("images/rollcalls/mosaic",rcid, sep=''))
+  }
+  if (post) {
+    postid <- wpAddByName(conwp,post_title=title,post_type="post",post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=post_excerpt,post_category=post_category,
+                          custom_fields=data.frame(meta_key="Image",meta_value=img%+%"small.png"),
+                          post_name=name,tags=tags)
+    ##FIX: create table in mysql
+    dbWriteTableU(connect,"br_rcvoteidpostid",data.frame(postid,rcvoteid=rcs$rcvoteid),append=TRUE)
+    res <- c(rcid,postid)
+    print(res)
+    res
+  }
 }
 
 rcsnow <- sort(unlist(dbGetQuery(connect,"select rcvoteid from br_votacoes where legis="%+%"53")))
 
 ##billsnow <- bills$billid[sample(1:nrow(bills),2)]
 ##billsnow <- bills$billid[1:nrow(bills)]
-t(sapply(tail(sort(rcsnow),2),postroll))
+##t(sapply(rcsnow[-c(1:10)],postroll, saveplot=TRUE, post=FALSE))
+##t(sapply(rcsnow[-c(1:10)],postroll, saveplot=FALSE, post=FALSE))
+t(sapply(tail(rcsnow,20),postroll, saveplot=FALSE, post=TRUE))
+
