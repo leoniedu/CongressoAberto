@@ -45,6 +45,11 @@ usource(rf("R/downloadbills.R"), echo=TRUE)
 usource("processbills.R", echo=TRUE)
 
 
+## wnominate (weekly? monthly?)
+usource("wnomLastYear.R", echo=TRUE)
+
+
+
 ## election tables
 ## electoral finance tables (by election)
 ##usource("/Users/eduardo/reps/CongressoAberto/R/br_contribAssemble.R",echo=TRUE,encoding="latin1")

@@ -3,7 +3,11 @@ if (!exists("tname")) {
   tname <- function(name,us="") paste("wp_",us,name,sep='') 
 }
 
-encode <- function(x) URLencode(tolower(clean(gsub(" +|/","-",tolower(x)),cleanmore=FALSE)))
+encode <- function(x) {
+  newx <- gsub("-+","-",tolower(clean(gsub(" +|/","-",tolower(x)),cleanmore=FALSE)))
+  newx <- gsub("º","",newx)
+  newx <- URLencode(newx)
+}
 
 wpconfig <- function() {
   ## not needed
@@ -78,7 +82,36 @@ wpAddByTitle <- function(con,post_title,new_post_title=NULL,...) {
 }
 
 
-wpAdd <- function(con,...,fulltext=NULL,postid=NA,tags=NULL,verbose=FALSE) {
+setTerms <- function(con,postid,tags,taxonomy="post_tag") {
+  oldtaxids <- dbGetQuery(con,paste("select term_taxonomy_id from ",tname("term_relationships"), " where object_id=",postid))
+  if (nrow(oldtaxids)>0) {
+    oldtaxids <- oldtaxids[,1]
+    oldtermids <- dbGetQuery(con,paste("select term_id from ",tname("term_taxonomy"), " where term_taxonomy_id in (",paste(oldtaxids, collapse=", "),")"))[,1]
+  } else {
+    oldtermids <- oldtaxids <- NULL
+  }
+  ## add tags if they do not exist
+  ## Note:  slug is the unique identifier
+  dbInsert(con,tags,table=tname("terms"),update=TRUE)
+  ## get the term ids for all tags
+  termid <- unlist(lapply(tags$slug,function(x) dbGetQuery(con,paste("select term_id from ",tname("terms"), " where slug=",shQuote(x)))))
+  ## update taxonomy and count
+  ## only update count if the tag is new for this post
+  newtermids <- termid[!termid%in%oldtermids]
+  if (length(newtermids)>0) {
+    df <- data.frame(term_id=newtermids, taxonomy=taxonomy, count=1)
+    res <- dbInsert(con,df,extra=" on duplicate key update count=count+1",table=tname("term_taxonomy"))
+  }
+  termtaxid <- unlist(lapply(newtermids,function(x) dbGetQuery(con,paste("select term_taxonomy_id from ",tname("term_taxonomy"), " where term_id=",shQuote(x)))))
+  ## update table linking posts to tags
+  ## FIX: have to remove the old tags, categories and update counts before effectively editing the post
+  try(dbInsert(con,data.frame(object_id=postid,term_taxonomy_id=termtaxid),table=tname("term_relationships")),silent=TRUE)
+}
+## test
+## setTerms(conwp, 2643, data.frame(slug="test3", name="testname3"), "category")
+
+
+wpAdd <- function(con,...,custom_fields=NULL,fulltext=NULL,postid=NA,tags=NULL,post_category=NULL,verbose=FALSE) {
   ## FIX: the editing part is very limited. it does not do all it is supposed to. use with care.
   newpost <- is.na(postid)
   fields <- list(...)
@@ -104,30 +137,17 @@ wpAdd <- function(con,...,fulltext=NULL,postid=NA,tags=NULL,verbose=FALSE) {
     res <- dbInsert(con,c(id=postid,fields),table=tname("posts"),update=TRUE)
   }
   if (length(tags)>0) {
-    oldtags <- dbGetQuery(con,paste("select term_taxonomy_id from ",tname("term_relationships"), " where object_id=",postid))
-    if (nrow(oldtags)>0) {
-      oldtags <- oldtags[,1]
-    } else {
-      oldtags <- NULL
-    }
-    ## add tags if they do not exist
-    ## Note:  slug is the unique identifier
-    dbInsert(con,tags,table=tname("terms"),update=TRUE)
-    ## get the term ids for all tags
-    termid <- unlist(lapply(tags$slug,function(x) dbGetQuery(con,paste("select term_id from ",tname("terms"), " where slug=",shQuote(x)))))
-    ## update table linking posts to tags
-    ## FIX: have to remove the old tags, categories and update counts before effectively editing the post
-    try(dbInsert(con,data.frame(object_id=postid,term_taxonomy_id=termid),table=tname("term_relationships")),silent=TRUE)
-    ## update taxonomy and count
-    ## only update count if the tag is new for this post
-    newtags <- termid[!termid%in%oldtags]
-    if (length(newtags)>0) {
-      df <- data.frame(term_id=newtags,taxonomy="post_tag",count=1)
-      dbInsert(con,df,extra=" on duplicate key update count=count+1",table=tname("term_taxonomy"))
-    }
+    setTerms(con,postid,tags,"post_tag")
+  }
+  if (length(post_category)>0) {
+    print("NOW")
+    setTerms(con,postid,post_category,"category")
   }
   ## update  custom fields FIX: we delete and replace. anything better?
   cf <- data.frame(post_id=postid,meta_key=c("disable_wptexturize","disable_wpautop","disable_convert_chars","disable_convert_smilies"),meta_value=1,stringsAsFactors=FALSE)
+  if (!is.null(custom_fields)) {
+    cf <- rbind(data.frame(post_id=postid,custom_fields),cf)
+  }
   if (!is.null(fulltext)) {
     ## add text to make the posts searchable
     cf <- rbind(cf,data.frame(post_id=postid,meta_key="fulltext",meta_value=fulltext))
@@ -139,6 +159,10 @@ wpAdd <- function(con,...,fulltext=NULL,postid=NA,tags=NULL,verbose=FALSE) {
   ## return the postid
   postid
 }
+
+
+
+
 
 wpClean <- function() {
   res <- lapply(c("postmeta","posts","term_relationships","term_taxonomy","terms"),function(x) dbGetQuery(conwp,paste("truncate ",tname(x))))

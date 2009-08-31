@@ -74,7 +74,7 @@ $isByAuthor = true;
 <?php if ('open' == $post->comment_status) : ?>
 
 
-<h3 id="respond">Leave your response!</h3>
+<h3 id="respond">Comente este artigo!</h3>
 
 <?php if ( get_option('comment_registration') && !$user_ID ) : ?>
 <p>You must be <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php echo urlencode(get_permalink()); ?>">logged in</a> to post a comment.</p>

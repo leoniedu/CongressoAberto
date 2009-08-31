@@ -27,18 +27,18 @@ connect.wp()
 
 
 ## add the parent page "Analises"
-pid <- wpAddByTitle(conwp,post_title="Análises",post_name="analises", post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
+##pid <- wpAddByTitle(conwp,post_title="Análises",post_name="analises", post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
+
+pid <- wpAddByTitle(conwp,post_title="Desempenho da Câmara",post_name=encode("Desempenho da Câmara"), post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
+
 
 
 sql2 <- paste("select  b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b where legis>49",sep='')
 res2 <- dbGetQueryU(connect,sql2)
-
 res2$Data <- as.Date(res2$rcdate)
 res2$legisday <- getlegisdays(res2$rcdate)
 res2$Legislatura <- get.legis.text(get.legis.year(res2$legis))
-
 rcbydate <- recast(res2,legisday+Data+Legislatura~variable,measure.var="rcdate",fun.aggregate=function(x) length(unique(x)))
-
 res2$datemonth <- getmonth(res2$rcdate)
 res2$legismonth <- getlegisdays(res2$datemonth)
 
@@ -105,10 +105,7 @@ p <- p + geom_point(data=rcbymonth,aes(x=legismonth,y=ifelse(rcdate==0,0.05,(rcd
 pdf(file=rf("images/camara/rcbyweek.pdf"),width=6,height=4)
 print(p)
 dev.off()
-
 convert.png(file=rf("images/camara/rcbyweek.pdf"))
-
-gs -q -dNOPAUSE -dBATCH -sDEVICE=pngalpha -r300 -dEPSCrop -sOutputFile=/Users/eduardo/reps/CongressoAberto/images/camara/rcbyweek.png /Users/eduardo/reps/CongressoAberto/images/camara/rcbyweek.pdf
 
 dx <- function(x) with(x,{
   x$votes <- 1
@@ -120,15 +117,32 @@ tmp <- ddply(res2,"legis",dx)
 alphan <- 1
 tmp$Legislatura <- get.legis.text(get.legis.year(tmp$legis))
 
-p2 <- qplot(legisday,votes,data=tmp, colour=Legislatura,group=Legislatura,geom=c("point"),size=I(1.2))+scale_x_continuous(name="",breaks=as.numeric(getlegisdays(paste(2008:2010,"-02-01",sep=''))),labels=fx(1:3),expand=c(0,0))+theme_bw()+scale_colour_manual(values = c(alpha("darkgreen",alphan),alpha("darkblue",alphan), alpha("darkred",alphan),"red"))
+p2 <- qplot(legisday,votes,data=tmp, colour=Legislatura,group=Legislatura,geom=c("line"),size=I(1.2))+scale_x_continuous(name="",breaks=as.numeric(getlegisdays(paste(2008:2010,"-02-01",sep=''))),labels=fx(1:3),expand=c(0,0))+theme_bw()+scale_colour_manual(values = c(alpha("darkgreen",alphan),alpha("darkblue",alphan), alpha("darkred",alphan),"red"))
+p2 <- p2+scale_y_continuous(name="Número de Votações")
 
 
 pdf(file=rf("images/camara/cumulativerc.pdf"),width=6,height=4)
 print(p2)
 dev.off()
 
-convert.png(file=rf("images/camara/cumulativerc.pdf"), density="150x150",resize="480x320",quality="90")
+convert.png(file=rf("images/camara/cumulativerc.pdf"))
 
 
 ## add page
-votid <- wpAddByTitle(conwp,post_title="Número de Votações", post_parent=pid, post_content='<p><img src="/images/camara/rcbyweek.png" alt="Número de votações por semana" /></p><img src="/images/camara/cumulativerc.png" alt="Número de votações acumuladas" /> ', )
+votid <- wpAddByTitle(conwp,post_title="Número de Votações", post_parent=pid,
+                      post_content='<p><img width=400 src="/images/camara/rcbyweek.png" alt="Número de votações por semana" /></p><img width=400 src="/images/camara/cumulativerc.png" alt="Número de votações acumuladas" /> ')
+
+
+
+
+
+
+
+
+
+sql2 <- paste("select  b.*, cast(b.rcdate as date) as rcdate  from br_votacoes as b where legis>49",sep='')
+res2 <- dbGetQueryU(connect,sql2)
+res2$legisday <- getlegisdays(res2$rcdate)
+res2$Legislatura <- get.legis.text(get.legis.year(res2$legis))
+
+

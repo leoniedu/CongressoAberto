@@ -1,7 +1,6 @@
 <?php get_header(); ?>
-
 	<div id="content">
-	
+
 	<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 
 	<div class="post" id="post-<?php the_ID(); ?>">
@@ -34,15 +33,17 @@
 	<div style="float:right;display:block;"><?php if(function_exists('the_ratings')) { the_ratings(); } ?></div>
 	</div>
 
+	<?php edit_post_link('Edit this entry.', '<p>', '</p>'); ?>
+
 	</div>
-	
+
 	<div id="comments">
 	<?php comments_template(); ?>
 	</div>
 
 	<?php endwhile; else: ?>
 
-	<p>Sorry, no posts matched your criteria.</p>
+	<p>Não existe artigo com esses critérios.</p>
 
 	<?php endif; ?>
 

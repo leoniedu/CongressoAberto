@@ -13,6 +13,16 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO"; -- Normally, you generate the next sequenc
 
 use congressoaberto;
 
+DROP TABLE IF EXISTS `br_partymedians`;
+CREATE TABLE IF NOT EXISTS `br_partymedians` (
+  `Partido` varchar(20),
+  `coord1D` double default NULL,
+  `initdate` varchar(10),
+  `finaldate` varchar(10),
+    PRIMARY KEY (Partido, initdate, finaldate)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 DROP TABLE IF EXISTS `br_bio`;
 CREATE TABLE  `br_bio` (
     `bioid` int COMMENT 'You can add a comment here',
@@ -110,6 +120,17 @@ CreatedBy=
 updatedBy=';	
 
 
+DROP TABLE IF EXISTS `br_rcvoteidpostid`;
+CREATE TABLE  `br_rcvoteidpostid` (
+    `rcvoteid` int,		
+    `postid` int,
+    PRIMARY KEY  (`rcvoteid`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='
+Content=Link table between wordpress posts and rcvoteid
+CreatedBy=
+updatedBy=';	
+
+
 DROP TABLE IF EXISTS `br_bioidpostid`;
 CREATE TABLE  `br_bioidpostid` (
     `bioid` int,		
@@ -133,7 +154,7 @@ CREATE TABLE  `br_votos` (
     `rcfile` varchar(30),
     `rcvoteid` int,
     `bioid` int,
-    PRIMARY KEY  (`bioid`,`rcfile`(30),`legis`)
+    PRIMARY KEY  (`bioid`,`rcvoteid`,`legis`)
     ) 
 -- ENGINE=InnoDB 
 DEFAULT CHARSET=utf8 COMMENT=''
@@ -141,6 +162,7 @@ DEFAULT CHARSET=utf8 COMMENT=''
 -- PARTITIONS 6
 ;
 alter table br_votos add key rcfile_index(rcfile);
+alter table br_votos add key rcvoteid_index(rcvoteid);
 
 
 DROP TABLE IF EXISTS `br_votacoes`;
@@ -159,7 +181,7 @@ CREATE TABLE  `br_votacoes` (
     `billtype` varchar(30),
     `legis` int,
     `rcfile` varchar(30),
-    PRIMARY KEY  (`rcfile`(30),`legis`)
+    PRIMARY KEY  (`rvoteid`,`legis`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ;
 alter table br_votacoes add key legis_index(legis);
