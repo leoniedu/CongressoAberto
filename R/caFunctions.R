@@ -804,24 +804,40 @@ states <- c("AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG", "P
 
 
 
-map.rc <- function(filenow='',title='') {  
+map.rc <- function(rc, filenow='',title='', large=TRUE, percent=FALSE) {
+  if (percent) {
+    pct <- 100
+    legend.title <- "Votando a favor da proposição (%)"    
+  } else {
+    pct <- 1
+    legend.title <- "Proporção votando a favor da proposição"    
+  }
+  rc$rc <- car::recode(rc$rc, "'Obstrução'='Não'")
+  rc <- subset(rc, rc%in%c("Sim", "Não"))
   rc$rc2 <- rc$rc=="Sim"
-  tmp <- recast(rc,state~variable,measure.var="rc2",fun.aggregate=function(x) c(n=length(x),p=sum(x)/length(x)))
+  tmp <- recast(rc,state~variable,measure.var="rc2",fun.aggregate=function(x) c(n=length(x),p=pct*sum(x)/length(x)))
   tmp$UF <- tmp$state
   m2 <- merge.sp(m1,tmp,by="UF")
   par(bg="grey")
   n1 <- 4
-  seqx <- c(0,.15,.3,.45,.55,.70,.85,1)
+  seqx <- c(0,.15,.3,.45,.55,.70,.85,1)*pct
   col.vec <- c(rev(brewer.pal(n1,"Blues")[-1]),"grey95",brewer.pal(n1,"Reds")[-1])
   ##pdf(file=paste(fname,"small.pdf",sep=""),height=6,width=6)
   ##par(mai=c(0,0,0,0))
   ##plot.heat(m2,NULL,"concpt_p",title="Proporção votando\njunto com o PT",breaks=seqx,reverse=FALSE,cex.legend=1,bw=1,col.vec=col.vec,plot.legend=FALSE)
   ##dev.off()
   ##   pdf(file=paste(fname,".pdf",sep=""),height=6,width=6)
-  par(mai=c(0,0,0.6,0))
-  plot.heat(m2,NULL,"rc2_p",title="Proporção votando a favor da proposição",breaks=seqx,reverse=FALSE,cex.legend=1,bw=1,col.vec=col.vec,main=filenow)
-  with(m2@data,text(x,y,UF,cex=0.8),col="grey30")
-  mtext(title,3, cex=.9)
+  if (large) {
+    par(mai=c(0,0,0.6,0))
+    plot.heat(m2,NULL,"rc2_p",title=legend.title,breaks=seqx,reverse=FALSE,cex.legend=1,bw=1,col.vec=col.vec,main=filenow)
+    with(m2@data,text(x,y,UF,cex=0.8),col="grey30")
+    mtext(title,3, cex=.9)
+  } else {
+    par(mai=c(0,0,0,0))
+    plot.heat(m2,NULL,"rc2_p",breaks=seqx,reverse=FALSE,cex.legend=1,bw=1,col.vec=col.vec,main=filenow,plot.legend=FALSE)
+    ##with(m2@data,text(x,y,UF,cex=0.8),col="grey30")
+    mtext(title,3, cex=.9)
+  }
   ##   dev.off()
 }
 
