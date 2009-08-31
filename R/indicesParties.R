@@ -167,7 +167,7 @@ dbWriteTableU(connect,"br_partyindices_rank",party.data.ranks)
 ### Plot governism graphs #####
 for(i in 1:nrow(party.data)){
     setwd(paste(rf("images"),"/governism",sep=""))
-    p<-rownames(party.data)[i]
+    pty<-rownames(party.data)[i]
     the.party <- subset(rcparty,partyR==p)
     the.party <- merge(the.party,rcnow,by="rcvoteid")
     the.party$rcdate <- as.Date(the.party$rcdate,format="%Y-%m-%d")
@@ -187,11 +187,11 @@ for(i in 1:nrow(party.data)){
     setwd(paste(rf("images"),"/typical",sep=""))
     pty<-rownames(party.data)[i]
     typical.pty <- data.frame(party=pty,
-                              rc=factor(c(rep("Ausente",party.data[pty,"current.size"]*party.data[pty,"share.absent"]/100),
-                                   rep("Com Governo",party.data[pty,"current.size"]*party.data[pty,"with.execALL"]/100),
+                              rc=factor(c(rep("Ausente",round(party.data[pty,"current.size"]*party.data[pty,"share.absent"]/100)),
+                                   rep("Com Governo",round(party.data[pty,"current.size"]*party.data[pty,"with.execDIV"]/100)),
                                    rep("Contra Governo",party.data[pty,"current.size"]-
-                                                            (party.data[pty,"share.absent"]/100*party.data[pty,"current.size"]+
-                                                             party.data[pty,"current.size"]*party.data[pty,"with.execALL"]/100)))))
+                                                           round((party.data[pty,"share.absent"]/100*party.data[pty,"current.size"]+
+                                                             party.data[pty,"current.size"]*party.data[pty,"with.execDIV"]/100))))))
     typical.pty$rc2 <- car::recode(typical.pty$rc,c("c('Com Governo','Contra Governo')='Votando';else='Não Votando'"))
     colvec <-c("red","darkblue","orange")
     colvec <- alpha(colvec,"1")
