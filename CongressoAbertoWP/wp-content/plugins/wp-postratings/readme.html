@@ -1,0 +1,925 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>	
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>WP-PostRatings 1.50 Readme</title>
+	<style type="text/css" media="screen">
+		/* Default Style */
+		BODY {
+			font-family: Verdana, Arial;
+			font-size: 12px;
+			color: #000000;
+			background: #FFFFFF;
+		}
+		P {
+			padding-left: 10px;
+		}
+		BLOCKQUOTE {
+			margin: 10px 20px 0px 20px;
+			padding: 10px;
+			border: 1px solid #8d8d8d;
+			background-color: #f5f5f5;
+			overflow: auto;
+		}
+		LI {
+			margin-top: 20px;
+		}
+		UL LI UL LI {
+			margin-top: 10px;
+		}
+		A, A:active, A:link, A:visited {
+			color: #2d3a4c;
+			text-decoration: none;
+		}
+		A:hover {
+			color: #5577a5;
+			text-decoration: underline;
+		}
+		/* Place Holder Style */
+		#Container {
+			width: 780px;
+			margin-left: auto;
+			margin-right: auto; 
+		}
+		#Content {
+			background-color: #fafafa;
+			border: 1px solid #a2b6cb;
+			padding: 10px;
+			margin-top: -13px;
+		}
+		/* Title Style */
+		#Title {
+			font-family: Verdana, Arial;
+			font-size: 22px;
+			font-weight: bold;
+			color: #389aff;
+			border-bottom: 1px solid #389aff;
+			margin-bottom: 10px;
+		}
+		.SubTitle {
+			font-family: Verdana, Arial;
+			font-size: 18px;
+			font-weight: bold;
+			color: #5b87b4;
+		}
+		.SubSubTitle {
+			font-family: Verdana, Arial;
+			font-size: 14px;
+			font-weight: bold;
+			color: #73a4d6;
+		}
+		/* Tabs */
+		UL#Tabs {
+			font-family: Verdana, Arial;
+			font-size: 12px;
+			font-weight: bold;
+			list-style-type: none;
+			padding-bottom: 28px;
+			border-bottom: 1px solid #a2b6cb;
+			margin-bottom: 12px;
+			z-index: 1;
+		}
+		#Tabs LI.Tab {
+			float: right;
+			height: 25px;
+			background-color: #deedfb;
+			margin: 2px 0px 0px 5px;
+			border: 1px solid #a2b6cb;
+		}
+		#Tabs LI.Tab A {
+			float: left;
+			display: block;
+			color: #666666;
+			text-decoration: none;
+			padding: 5px;
+		}
+		#Tabs LI.Tab A:hover {
+			background-color: #bfe0fe;
+			border-bottom: 1px solid #bfe0fe;
+		}
+		/* Selected Tab */
+		#Tabs LI.SelectedTab {
+			float: right;
+			height: 25px;
+			background-color: #fafafa;
+			margin: 2px 0px 0px 5px;
+			border-top: 1px solid #a2b6cb;
+			border-right: 1px solid #a2b6cb;
+			border-bottom: 1px solid #fafafa;
+			border-left: 1px solid #a2b6cb;
+		}
+		#Tabs LI.SelectedTab A {
+			float: left;
+			display: block;
+			color: #666666;
+			text-decoration: none;
+			padding: 5px;
+			cursor: default;
+		}
+		/* Copyright */
+		#Copyright {
+			text-align: center;
+		}
+	</style>
+	<script type="text/javascript">
+	/* <![CDATA[*/
+		// Index Page
+		function index() {
+			// Tab
+			document.getElementById('IndexTab').className = 'SelectedTab';
+			document.getElementById('ChangelogTab').className = 'Tab';
+			document.getElementById('InstallTab').className = 'Tab';
+			document.getElementById('UpgradeTab').className = 'Tab';
+			document.getElementById('UsageTab').className = 'Tab';
+			// Page
+			document.getElementById('Index').style.display= 'block';
+			document.getElementById('Changelog').style.display = 'none';
+			document.getElementById('Install').style.display = 'none';
+			document.getElementById('Upgrade').style.display = 'none';
+			document.getElementById('Usage').style.display = 'none';
+		}
+		// Changelog Page
+		function changelog() {
+			// Tab
+			document.getElementById('IndexTab').className = 'Tab';
+			document.getElementById('ChangelogTab').className = 'SelectedTab';
+			document.getElementById('InstallTab').className = 'Tab';
+			document.getElementById('UpgradeTab').className = 'Tab';
+			document.getElementById('UsageTab').className = 'Tab';
+			// Page
+			document.getElementById('Index').style.display = 'none';
+			document.getElementById('Changelog').style.display = 'block';
+			document.getElementById('Install').style.display = 'none';
+			document.getElementById('Upgrade').style.display = 'none';
+			document.getElementById('Usage').style.display = 'none';
+		}
+		// Installation Page
+		function install() {
+			// Tab
+			document.getElementById('IndexTab').className = 'Tab';
+			document.getElementById('ChangelogTab').className = 'Tab';
+			document.getElementById('InstallTab').className = 'SelectedTab';
+			document.getElementById('UpgradeTab').className = 'Tab';
+			document.getElementById('UsageTab').className = 'Tab';
+			// Page
+			document.getElementById('Index').style.display= 'none';
+			document.getElementById('Changelog').style.display = 'none';
+			document.getElementById('Install').style.display = 'block';
+			document.getElementById('Upgrade').style.display = 'none';
+			document.getElementById('Usage').style.display = 'none';
+		}
+		// Upgrade Page
+		function upgrade() {
+			// Tab
+			document.getElementById('IndexTab').className = 'Tab';
+			document.getElementById('ChangelogTab').className = 'Tab';
+			document.getElementById('InstallTab').className = 'Tab';
+			document.getElementById('UpgradeTab').className = 'SelectedTab';
+			document.getElementById('UsageTab').className = 'Tab';
+			// Page
+			document.getElementById('Index').style.display= 'none';
+			document.getElementById('Changelog').style.display = 'none';
+			document.getElementById('Install').style.display = 'none';
+			document.getElementById('Upgrade').style.display = 'block';
+			document.getElementById('Usage').style.display = 'none';
+		}
+		// Usage Page
+		function usage() {
+			// Tab
+			document.getElementById('IndexTab').className = 'Tab';
+			document.getElementById('ChangelogTab').className = 'Tab';
+			document.getElementById('InstallTab').className = 'Tab';
+			document.getElementById('UpgradeTab').className = 'Tab';
+			document.getElementById('UsageTab').className = 'SelectedTab';
+			// Page
+			document.getElementById('Index').style.display= 'none';
+			document.getElementById('Changelog').style.display = 'none';
+			document.getElementById('Install').style.display = 'none';
+			document.getElementById('Upgrade').style.display = 'none';
+			document.getElementById('Usage').style.display = 'block';
+		}
+	/* ]]> */
+	</script>
+</head>
+<body>
+<div id="Container">
+	<!-- Title -->
+	<div id="Title">WP-PostRatings 1.50&nbsp;&nbsp;&nbsp;<span style="color: #aaaaaa;">Readme</span></div>
+
+	<!-- Tabs -->
+	<ul id="Tabs">
+		<li id="UsageTab" class="Tab"><a href="#Usage" onclick="usage(); return false;" title="Usage Instructions">Usage</a></li>
+		<li id="UpgradeTab" class="Tab"><a href="#Upgrade" onclick="upgrade(); return false;" title="Upgrade Instructions">Upgrade</a></li>
+		<li id="InstallTab" class="Tab"><a href="#Installation" onclick="install(); return false;" title="Installation Instructions">Installation</a></li>
+		<li id="ChangelogTab" class="Tab"><a href="#Changelog" onclick="changelog(); return false;" title="Changelog">Changelog</a></li>
+		<li id="IndexTab" class="SelectedTab"><a href="#Index" onclick="index(); return false;" title="Index Instructions">Index</a></li>
+	</ul>
+
+	<!-- Content -->
+	<div id="Content">
+		<!-- Index -->
+		<div id="Index">
+			<div class="SubTitle">&raquo; Index</div>
+			<div class="SubSubTitle">Plugin Information</div>
+			<p>
+				<strong>Author:</strong><br />
+				<strong>&raquo;</strong> Lester 'GaMerZ' Chan
+			</p>
+			<p>
+				<strong>Website:</strong><br />
+				<strong>&raquo;</strong> <a href="http://lesterchan.net/" title="http://lesterchan.net/">http://lesterchan.net/</a>
+			</p>
+			<p>
+				<strong>Features:</strong><br />
+				<strong>&raquo;</strong> Adds an AJAX rating system for your WordPress blog's post/page.
+			</p>
+			<p>
+				<strong>Download:</strong><br />
+				<strong>&raquo;</strong> <a href="http://downloads.wordpress.org/plugin/wp-postratings.1.50.zip" title="http://downloads.wordpress.org/plugin/wp-postratings.1.50.zip">WP-PostRatings 1.50 For WordPress 2.8.x</a><br />
+				<strong>&raquo;</strong> <a href="http://downloads.wordpress.org/plugin/wp-postratings.1.40.zip" title="http://downloads.wordpress.org/plugin/wp-postratings.1.40.zip">WP-PostRatings 1.40 For WordPress 2.7.x</a><br />
+				<strong>&raquo;</strong> <a href="http://downloads.wordpress.org/plugin/wp-postratings.1.31.zip" title="http://downloads.wordpress.org/plugin/wp-postratings.1.31.zip">WP-PostRatings 1.31 For WordPress 2.5.x And 2.6.x</a><br />
+				<strong>&raquo;</strong> <a href="http://downloads.wordpress.org/plugin/wp-postratings.1.20.zip" title="http://downloads.wordpress.org/plugin/wp-postratings.1.20.zip">WP-PostRatings 1.20 For WordPress 2.3.x</a><br />
+				<strong>&raquo;</strong> <a href="http://downloads.wordpress.org/plugin/wp-postratings.1.11.zip" title="http://downloads.wordpress.org/plugin/wp-postratings.1.11.zip">WP-PostRatings 1.11 For WordPress 2.1.x And 2.2.x</a><br />
+				<strong>&raquo;</strong> <a href="http://downloads.wordpress.org/plugin/wp-postratings.1.05.zip" title="http://downloads.wordpress.org/plugin/wp-postratings.1.05.zip">WP-PostRatings 1.05 For WordPress 2.0.x</a><br />
+				<strong>&raquo;</strong> <a href="http://downloads.wordpress.org/plugin/wp-postratings.1.03wp1.52.zip" title="http://downloads.wordpress.org/plugin/wp-postratings.1.03wp1.52.zip">WP-PostRatings 1.03 For WordPress 1.5.2</a>
+			</p>
+			<p>
+				<strong>Screenshots:</strong><br />
+				<strong>&raquo;</strong> <a href="http://lesterchan.net/wordpress/screenshots/browse/wp-postratings/" title="http://lesterchan.net/wordpress/screenshots/browse/wp-postratings/">http://lesterchan.net/wordpress/screenshots/browse/wp-postratings/</a>
+			</p>
+			<p>
+				<strong>Demo:</strong><br />
+				<strong>&raquo;</strong> <a href="http://lesterchan.net/wordpress/" title="http://lesterchan.net/wordpress/">http://lesterchan.net/wordpress/</a>
+			</p>
+			<p>
+				<strong>Development:</strong><br />
+				<strong>&raquo;</strong> <a href="http://dev.wp-plugins.org/browser/wp-postratings/" title="http://dev.wp-plugins.org/browser/wp-postratings/">http://dev.wp-plugins.org/browser/wp-postratings/</a>
+			</p>
+			<p>
+				<strong>Translations:</strong><br />
+				<strong>&raquo;</strong> <a href="http://dev.wp-plugins.org/browser/wp-postratings/i18n/" title="http://dev.wp-plugins.org/browser/wp-postratings/i18n/">http://dev.wp-plugins.org/browser/wp-postratings/i18n/</a>
+			</p>
+			<p>
+				<strong>Support Forums:</strong><br />
+				<strong>&raquo;</strong> <a href="http://forums.lesterchan.net/index.php?board=17.0" title="http://forums.lesterchan.net/index.php?board=17.0">http://forums.lesterchan.net/index.php?board=17.0</a>
+			</p>
+			<p>
+				<strong>Credits:</strong><br />
+				<strong>&raquo;</strong> Icons courtesy of <a href="http://www.famfamfam.com/" title="http://www.famfamfam.com/">FamFamFam</a> and <a href="http://www.everaldo.com/" title="http://www.everaldo.com/">Everaldo</a>.<br />
+				<strong>&raquo;</strong> __ngetext() by <a href="http://hweia.ru/" title="http://hweia.ru/">Anna Ozeritskaya</a>.<br />
+				<strong>&raquo;</strong> Right To Left Language Support by <a href="http://persian-programming.com/" title="http://persian-programming.com/">Kambiz R. Khojasteh</a>.
+			</p>
+			<p>
+				<strong>Note:</strong><br />
+				<strong>&raquo;</strong> The <strong>Changelog</strong>, <strong>Installation</strong>, <strong>Upgrade</strong>, <strong>Usage</strong> Tab at the top of the page.
+			</p>
+			<p>
+				<strong>Donations:</strong><br />
+				<strong>&raquo;</strong> I spent most of my free time creating, updating, maintaining and supporting these plugins, if you really love my plugins and could spare me a couple of bucks as my school allowance, I will really appericiate it. If not feel free to use it without any obligations. Thank You. My Paypal account is 
+				<script type="text/javascript">
+					/* <![CDATA[*/
+					document.write(' <strong>lesterchan@gmail.com</strong>.');
+					/* ]]> */
+				</script>
+			</p>
+		</div>
+
+		<!-- Changelog -->
+		<div id="Changelog" style="display: none;">
+			<div class="SubTitle">&raquo; Changelog</div>
+			<ul>
+				<li>
+					<strong>Version 1.50 (01-06-2009)</strong>
+					<ul>
+						<li>NEW: Works For WordPress 2.8 Only</li>
+						<li>NEW: Javascript Now Placed At The Footer</li>
+						<li>NEW: Uses jQuery Instead Of tw-sack</li>
+						<li>NEW: Minified Javascript Instead Of Packed Javascript</li>
+						<li>NEW: Renamed postratings-admin-js-packed.js To postratings-admin-js.js</li>
+						<li>NEW: Renamed postratings-admin-js.js To postratings-admin-js.dev.js</li>
+						<li>NEW: Renamed postratings-js-packed.js To postratings-js.js</li>
+						<li>NEW: Renamed postratings-js.js To postratings-js.dev.js</li>
+						<li>NEW: Translate Javascript Variables Using wp_localize_script()</li>
+						<li>NEW: Added In Most Rated & Highest Rated Pages To WP-Stats</li>
+						<li>NEW: Added get_highest_score(), get_highest_score_category(), get_highest_score_range(), get_highest_score_range_category()</li>
+						<li>NEW: Use _n() Instead Of __ngettext() And _n_noop() Instead Of __ngettext_noop()</li>
+						<li>NEW: Uses New Widget Class From WordPress</li>
+						<li>NEW: Merge Widget Code To wp-postratings.php And Remove wp-postratings-widget.php</li>
+						<li>NEW: get_highest_rated_tag() And get_lowest_rated_tag()</li>
+						<li>FIXED: Uses $_SERVER['PHP_SELF'] With plugin_basename(__FILE__) Instead Of Just $_SERVER['REQUEST_URI']</li>
+						<li>FIXED: Ensure That Post Is Not A Revision</li>
+						<li>FIXED: Missing + Sign For Thumbs Up/Down Ratings If Score Is Positive</li>
+						<li>FIXED: Logged By Username Now Shows Ratings Results To Users Who Did Not Login</li>
+						<li>FIXED: Multiple Loops Filtered Not Cleared</li>
+					</ul>
+				</li>
+				<li>
+					<strong>Version 1.40 (12-12-2008)</strong>
+					<ul>
+						<li>NEW: Works For WordPress 2.7 Only</li>
+						<li>NEW: Load Admin JS And CSS Only In WP-PostRatings Admin Pages</li>
+						<li>NEW: Added postratings-admin-css.css For WP-PostRatings Admin CSS Styles</li>
+						<li>NEW: Allow The Usage Of PNG Icons Or GIF Icons. See Usage Tab.<li>
+						<li>NEW: Added get_lowest_rated_range() Function</li>
+						<li>NEW: Right To Left Language Support by <a href="http://persian-programming.com/" title="http://persian-programming.com/">Kambiz R. Khojasteh</a></li>
+						<li>NEW: Added "postratings-css-rtl.css" by <a href="http://persian-programming.com/" title="http://persian-programming.com/">Kambiz R. Khojasteh</a></li>
+						<li>NEW: Added 3 Functions For Creating HTML Code Of Rating Images by <a href="http://persian-programming.com/" title="http://persian-programming.com/">Kambiz R. Khojasteh</a></li>
+						<li>NEW: Call postratings_textdomain() In create_ratinglogs_table() and process_ratings() by <a href="http://persian-programming.com/" title="http://persian-programming.com/">Kambiz R. Khojasteh</a></li>
+						<li>NEW: Replaced Template Variable Calculations With expand_ratings_template() by <a href="http://persian-programming.com/" title="http://persian-programming.com/">Kambiz R. Khojasteh</a></li>
+						<li>NEW: Added Filter expand_ratings_template For Localizing Digits by <a href="http://persian-programming.com/" title="http://persian-programming.com/">Kambiz R. Khojasteh</a></li>
+						<li>NEW: Uses wp_register_style(), wp_print_styles(), plugins_url() And site_url()</li>
+						<li>FIXED: SSL Support</li>
+					</ul>
+				</li>
+				<li>
+					<strong>Version 1.31 (16-07-2008)</strong>
+					<ul>
+						<li>NEW: Works For WordPress 2.6</li>
+						<li>NEW: Renamed GET Variables sortby To r_sortby And orderby To r_orderby</li>
+						<li>NEW: Renamed postratings-admin-js.php To postratings-admin-js.js and Move The Dynamic Javascript Variables To The PHP Pages</li>
+						<li>NEW: Renamed postratings-js.php To postratings-js.js and Move The Dynamic Javascript Variables To The PHP Pages</li>
+						<li>NEW: Uses postratings-js-packed.js And postratings-admin-js-packed.js</li>
+						<li>NEW: When Displaying The Ratings Given By Comment Author, It Check Against Cookie As Well As IP</li>
+						<li>NEW: Better Translation Using __ngetext() by <a href="http://hweia.ru/" title="http://hweia.ru/">Anna Ozeritskaya</a></li>
+						<li>FIXED: MYSQL Charset Issue Should Be Solved</li>
+						<li>FIXED: Removed WP-Cache Compatibility As It Is Not Tested</li>
+						<li>FIXED: Able To Use r_sortby And r_orderby in query_posts()</li>
+					</ul>
+				</li>
+				<li>
+					<strong>Version 1.30 (01-06-2008)</strong>
+					<ul>
+						<li>NEW: Works For WordPress 2.5 Only</li>
+						<li>NEW: Removed 'postratings-usage.php'</li>
+						<li>NEW: Uses ShortCode API</li>
+						<li>NEW: Splitted Templates From PostRating Options Into Its Own File, 'postratings-templates.php'</li>
+						<li>NEW: Able To Display The Ratings Given By Comment Author When Displaying Comments</li>
+						<li>NEW: WP-PostRatings Will Load 'postratings-css.css' Inside Your Theme Directory If It Exists. If Not, It Will Just Load The Default 'postratings-css.css' By WP-PostRatings</li>
+						<li>NEW: Use number_format_i18n() Instead Of number_format()</li>
+						<li>NEW: Added Get Most/Highest Rated Post Within A Given Time Range Function</li>
+						<li>NEW: Added Get Most/Highest Rated Post By Category ID Within A Given Time Range Function</li>
+						<li>NEW: Added get_lowest_rated() Function</li>
+						<li>NEW: Added get_lowest_rated_category() Function</li>
+						<li>NEW: Added get_most_rated_category() Function</li>
+						<li>NEW: Get Most Rated Is Now Under The Templates</li>
+						<li>NEW: Minimum Votes Options/Parameters Added To get_lowest_rated(), get_lowest_rated_category(), get_highest_rated(), get_highest_rated_category(), get_most_rated() and get_most_rated_category() Functions</li>
+						<li>NEW: Uses /wp-postratings/ Folder Instead Of /postratings/</li>
+						<li>NEW: Uses wp-postratings.php Instead Of postratings.php</li>
+						<li>NEW: Move WP-PostRatings Stats Out Of postratings.php Into postrating-stats.php</li>
+						<li>FIXED: Thumbs Up/Down Post Should Get Sorted By Score Instead Of Average</li>
+						<li>FIXED: Increased The Length Of The Input Box For Individual Rating Value</li>
+						<li>FIXED: Manage Ratings Does Not Display "Numbers" Style Rating</li>
+						<li>FIXED: %POST_EXCERPT% Variable Is Sometimes Empty</li>
+					</ul>
+				</li>
+				<li>
+					<strong>Version 1.20 (01-10-2007)</strong>
+					<ul>
+						<li>NEW: Works For WordPress 2.3 Only</li>
+						<li>NEW: Ability To Embed [ratings=1] Into Post/Excerpt, Where 1 Is The ID Of The Post/Page Ratings You Want To Display</li>
+						<li>NEW: Ability To Embed [ratings_results=1] Into Post/Excerpt, Where 1 Is The ID Of The Post/Page Ratings Results You Want To Display</li>
+						<li>NEW: Ability To Support Mutiple Categories For get_highest_rated_category(). By: <a href="http://pomoti.com">Dirceu P. Junior</a></li>
+						<li>NEW: Ability To Embed [ratings] Into Excerpt</li>
+						<li>NEW: Added Template For No Permission To Rate</li>
+						<li>NEW: Ability To Filter Logs By Post ID, User and Rating</li>
+						<li>NEW: Added heart, heart_crystal, plusminus, plusminus_crystal, stars_crystal, thumbs, tickcross, tickcross_crystal and updown_crystal Rating Styles</li>
+						<li>NEW: Supports Up/Down Or Thumbs Up/Thumbs Down Rating</li>
+						<li>NEW: Supports Custom Image For Individual Rating Scale</li>
+						<li>NEW: WP-Cache Compatible By <a href="http://forums.lesterchan.net/index.php/topic,227.0.html">Nir Aides</a></li>
+						<li>NEW: Highest Rated Widge And Most Rated Widget Added</li>
+						<li>NEW: Ability To Uninstall WP-PostRatings</li>
+						<li>NEW: Uses WP-Stats Filter To Add Stats Into WP-Stats Page</li>
+						<li>FIXED: Some Translation Bug In postrating-usage.php</li>
+					</ul>
+				</li>
+				<li>
+					<strong>Version 1.11 (01-06-2007)</strong>
+					<ul>
+						<li>NEW: Ratings Custom Fields Will Automatically Be Created With The Creation Of Each New Post/Page</li>
+						<li>NEW: Added AJAX Style Option: "Show Loading Image With Text"</li>
+						<li>NEW: Added AJAX Style Option: "Show Fading In And Fading Out Of Ratings"</li>
+						<li>NEW: Removed Ratings From Feed If Ratings Is Embedded Into The Post Using [ratings]</li>
+						<li>FIXED: Wrong URL For Page Under Top Rated/Highest Posts Listing</li>
+						<li>FIXED: Next/Previous Paging Bug In WP-Admin -> Manage Ratings</li>
+						<li>FIXED: Sort Most Rated Posts By Number Of Voters Followed By Post Average Ratings</li>
+					</ul>
+				</li>
+				<li>
+					<strong>Version 1.10 (01-02-2007)</strong>
+					<ul>
+						<li>NEW: Works For WordPress 2.1 Only</li>
+						<li>NEW: Renamed postratings-js.js To postratings-js.php To Enable PHP Parsing</li>
+						<li>NEW: Added Function To Get Highest Rated Post By Category ID</li>
+					</ul>
+				</li>
+				<li>
+					<strong>Version 1.05 (02-01-2007)</strong>
+					<ul>
+						<li>NEW: Added The Ability For Each Rating Star To Have Its Own Text</li>
+						<li>NEW: Highest Rated Post Is Now In The Templates For Easy Modification</li>
+						<li>NEW: Usage Instructions Is Also Included Within The Plugin Itself</li>
+						<li>NEW: Able To Delete Ratings Logs And Data By Post IDs</li>
+						<li>NEW: Able To Uninstall WP-PostRatings</li>
+						<li>NEW: Localization WP-PostRatings</li>
+						<li>FIXED: snippet_text() Function Missing</li>
+						<li>FIXED: AJAX Not Working On Servers Running On PHP CGI</li>
+						<li>FIXED: Highest Rated Post Is Now Based On The Ratings Followed By The Number Of Votes</li>
+						<li>FIXED: Added Some Default Styles To postratings-css.css To Ensure That WP-PostRatings Does Not Break</li>
+					</ul>
+				</li>	
+				<li>
+					<strong>Version 1.04 (01-10-2006)</strong>
+					<ul>
+						<li>NEW: Ability To Logged By UserName</li>
+						<li>NEW: get_highest_rated_sidebar(); To Display The Highest Rated Post On The Sidebar</li>
+						<li>NEW: Added CSS Class 'post-ratings-image' To All IMG Tags</li>
+						<li>FIXED: If Site URL Doesn't Match WP Option's Site URL, WP-PostRatings Will Not Work</li>
+					</ul>
+				</li>	
+				<li>
+					<strong>Version 1.03 (01-07-2006)</strong>
+					<ul>
+						<li>NEW: Total Rating Votes Stats And Total Rating Users Stats Function Added</li>
+						<li>FIXED: Ratings Not Working On Physical Pages That Is Integrated Into WordPress</li>
+						<li>FIXED: Modified Get Most/Highest Rated Post Function</li>
+						<li>FIXED: Search Bots Unable To Index Site</li>
+					</ul>
+				</li>	
+				<li>
+					<strong>Version 1.02a (07-06-2006)</strong>
+					<ul>
+						<li>FIXED: AJAX Not Working In Opera Browser</li>
+					</ul>
+				</li>
+				<li>
+					<strong>Version 1.02 (01-06-2006)</strong>
+					<ul>
+						<li>NEW: Fading In/Put Effect After You Rate A Post</li>
+						<li>NEW: Rating Voting And Rating Results Are On The Same Image</li>
+						<li>NEW: Added Rating Option For Logging Method</li>
+						<li>NEW: Added Rating Option For Who Can Rate</li>
+						<li>NEW: Added Rating Results Image To Get Highest Rated Stats</li>
+						<li>NEW: Rating Administration Panel And The Code That WP-PostRatings Generated Is XHTML 1.0 Transitional</li>
+					</ul>
+				</li>
+				<li>
+					<strong>Version 1.01 (01-04-2006)</strong>
+					<ul>
+						<li>NEW: AJAX Voting</li>
+						<li>FIXED: Block Search Bots From Voting</li>
+						<li>FIXED: Hard Coded Table Name In Ratings Stats</li>
+					</ul>
+				</li>
+				<li>
+					<strong>Version 1.00 (01-03-2006)</strong>
+					<ul>
+						<li>NEW: Initial Release</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+
+		<!-- Installation Instructions -->
+		<div id="Install" style="display: none;">
+			<div class="SubTitle">&raquo; Installation Instructions</div>
+			<ol>
+				<li>
+					Open <strong>wp-content/plugins</strong> Folder
+				</li>
+				<li>
+					Put:
+					<blockquote>Folder: wp-postratings</blockquote>
+				</li>
+				<li>
+					<strong>Activate</strong> WP-PostRatings Plugin
+				</li>
+				<li>
+					Refer To <strong>Usage</strong> For Further Instructions
+				</li>
+			</ol>
+		</div>
+
+		<!-- Upgrade Instructions -->	
+		<div id="Upgrade" style="display: none;">
+			<div class="SubTitle">&raquo; Upgrade Instructions</div>
+			<div class="SubSubTitle">From v1.0x To v1.50</div>
+			<ol>
+				<li>
+					<strong>Deactivate</strong> WP-PostRatings Plugin
+				</li>
+				<li>
+					<strong>Deactivate</strong> WP-PostRatings Widget Plugin
+				</li>
+				<li>
+					Open <strong>wp-content/plugins</strong> Folder
+				</li>
+				<li>
+					Put/Overwrite:
+					<blockquote>Folder: wp-postratings</blockquote>
+				</li>
+				<li>
+					Delete this folder if exists:
+					<blockquote>
+						Folder: postratings
+					</blockquote>
+				</li>
+				<li>
+					Open <strong>wp-content/plugins/wp-postratings</strong> Folder
+				</li>
+				<li>
+					Delete these files if exists:
+					<blockquote>
+						File: postratings-admin-js.php<br />
+						File: postratings-js.php
+						File: wp-postratings-widget.php
+					</blockquote>
+				</li>
+				<li>
+					<strong>Activate</strong> WP-PostRatings Plugin
+				</li>
+				<li>
+					Go to '<strong>WP-Admin -> Ratings -> Ratings Templates</strong>' and restore all the template variables to <strong>Default</strong>
+				</li>
+				<li>
+					Go to '<strong>WP-Admin -> Appearance -> Widgets</strong>' and re-add the Ratings Widget
+				</li>
+				<li>
+					Refer To <strong>Usage</strong> For Further Instructions
+				</li>
+			</ol>
+		</div>
+
+		<!-- Usage Instructions -->	
+		<div id="Usage" style="display: none;">
+			<div class="SubTitle">&raquo; Usage Instructions</div>
+			<div class="SubSubTitle">General Usage</div>
+			<ol>
+				<li>
+					Open <strong>wp-content/themes/&lt;YOUR THEME NAME&gt;/index.php</strong>
+					<p>You may place it in <strong>archive.php</strong>, <strong>single.php</strong>, <strong>post.php</strong> or <strong>page.php</strong> also.</p>
+				</li>
+				<li>
+					Find:
+					<blockquote>
+						&lt;?php while (have_posts()) : the_post(); ?&gt;
+					</blockquote>
+				</li>
+				<li>
+					Add Anywhere Below It (The Place You Want The Ratings To Show):
+					<blockquote>
+						&lt;?php if(function_exists('the_ratings')) { the_ratings(); } ?&gt;
+					</blockquote>
+					<p>If you DO NOT want the ratings to appear in every post/page, DO NOT use the code above. Just type in <strong>[ratings]</strong> into the selected post/page content and it will embed ratings into that post/page only.</p>
+					<p>If you want to embed other <strong>post ratings</strong>, use <strong>[ratings id="1"]</strong>, where <strong>1</strong> is the ID of the post/page ratings that you want to display.</p>
+					<p>If you want to embed other <strong>post ratings results</strong>, use <strong>[ratings id="1" results="true"]</strong>, where <strong>1</strong> is the ID of the post/page ratings results that you want to display.</p>
+				</li>
+			</ol>
+			<div class="SubSubTitle">Displaying Comment Author Ratings</div>
+			<ol>
+				<li>
+					Open <strong>wp-content/plugins/wp-postratings/wp-postratings.php</strong>
+				</li>
+				<li>
+					Find:
+					<blockquote>
+						//add_filter('comment_text', 'comment_author_ratings_filter');
+					</blockquote>
+				</li>
+				<li>
+					Replace:
+					<blockquote>
+						add_filter('comment_text', 'comment_author_ratings_filter');
+					</blockquote>
+				</li>
+			</ol>
+			<div class="SubSubTitle">Note</div>
+			<ul>
+				<li>
+					To use PNG images instead of GIF images:
+					<ol>
+						<li>
+							Open <strong>wp-content/plugins/wp-postratings/wp-postratings.php</strong>
+						</li>
+						<li>
+							Find:
+							<blockquote>
+								define('RATINGS_IMG_EXT', 'gif');<br />
+								//define('RATINGS_IMG_EXT', 'png');
+							</blockquote>
+						</li>
+						<li>
+							Replace:
+							<blockquote>
+								//define('RATINGS_IMG_EXT', 'gif');<br />
+								define('RATINGS_IMG_EXT', 'png');
+							</blockquote>
+						</li>
+					</ol>
+				</li>
+				<li>
+					WP-PostRatings will load '<strong>postratings-css.css</strong>' from your theme's directory if it exists.
+					<ul>
+						<li>If it doesn't exists, it will just load the default 'postratings-css.css' that comes with WP-PostRatings.</li>
+						<li>This will allow you to upgrade WP-PostRatings without worrying about overwriting your ratings styles that you have created.</li>
+					</ul>
+				</li>
+			</ul>
+			<div class="SubSubTitle">Ratings Stats (With Widgets)</div>
+			<ol>
+				<li>
+					Go to '<strong>WP-Admin -> Appearance -> Widgets</strong>'
+				</li>
+				<li>
+					The widget name is <strong>Ratings</strong>.
+				</li>
+			</ol>
+			<div class="SubSubTitle">Ratings Stats (Outside WP Loop)</div>
+			<ul>
+				<li>
+					To Display <strong>Lowest Rated Post</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_lowest_rated')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_lowest_rated(); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_lowest_rated('both', 0, 10)</p>
+					<p>The value <strong>'both'</strong> will display both the lowest rated posts and pages.</p>
+					<p>If you want to display the lowest rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the lowest rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>0</strong> refers to the minimum votes required before the post get shown.</p>
+					<p>The value <strong>10</strong> will display only the top 10 lowest rated posts/pages.</p>
+				</li>
+					<li>
+					To Display <strong>Lowest Rated Post By Tag</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_lowest_rated_tag')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_lowest_rated_tag(TAG_ID); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_lowest_rated_tag(TAG_ID, 'both', 0, 10)</p>
+					<p>Replace <strong>TAG_ID</strong> will your tag ID. If you want it to span several categories, replace <strong>TAG_ID</strong> with <strong>array(1, 2)</strong> where <strong>1</strong> and <strong>2</strong> are your categories ID.</p>
+					<p>The value <strong>'both'</strong> will display both the lowest rated posts and pages.</p>
+					<p>If you want to display the lowest rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the lowest rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>0</strong> refers to the minimum votes required before the post get shown.</p>
+					<p>The value <strong>10</strong> will display only the top 10 lowest rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Lowest Rated Post In A Category</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_lowest_rated_category')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_lowest_rated_category(CATEGORY_ID); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_lowest_rated_category(CATEGORY_ID, 'both', 0, 10)</p>
+					<p>Replace <strong>CATEGORY_ID</strong> will your category ID. If you want it to span several categories, replace <strong>CATEGORY_ID</strong> with <strong>array(1, 2)</strong> where <strong>1</strong> and <strong>2</strong> are your categories ID.</p>
+					<p>The value <strong>'both'</strong> will display both the lowest rated posts and pages.</p>
+					<p>If you want to display the lowest rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the lowest rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>0</strong> refers to the minimum votes required before the post get shown.</p>
+					<p>The value <strong>10</strong> will display only the top 10 lowest rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Highest Rated Post</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_highest_rated')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_highest_rated(); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_highest_rated('both', 0, 10)</p>
+					<p>The value <strong>'both'</strong> will display both the highest rated posts and pages.</p>
+					<p>If you want to display the highest rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the highest rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>0</strong> refers to the minimum votes required before the post get shown.</p>
+					<p>The value <strong>10</strong> will display only the top 10 highest rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Highest Rated Post By Tag</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_highest_rated_tag')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_highest_rated_tag(TAG_ID); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_highest_rated_tag(TAG_ID, 'both', 0, 10)</p>
+					<p>Replace <strong>TAG_ID</strong> will your tag ID. If you want it to span several categories, replace <strong>TAG_ID</strong> with <strong>array(1, 2)</strong> where <strong>1</strong> and <strong>2</strong> are your categories ID.</p>
+					<p>The value <strong>'both'</strong> will display both the highest rated posts and pages.</p>					
+					<p>If you want to display the highest rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the highest rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>0</strong> refers to the minimum votes required before the post get shown.</p>
+					<p>The value <strong>10</strong> will display only the top 10 highest rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Highest Rated Post In A Category</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_highest_rated_category')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_highest_rated_category(CATEGORY_ID); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_highest_rated_category(CATEGORY_ID, 'both', 0, 10)</p>
+					<p>Replace <strong>CATEGORY_ID</strong> will your category ID. If you want it to span several categories, replace <strong>CATEGORY_ID</strong> with <strong>array(1, 2)</strong> where <strong>1</strong> and <strong>2</strong> are your categories ID.</p>
+					<p>The value <strong>'both'</strong> will display both the highest rated posts and pages.</p>					
+					<p>If you want to display the highest rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the highest rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>0</strong> refers to the minimum votes required before the post get shown.</p>
+					<p>The value <strong>10</strong> will display only the top 10 highest rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Highest Rated Post Within A Given Period</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_highest_rated_range')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_highest_rated_range('1 day'); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_highest_rated_range('1 day', 'both', 10)</p>
+					<p>The value <strong>'1 day'</strong> will be the range that you want. You can use <strong>'2 days'</strong>, <strong>'1 month'</strong>, etc.</p>
+					<p>The value <strong>'both'</strong> will display both the most rated posts and pages.</p>
+					<p>If you want to display the most rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the most rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>10</strong> will display only the top 10 most rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Most Rated Post</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_most_rated')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_most_rated(); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_most_rated('both', 0, 10)</p>
+					<p>The value <strong>'both'</strong> will display both the most rated posts and pages.</p>
+					<p>If you want to display the most rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the most rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>0</strong> refers to the minimum votes required before the post get shown.</p>
+					<p>The value <strong>10</strong> will display only the top 10 most rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Most Rated Post In A Category</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_most_rated_category')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_most_rated_category(CATEGORY_ID); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_most_rated_category(CATEGORY_ID, 'both', 0, 10)</p>
+					<p>Replace <strong>CATEGORY_ID</strong> will your category ID. If you want it to span several categories, replace <strong>CATEGORY_ID</strong> with <strong>array(1, 2)</strong> where <strong>1</strong> and <strong>2</strong> are your categories ID.</p>
+					<p>The value <strong>'both'</strong> will display both the most rated posts and pages.</p>
+					<p>If you want to display the most rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the most rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>0</strong> refers to the minimum votes required before the post get shown.</p>
+					<p>The value <strong>10</strong> will display only the top 10 most rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Most Rated Post Within A Given Period</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_most_rated_range')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_most_rated_range('1 day'); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_most_rated_range('1 day', 'both', 10)</p>
+					<p>The value <strong>'1 day'</strong> will be the range that you want. You can use <strong>'2 days'</strong>, <strong>'1 month'</strong>, etc.</p>
+					<p>The value <strong>'both'</strong> will display both the most rated posts and pages.</p>
+					<p>If you want to display the most rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the most rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>10</strong> will display only the top 10 most rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Highest Score Post</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_highest_score')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_highest_score(); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_highest_score('both', 0, 10)</p>
+					<p>The value <strong>'both'</strong> will display both the most rated posts and pages.</p>
+					<p>If you want to display the most rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the most rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>0</strong> refers to the minimum votes required before the post get shown.</p>
+					<p>The value <strong>10</strong> will display only the top 10 most rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Highest Score Post In A Category</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_highest_score_category')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_highest_score_category(CATEGORY_ID); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_highest_score_category(CATEGORY_ID, 'both', 0, 10)</p>
+					<p>Replace <strong>CATEGORY_ID</strong> will your category ID. If you want it to span several categories, replace <strong>CATEGORY_ID</strong> with <strong>array(1, 2)</strong> where <strong>1</strong> and <strong>2</strong> are your categories ID.</p>
+					<p>The value <strong>'both'</strong> will display both the most rated posts and pages.</p>
+					<p>If you want to display the most rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the most rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>0</strong> refers to the minimum votes required before the post get shown.</p>
+					<p>The value <strong>10</strong> will display only the top 10 most rated posts/pages.</p>
+				</li>
+				<li>
+					To Display <strong>Highest Score Post Within A Given Period</strong>
+				</li>
+				<li>
+					Use:
+					<blockquote>
+						&lt;?php if (function_exists('get_highest_score_range')): ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;ul&gt;<br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;?php get_highest_score_range('1 day'); ?&gt;<br />
+						&nbsp;&nbsp;&nbsp;&lt;/ul&gt;<br />
+						&lt;?php endif; ?&gt;
+					</blockquote>
+					<p>Default: get_highest_score_range('1 day', 'both', 10)</p>
+					<p>The value <strong>'1 day'</strong> will be the range that you want. You can use <strong>'2 days'</strong>, <strong>'1 month'</strong>, etc.</p>
+					<p>The value <strong>'both'</strong> will display both the most rated posts and pages.</p>
+					<p>If you want to display the most rated posts only, replace 'both' with <strong>'post'</strong>.</p>
+					<p>If you want to display the most rated pages only, replace 'both' with <strong>'page'</strong>.</p>
+					<p>The value <strong>10</strong> will display only the top 10 most rated posts/pages.</p>
+				</li>
+				<li>
+					To Sort <strong>Highest/Lowest Rated Posts</strong>
+				</li>
+				<li>
+					You can use:
+					<blockquote>
+						&lt;?php query_posts($query_string.'&r_sortby=highest_rated&amp;r_orderby=desc') ?&gt;
+					</blockquote>
+					<p>Or pass in the variables to the URL:</p>
+					<blockquote>
+						http://yoursite.com/?r_sortby=highest_rated&amp;r_orderby=desc
+					</blockquote>
+					<p>You can replace <strong>desc</strong> with <strong>asc</strong> if you want the lowest rated posts.</p>
+				</li>
+				<li>
+					To Sort <strong>Most/Least Rated Posts</strong>
+				</li>
+				<li>
+					You can use:
+					<blockquote>
+						&lt;?php query_posts($query_string.'&r_sortby=most_rated&amp;r_orderby=desc') ?&gt;
+					</blockquote>
+					<p>Or pass in the variables to the URL:</p>
+					<blockquote>
+						http://yoursite.com/?r_sortby=most_rated&amp;r_orderby=desc
+					</blockquote>
+					<p>You can replace <strong>desc</strong> with <strong>asc</strong> if you want the least rated posts.</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<p id="Copyright">WP-PostRatings 1.50<br />Copyright &copy; 2009 Lester 'GaMerZ' Chan. All Rights Reserved.</p>
+</body>
+</html>

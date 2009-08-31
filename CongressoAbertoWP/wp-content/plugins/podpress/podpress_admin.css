@@ -1,0 +1,43 @@
+
+#podPressstuff a.dbx-toggle, #podPressstuff a.dbx-toggle-open:visited {
+	height: 22px;
+	width: 22px;
+	background-position: 0 -3px;
+}
+
+#podPressstuff a.dbx-toggle-open, #podPressstuff a.dbx-toggle-open:visited {
+	height: 22px;
+	width: 22px;
+	background-position: 0 -28px;
+}
+
+#podPressstuff fieldset {
+	margin-bottom: 1em;
+}
+
+#podPressstuff h3 {
+	padding: 3px;
+	font-weight: normal;
+	font-size: 13px;
+}
+
+#podPressstuff div {
+	margin-top: .5em;
+}
+
+#podPress_content div {
+	margin-right: 8px;
+}
+
+* html #podPress_content .dbx-toggle-open, * html #podPress_content .dbx-toggle-open {
+	margin-right: 8px;
+}
+
+#podPress_mp3info div {
+	margin-right: 8px;
+}
+
+* html #podPress_mp3info .dbx-toggle-open, * html #podPress_mp3info .dbx-toggle-open {
+	margin-right: 8px;
+}
+

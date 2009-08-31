@@ -1,0 +1,1768 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Simple Tags 1.5.1 for WP2.3 & WP2.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-04-01 20:19+0600\n"
+"PO-Revision-Date: 2009-04-22 16:11+0100\n"
+"Last-Translator: Amaury BALMER <amaury@wordpress-fr.net>\n"
+"Language-Team: Lecactus <lecactus@lecactus.ru>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Russian\n"
+"X-Poedit-Country: RUSSIAN FEDERATION\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: X:\\web\\Мадыфікацыі\\wordpress\\tags\\simple-tags-wp23-wp25\\simple-tags\n"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/simple-tags.php:40
+msgid "Simple Tags can't work with this WordPress version !"
+msgstr "Simple Tags не можа працаваць з гэтай версіяй WordPress !"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/simple-tags.php:40
+#, php-format
+msgid "You must use <a href=\"%1$s\">Simple Tagging Plugin</a> for it to work."
+msgstr "Вы павінны выкарыстаць <a href=\"%1$s\">Убудова Simple Tagging</a>."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:87
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:556
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:86
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:551
+msgid "No related posts."
+msgstr "Няма звязаных запісаў."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:88
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:555
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:87
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:550
+msgid "<h4>Related posts</h4>"
+msgstr "<h4>Звязаныя запісы</h4>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:89
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:558
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:88
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:553
+msgid "<a href=\"%post_permalink%\" title=\"%post_title% (%post_date%)\">%post_title%</a> (%post_comment%)"
+msgstr "<a href=\"%post_permalink%\" title=\"%post_title% (%post_date%)\">%post_title%</a> (%post_comment%)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:95
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:1223
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:94
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:1250
+msgid "No tags."
+msgstr "Няма пазанак."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:96
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:1225
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:95
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:1252
+msgid "<h4>Tag Cloud</h4>"
+msgstr "<h4>Воблака пазанак</h4>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:98
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:1224
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:97
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:1251
+msgid "<a href=\"%tag_link%\" id=\"tag-link-%tag_id%\" class=\"st-tags t%tag_scale%\" title=\"%tag_count% topics\" %tag_rel% style=\"%tag_size% %tag_color%\">%tag_name%</a>"
+msgstr "<a href=\"%tag_link%\" id=\"tag-link-%tag_id%\" class=\"st-tags t%tag_scale%\" title=\"%tag_count% topics\" %tag_rel% style=\"%tag_size% %tag_color%\">%tag_name%</a>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:110
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:1440
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:109
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:1496
+msgid "Tags: "
+msgstr "Пазнакі:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:112
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:1447
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:1503
+msgid "No tag for this post."
+msgstr "У запісы няма пазанак."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:115
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:1446
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:114
+msgid "<a href=\"%tag_link%\" title=\"%tag_name%\" %tag_rel%>%tag_name%</a>"
+msgstr "<a href=\"%tag_link%\" title=\"%tag_name%\" %tag_rel%>%tag_name%</a>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:123
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:875
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:122
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:901
+msgid "<h4>Related tags</h4>"
+msgstr "<h4>Звязаныя пазнакі</h4>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:124
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:876
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:902
+msgid "No related tag found."
+msgstr "Звязаных пазанак не знойдзена."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:125
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:124
+msgid "<span>%tag_count%</span> <a href=\"%tag_link_add%\">+</a> <a href=\"%tag_link%\">%tag_name%</a>"
+msgstr "<span>%tag_count%</span> <a href=\"%tag_link_add%\">+</a> <a href=\"%tag_link%\">%tag_name%</a>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:130
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:129
+msgid "&raquo; <a href=\"%tag_link_remove%\" title=\"Remove %tag_name_attribute% from search\">Remove %tag_name%</a>"
+msgstr "&raquo; <a href=\"%tag_link_remove%\" title=\"Прыбраць %tag_name_attribute% from search\">Прыбраць %tag_name%</a>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:272
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:262
+#, php-format
+msgid "Posts tagged with %s"
+msgstr "Запісы, пазначаныя з %s"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:787
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:822
+msgid "There is no excerpt because this is a protected post."
+msgstr "Няма цытаты, таму што гэта абаронены запіс."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:877
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:903
+msgid "<span>%tag_count%</span> <a %tag_rel% href=\"%tag_link_add%\">+</a> <a %tag_rel% href=\"%tag_link%\" title=\"See posts with %tag_name_attribute%\">%tag_name%</a>"
+msgstr "<span>%tag_count%</span> <a %tag_rel% href=\"%tag_link_add%\">+</a> <a %tag_rel% href=\"%tag_link%\" title=\"Глядзець запісы з пазнакай %tag_name_attribute%\">%tag_name%</a>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:1079
+msgid "&raquo; <a %tag_rel% href=\"%tag_link_remove%\" title=\"Remove %tag_name_attribute% from search\">Remove %tag_name%</a>"
+msgstr "&raquo; <a %tag_rel% href=\"%tag_link_remove%\" title=\"Прыбраць %tag_name_attribute% from search\">Прыбраць %tag_name%</a>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/simple-tags.client.php:1686
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:1761
+msgid "Invalid Taxonomy"
+msgstr "Недапушчальная таксанамія"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:149
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:628
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:158
+msgid "Simple Tags: Manage Tags"
+msgstr "Simple Tags: Кіраванне пазнакамі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:149
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:158
+msgid "Manage Tags"
+msgstr "Кіраванне пазнакамі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:150
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:843
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:159
+msgid "Simple Tags: Mass Edit Tags"
+msgstr "Simple Tags: Масавае рэдагаванне пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:150
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:159
+msgid "Mass Edit Tags"
+msgstr "Масавае рэдагаванне пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:151
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:209
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:160
+msgid "Simple Tags: Auto Tags"
+msgstr "Simple Tags: Аўтаматычныя пазнакі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:151
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:160
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:217
+msgid "Auto Tags"
+msgstr "Аўтаматычныя пазнакі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:152
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:522
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:161
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:521
+msgid "Simple Tags: Options"
+msgstr "Simple Tags: Налады"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:152
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:161
+msgid "Simple Tags"
+msgstr "Simple Tags"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:194
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:203
+msgid "Auto tags options updated !"
+msgstr "Налада аўтаматычных пазанак абноўленая!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:210
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:523
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:629
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:844
+msgid "Visit the <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">plugin's homepage</a> for further details. If you find a bug, or have a fantastic idea for this plugin, <a href=\"mailto:amaury@wordpress-fr.net\">ask me</a> !"
+msgstr "Наведаеце <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">хатнюю старонку ўбудовы</a> для вялікіх дэталяў. Калі вы знайшлі памылку, або маеце фантастычную ідэю для гэтай убудовы, <a href=\"mailto:amaury@wordpress-fr.net\">звяртайцеся ды мяне</a> !"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:214
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:222
+msgid "Auto tags list"
+msgstr "Спіс аўтаматычных пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:215
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:223
+msgid "This feature allows Wordpress to look into post content and title for specified tags when saving posts. If your post content or title contains the word \"WordPress\" and you have \"wordpress\" in auto tags list, Simple Tags will add automatically \"wordpress\" as tag for this post."
+msgstr "Гэтая функцыя дазволіць Wordpress праглядаць змесціва запісу і загалоўка на прадмет зададзеных пазанак пры захаванні запісаў. калі ваш запіс або загаловак утрымоўваюць словы \"WordPress\" і вы маеце \"wordpress\" у спісе аўтаматычных пазанак, Simple Tags аўтаматычна дадасць \"wordpress\" у якасці пазанак для вашага запісу."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:219
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:232
+msgid "Active Auto Tags."
+msgstr "Актываваць аўтаматычныя пазнакі."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:222
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:239
+msgid "Use also local tags database with auto tags. (Warning, this option can increases the CPU consumption a lot if you have many tags)"
+msgstr "Выкарыстаць таксама лакальную базу дадзеных пазанак з аўтаматычнымі пазнакамі. (Увага, гэтая опцыя моцна павялічвае спажыванне рэсурсаў CPU, калі ў вас есць шмат пазанак)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:225
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:246
+msgid "Autotag only posts without tags."
+msgstr "Аўтаматычна пазначыць толькі запісы без пазанак."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:227
+msgid "Keywords list: (separated with a comma)"
+msgstr "Спіс ключавых слоў: (падзелены коскамі спіс)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:233
+msgid "Update list &raquo;"
+msgstr "Абнавіць спіс &raquo;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:236
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:262
+msgid "Auto tags old content"
+msgstr "Аўтаматычна пазначыць старыя кантэнт"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:237
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:263
+msgid "Simple Tags can also tag all existing contents of your blog. This feature use auto tags list above-mentioned."
+msgstr "Simple Tags можа таксама дадаць пазнакі ў ўвесь наяўны кантэнт вашага блога. Гэтая функцыя выкарыстае спіс аўтаматычных пазанак зададзены вышэй."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:238
+msgid "Auto tags all content"
+msgstr "Аўтаматычна пазначыць пазнакамі ўвесь кантэнт"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:259
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:288
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:167
+msgid "If your browser doesn't start loading the next page automatically click this link:"
+msgstr "Калі ваш браўзэр не пачынае загрузку наступнай старонкі аўтаматычна, пстрыкніце па гэтай спасылцы:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:259
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:288
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:167
+msgid "Next content"
+msgstr "Наступны кантэнт"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:271
+msgid "All done!"
+msgstr "Вусе гатова!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:287
+msgid "Include page in tag search:"
+msgstr "Уключыць старонкі ў пошук па пазнаках:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:288
+msgid "This feature need that option \"Add page in tags management\" is enabled."
+msgstr "Гэтая функцыя патрабуе, каб опцыя \"Уключыць старонкі ў пошук па пазнаках\" была ўключаная."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:289
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:319
+msgid "Allow tag cloud in post/page content:"
+msgstr "Дазволіць воблака пазанак у змесціве запісу/старонкі:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:290
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:320
+msgid "Enabling this will allow Wordpress to look for tag cloud marker <code>&lt;!--st_tag_cloud--&gt;</code> when displaying posts. WP replace this marker by a tag cloud."
+msgstr "Уключэнне гэтай функцыі дазволіць Wordpress праглядаць маркер воблака пазанак <strong>&lt;!--st_tag_cloud--&gt;</strong> пры паказе запісаў. WP заменіць гэты маркер воблакам пазанак."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:291
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:321
+msgid "Active auto link tags into post content:"
+msgstr "Актываваць аўтаматычныя спасылкі пазанак у змесціве запісу:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:292
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:322
+msgid "Example: You have a tag called \"WordPress\" and your post content contains \"wordpress\", this feature will replace \"wordpress\" by a link to \"wordpress\" tags page. (http://myblog.net/tag/wordpress/)"
+msgstr "Напрыклад: Вы маеце пазнаку з назовам \"WordPress\" і ваша змесціва вашага запісу траўні слова \"wordpress\", гэтая функцыя заменіць \"wordpress\" на спасылку старонкі пазнакі \"wordpress\" . (http://myblog.net/tag/wordpress/)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:293
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:323
+msgid "Min usage for auto link tags:"
+msgstr "Мінімальнае выкарыстанне для аўтаматычных спасылак з пазнакамі:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:294
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:324
+msgid "This parameter allows to fix a minimal value of use of tags. Default: 1."
+msgstr "Гэты параметр дазваляе фіксаваць мінімальнае значэнні выкарыстанне пазанак. Па змаўчанні: 1."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:295
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:325
+msgid "Ignore case for auto link feature ?"
+msgstr "Ігнараваць рэгістр у функцыі аўтаматычных спасылак?"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:296
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:326
+msgid "Example: If you ignore case, auto link feature will replace the word \"wordpress\" by the tag link \"WordPress\"."
+msgstr "Напрыклад: Калі вы ігнаруеце рэгістр, функцыя аўтаматычных спасылак заменіць слова \"wordpress\" спасылкай на пазнаку \"WordPress\"."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:297
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:327
+msgid "Add the rel=\"nofollow\" on each tags link ?"
+msgstr "Дадаць rel=\"nofollow\" у кожную спасылку пазнакі ?"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:298
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:328
+msgid "Nofollow is a non-standard HTML attribute value used to instruct search engines that a hyperlink should not influence the link target's ranking in the search engine's index."
+msgstr "Nofollow - гэтае нестандартнае значэнне атрыбуту HTML, выкарыстоўванае для ўказання пошукавым сістэмам, што гіперспасылкі не павінны ўплываць на рэйтынг мэтавай спасылкі ў індэксе пошукавай сістэмы."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:301
+msgid "Add page in tags management:"
+msgstr "Дадаць увод пазанак у старонкі:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:302
+msgid "Add a tag input (and tag posts features) in page edition"
+msgstr "Дадаць увод пазанак (і магчымасць пазанак запісаў) у рэдагаванне старонкі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:303
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:331
+msgid "Activate click tags feature:"
+msgstr "Уключыць функцыю зграй-пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:304
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:332
+msgid "This feature add a link allowing you to display all the tags of your database. Once displayed, you can click over to add tags to post."
+msgstr "Гэтая функцыя дадаць спасылку, якая дазваляе вам паказаць усе пазнакі з базы дадзеных. Пасля таго як панэль з пазнакамі будзе паказу, вы зможаце дадаваць іх да запісу проста клічучы па назовах."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:305
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:333
+msgid "Activate autocompletion feature:"
+msgstr "Актываваць функцыю аўтазавяршэння:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:306
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:334
+msgid "This feature displays a visual help allowing to enter tags more easily."
+msgstr "Гэтая функцыя пакажа візуальную дапамогу, якая дазваляе ўводзіць пазнакі прасцейшае."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:307
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:335
+msgid "Activate suggested tags feature: (Yahoo! Term Extraction API, Tag The Net, Local DB)"
+msgstr "Уключыць функцыю прыдатных пазанак: (Yahoo! Term Extraction API, Tag The Net, Лакальная БД)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:308
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:336
+msgid "This feature add a box allowing you get suggested tags, by comparing post content and various sources of tags. (external and internal)"
+msgstr "Гэтая функцыя дадасць блок, які дазваляе атрымаць прыдатныя пазнакі, параўноўваючы змесціва запісу і адзін з крыніц пазанак. (знешні або ўнутраны)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:311
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:339
+msgid "Automatically include in header:"
+msgstr "Аўтаматычна ўключаць у загаловак (header):"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:312
+msgid "Includes the meta keywords tag automatically in your header (most, but not all, themes support this). These keywords are sometimes used by search engines.<br /><strong>Warning:</strong> If the plugin \"All in One SEO Pack\" is installed and enabled. This feature is disabled."
+msgstr "Уключае пазнакі ў meta keywords аўтаматычна ў ваш загаловак (большасць, але не ўсе тэмы падтрымліваюць гэта). Гэтыя ключавыя часам выкарыстоўваюцца пошукавымі машынамі. <br /><strong>Увага:</strong> Калі ўбудова \"All in One SEO Pack\" усталяваны і ўключаны,гэтая функцыя будзе адключаная."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:313
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:341
+msgid "Always add these keywords:"
+msgstr "Заўсёды дадаваць гэтыя ключавыя словы:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:314
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:342
+msgid "Max keywords display:"
+msgstr "Паказваць максімум ключавых слоў:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:315
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:343
+msgid "You must set zero (0) for display all keywords in HTML header."
+msgstr "Вы павінны ўсталяваць значэнне ў нуль (0) каб паказаць усе ключавыя словы ў загалоўку HTML."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:318
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:346
+msgid "Use embedded tags:"
+msgstr "Выкарыстаць убудавальныя пазнакі:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:319
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:347
+msgid "Enabling this will allow Wordpress to look for embedded tags when saving and displaying posts. Such set of tags is marked <code>[tags]like this, and this[/tags]</code>, and is added to the post when the post is saved, but does not display on the post."
+msgstr "Актывацыя гэтай опцыі дасць каманду Wordpress шукаць убудавальныя (embedded) пазнакі пры захаванні і адлюстраванні запісаў. Так, набор пазанак, пазначаных <code>[tags]like this, and this[/tags]</code> дадаецца ў запіс пры захаванні, але не адлюстроўваецца ў запіса."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:320
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:348
+msgid "Prefix for embedded tags:"
+msgstr "Прэфікс для ўбудавальных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:321
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:349
+msgid "Suffix for embedded tags:"
+msgstr "Суфікс для ўбудавальных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:324
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:352
+msgid "Automatically display tags list into feeds"
+msgstr "Аўтаматычна адлюстроўваць спіс пазанак у фидах"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:325
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:353
+msgid "Automatically display tags list into post content:"
+msgstr "Аўтаматычна адлюстроўваць спіс пазанак у змесціве запісаў"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:327
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:351
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:355
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:379
+msgid "<code>no</code> &ndash; Nowhere (default)"
+msgstr "<code>no</code> &ndash; Нідзе (па змаўчанні)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:328
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:352
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:356
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:380
+msgid "<code>all</code> &ndash; On your blog and feeds."
+msgstr "<code>all</code> &ndash; На вашым блогу і ў RSS стужцы."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:329
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:353
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:357
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:381
+msgid "<code>blogonly</code> &ndash; Only on your blog."
+msgstr "<code>blogonly</code> &ndash; Толькі на вашым блогу."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:330
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:354
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:358
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:382
+msgid "<code>homeonly</code> &ndash; Only on your home page."
+msgstr "<code>homeonly</code> &ndash; Толькі на хатняй старонцы."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:331
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:355
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:359
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:383
+msgid "<code>singularonly</code> &ndash; Only on your singular view (single & page)."
+msgstr "<code>singularonly</code> &ndash; Толькі ў адзінкавым праглядзе (адзін запіс і старонка)."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:332
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:356
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:360
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:384
+msgid "<code>singleonly</code> &ndash; Only on your single view."
+msgstr "<code>singleonly</code> &ndash; Толькі ў адзінкавым праглядзе."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:333
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:357
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:361
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:385
+msgid "<code>pageonly</code> &ndash; Only on your page view."
+msgstr "<code>pageonly</code> &ndash; Толькі пры праглядзе старонкі."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:335
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:363
+msgid "Post tag separator string:"
+msgstr "Падзельнік у радку пазанак запісы:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:336
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:364
+msgid "Text to display before tags list:"
+msgstr "Тэкст для паказу да спісу пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:337
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:365
+msgid "Text to display after tags list:"
+msgstr "Тэкст для паказу пасля спісу пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:338
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:366
+msgid "Max tags display:"
+msgstr "Максімум паказваць пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:339
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:367
+msgid "You must set zero (0) for display all tags."
+msgstr "Вы павінны ўсталяваць значэнне ў нуль (0) каб паказаць усе пазнакі."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:340
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:368
+msgid "Include categories in result ?"
+msgstr "Уключыць рубрыкі ў вынік ?"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:341
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:448
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:369
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:476
+msgid "Tag link format:"
+msgstr "Фармат спасылкі пазнакі:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:342
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:370
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:398
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:416
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:449
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:370
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:398
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:426
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:444
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:477
+msgid "You can find markers and explanations <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">in the online documentation.</a>"
+msgstr "Вы можаце знайсці маркеры і растлумачэнні функцый на старонках анлайн-дакументацыі: <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">арыгінальнай</a> або <a href=\"http://lecactus.ru/2007/10/07/851\">рускай</a> каб лепш разабрацца ў наладах."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:343
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:371
+msgid "Text to display if no tags found:"
+msgstr "Тэкст для паказу, калі пазнакі не знойдзеныя:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:344
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:374
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:403
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:461
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:372
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:402
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:431
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:489
+msgid "<strong>Advanced usage</strong>:"
+msgstr "<strong>Пашыранае выкарыстанне</strong>:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:345
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:373
+msgid "You can use the same syntax as <code>st_the_tags()</code> function to customize display. See <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">documentation</a> for more details."
+msgstr "Вы можаце выкарыстаць той жа сінтаксіс як для функцыі <code>st_the_tags()</code> для налады адлюстравання. Глядзіце <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">арыгінальную</a> або <a href=\"http://lecactus.ru/2007/10/07/851\">рускую</a> дакументацыю для вялікіх дэталяў."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:348
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:376
+msgid "Automatically display related posts into feeds"
+msgstr "Аўтаматычна дадаваць звязаныя запісы ў фиды"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:349
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:377
+msgid "Automatically display related posts into post content"
+msgstr "Аўтаматычна дадаваць звязаныя запісы ў змесціва запісаў"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:359
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:387
+msgid "Related Posts Order:"
+msgstr "Парадак звязаных запісаў:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:361
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:389
+msgid "<code>date-asc</code> &ndash; Older Entries."
+msgstr "<code>date-asc</code> &ndash; Старыя запісы."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:362
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:390
+msgid "<code>date-desc</code> &ndash; Newer Entries."
+msgstr "<code>date-desc</code> &ndash; Новыя запісы."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:363
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:391
+msgid "<code>count-asc</code> &ndash; Least common tags between posts"
+msgstr "<code>count-asc</code> &ndash; Найменш агульныя пазнакі паміж запісамі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:364
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:392
+msgid "<code>count-desc</code> &ndash; Most common tags between posts (default)"
+msgstr "<code>count-desc</code> &ndash; Найболей агульныя пазнакі паміж запісамі (па змаўчанні)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:365
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:383
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:430
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:438
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:393
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:411
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:458
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:466
+msgid "<code>name-asc</code> &ndash; Alphabetical."
+msgstr "<code>name-asc</code> &ndash; Алфавіт."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:366
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:384
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:431
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:439
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:394
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:412
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:459
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:467
+msgid "<code>name-desc</code> &ndash; Inverse Alphabetical."
+msgstr "<code>name-desc</code> &ndash; Алфавіт у зваротным порядкеl."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:367
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:385
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:432
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:395
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:413
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:460
+msgid "<code>random</code> &ndash; Random."
+msgstr "<code>random</code> &ndash; Выпадкова."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:369
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:397
+msgid "Post link format:"
+msgstr "Фармат спасылкі запісу:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:371
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:399
+msgid "Maximum number of related posts to display: (default: 5)"
+msgstr "Максімальны лік звязаных запісаў для адлюстравання: (па змаўчанні: 5)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:372
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:400
+msgid "Enter the text to show when there is no related post:"
+msgstr "Увядзіце тэкст, паказваемы калі няма звязаных запісаў:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:373
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:402
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:452
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:401
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:430
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:480
+msgid "Enter the positioned title before the list, leave blank for no title:"
+msgstr "Увядзіце загаловак, паказваемы перад спісам. Пакіньце пустым калі загаловак не патрэбен:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:375
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:403
+msgid "You can use the same syntax as <code>st_related_posts()</code>function to customize display. See <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">documentation</a> for more details."
+msgstr "Вы можаце выкарыстаць той жа сінтаксіс як для функцыі <code>st_related_posts()</code> для налады адлюстравання. Глядзіце <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">арыгінальную</a> або <a href=\"http://http://lecactus.ru/2007/10/07/851\">рускую</a> дакументацыю для вялікіх дэталяў."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:378
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:406
+msgid "Maximum number of related tags to display: (default: 5)"
+msgstr "Максімальны лік паказваемых звязаных пазанак: (па змаўчанні: 5)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:379
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:407
+msgid "Order related tags:"
+msgstr "Парадак звязаных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:381
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:428
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:436
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:409
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:456
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:464
+msgid "<code>count-asc</code> &ndash; Least used."
+msgstr "<code>count-asc</code> &ndash; Найменш выкарыстоўваныя."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:382
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:429
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:410
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:457
+msgid "<code>count-desc</code> &ndash; Most popular. (default)"
+msgstr "<code>count-desc</code> &ndash; Найболей папулярныя. (па змаўчанні)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:387
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:415
+msgid "Related tags type format:"
+msgstr "Фармат звязаных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:389
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:409
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:445
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:417
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:437
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:473
+msgid "<code>list</code> &ndash; Display a formatted list (ul/li)."
+msgstr "<code>list</code> &ndash; Паказаць фарматаваны спіс (ul/li)."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:390
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:410
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:446
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:418
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:438
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:474
+msgid "<code>flat</code> &ndash; Display inline (no list, just a div)"
+msgstr "<code>flat</code> &ndash; Убудаваць (не спіс, проста div)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:392
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:420
+msgid "Method of tags intersections and unions used to build related tags link:"
+msgstr "Метад скрыжавання і аб'яднанні пазанак, выкарыстоўваны для пабудовы спасылкі звязаных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:394
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:422
+msgid "<code>OR</code> &ndash; Fetches posts with either the \"Tag1\" <strong>or</strong> the \"Tag2\" tag. (default)"
+msgstr "<code>OR</code> &ndash; Выбірае запісы альбо з пазнакай \"Tag1\" <strong>альбо</strong> з пазнакай \"Tag2\". (па змаўчанні)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:395
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:423
+msgid "<code>AND</code> &ndash; Fetches posts with both the \"Tag1\" <strong>and</strong> the \"Tag2\" tag."
+msgstr "<code>AND</code> &ndash; Выбірае запісы з обоиме пазнакамі: \"Tag1\" <strong>і</strong> \"Tag2\"."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:397
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:425
+msgid "Related tags link format:"
+msgstr "Фармат спасылак звязаных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:399
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:427
+msgid "Related tags separator:"
+msgstr "Падзельнік звязаных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:400
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:413
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:428
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:441
+msgid "Leave empty for list format."
+msgstr "Пакіньце пустым для высновы спісам."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:401
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:429
+msgid "Enter the text to show when there is no related tags:"
+msgstr "Увядзіце тэкст, які адлюстроўваецца калі няма звязаных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:404
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:432
+msgid "You can use the same syntax as <code>st_related_tags()</code>function to customize display. See <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">documentation</a> for more details."
+msgstr "Вы можаце выкарыстаць той жа сінтаксіс як для функцыі <code>st_related_tags()</code> для налады адлюстравання. Глядзіце <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">арыгінальную</a> або <a href=\"http://http://lecactus.ru/2007/10/07/851\">рускую</a> дакументацыю для вялікіх дэталяў."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:406
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:434
+msgid "Remove related Tags"
+msgstr "Выдаленне звязаных пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:407
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:435
+msgid "Remove related Tags type format:"
+msgstr "Фармат выдалення звязаных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:412
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:440
+msgid "Remove related tags separator:"
+msgstr "Падзельнік:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:414
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:442
+msgid "Enter the text to show when there is no remove related tags:"
+msgstr "Увядзіце тэкст, які адлюстроўваецца калі няма звязаных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:415
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:443
+msgid "Remove related tags  link format:"
+msgstr "Фармат спасылак выдалення звязаных пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:419
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:447
+msgid "Which difference between <strong>&#8216;Order tags selection&#8217;</strong> and <strong>&#8216;Order tags display&#8217;</strong> ?<br />"
+msgstr "Якая розніца паміж <strong>&#8216;Парадак выбару пазанак&#8217;</strong> і <strong>&#8216;Парадак адлюстравання пазанак&#8217;</strong> ?<br />"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:421
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:449
+msgid "<strong>&#8216;Order tags selection&#8217;</strong> is the first step during tag's cloud generation, corresponding to collect tags."
+msgstr "<strong>&#8216;Парадак выбару пазанак&#8217;</strong> гэта першы крок падчас генеравання воблака пазанак, у адпаведнасці з вылучанымі пазнакамі."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:422
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:450
+msgid "<strong>&#8216;Order tags display&#8217;</strong> is the second. Once tags choosen, you can reorder them before display."
+msgstr "<strong>&#8216;Парадак адлюстравання пазанак&#8217;</strong> гэта другі крок. Пасля выбару пазанак, вы можаце перасартаваць іх перад паказам."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:424
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:452
+msgid "<strong>Example:</strong> You want display randomly the 100 tags most popular.<br />"
+msgstr "<strong>Прыклад:</strong> Вы жадаеце паказаць выпадкова 100 найболей папулярных пазанак.<br />"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:425
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:453
+msgid "You must set &#8216;Order tags selection&#8217; to <strong>count-desc</strong> for retrieve the 100 tags most popular and &#8216;Order tags display&#8217; to <strong>random</strong> for randomize cloud."
+msgstr "Вы павінны ўсталяваць &#8216;Парадак выбару пазанак&#8217; на <strong>count-desc</strong> для атрымання 100 найболей папулярных пазанак і &#8216;Парадак адлюстравання пазанак&#8217; на <strong>random</strong> для выпадковага сартавання воблака."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:426
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:454
+msgid "Order tags selection:"
+msgstr "Парадак выбару пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:434
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:167
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:462
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:157
+msgid "Order tags display:"
+msgstr "Парадак адлюстравання пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:437
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:465
+msgid "<code>count-desc</code> &ndash; Most popular."
+msgstr "<code>count-desc</code> &ndash; Найболей папулярныя."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:440
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:468
+msgid "<code>random</code> &ndash; Random. (default)"
+msgstr "<code>random</code> &ndash; Выпадкова. (па змаўчанні)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:442
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:470
+msgid "Include categories in tag cloud ?"
+msgstr "Уключыць рубрыкі ў воблака пазанак ?"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:443
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:471
+msgid "Tags cloud type format:"
+msgstr "Фармат воблака пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:450
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:478
+msgid "Maximum number of tags to display: (default: 45)"
+msgstr "Максімальнае кол-у пазанак для адлюстравання: (па змаўчанні: 45)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:451
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:479
+msgid "Enter the text to show when there is no tag:"
+msgstr "Увядзіце тэкст, паказваемы калі няма пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:453
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:481
+msgid "Most popular color:"
+msgstr "Колер найболей папулярных:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:454
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:482
+msgid "The colours are hexadecimal colours,  and need to have the full six digits (#eee is the shorthand version of #eeeeee)."
+msgstr "Колеры ў шаснаццатковым фармаце, вы павінны ўвесці ўсе шэсць знакаў (#eee гэта кароткая версія ад #eeeeee)."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:455
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:483
+msgid "Least popular color:"
+msgstr "Колер найменш папулярных:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:456
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:484
+msgid "Most popular font size:"
+msgstr "Памер шрыфта найболей папулярных:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:457
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:485
+msgid "The two font sizes are the size of the largest and smallest tags."
+msgstr "Два памеру шрыфта - гэта памеры самых вялікіх і маленькіх пазанак."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:458
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:486
+msgid "Least popular font size:"
+msgstr "Памер шрыфта найменш папулярных:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:459
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:487
+msgid "The units to display the font sizes with, on tag clouds:"
+msgstr "Адзінкі вымярэння для адлюстравання шрыфта ў воблаку пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:460
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:488
+msgid "The font size units option determines the units that the two font sizes use."
+msgstr "Опцыя адзінак вымярэння памераў шрыфта задае адзінкі, выкарыстоўваныя для двух памераў шрыфта."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:462
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:490
+msgid "You can use the same syntax as <code>st_tag_cloud()</code> function to customize display. See <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">documentation</a> for more details."
+msgstr "Вы можаце выкарыстаць той жа сінтаксіс як для функцыі <code>st_tag_cloud()</code> для налады адлюстравання. Глядзіце <a href=\"http://code.google.com/p/simple-tags/wiki/ThemeIntegration\">арыгінальную</a> або <a href=\"http://http://lecactus.ru/2007/10/07/851\">рускую</a> дакументацыю для вялікіх дэталяў."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:476
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:504
+msgid "Options saved"
+msgstr "Налады захаваныя"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:480
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:508
+msgid "Simple Tags options resetted to default options!"
+msgstr "Налады Simple Tags адноўленыя па змаўчанні!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:486
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:514
+#, php-format
+msgid "All Simple Tags options are deleted ! You <a href=\"%s\">deactive plugin</a> now !"
+msgstr "Усе налады Simple Tags выдаленыя! Вы <a href=\"%s\">дэактывавалі ўбудову</a> ! "
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:526
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:550
+msgid "Update Options &raquo;"
+msgstr "Абнавіць налады &raquo;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:527
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:551
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:526
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:549
+msgid "Do you really want to restore the default options?"
+msgstr "Вы сапраўды жадаеце аднавіць налады па змаўчанні?"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:527
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:551
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:526
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:549
+msgid "Reset Options"
+msgstr "Скінуць налады"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:534
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:533
+msgid "Uninstallation"
+msgstr "Дэўсталёўка"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:540
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:539
+msgid "Generally, deactivating this plugin does not erase any of its data, if you like to quit using Simple Tags for good, please erase <strong>all</strong> options before deactivating the plugin."
+msgstr "Звычайна, дэактывацыя ўбудовы не выдаляе любыя яго дадзеныя, калі вы жадаеце спыніць использвать Simple Tags, калі ласка выдаліце <strong>усё</strong> налады перад дэактывацыяй убудовы."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:541
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:540
+msgid "This erases all Simple Tags options. <strong>This is irrevocable! Be careful.</strong>"
+msgstr "Гэта выдаліць усе налады Simple Tags. <strong>Гэта незваротна! Будзьце асцярожныя.</strong>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:544
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:543
+msgid "Delete all options ?"
+msgstr "Выдаліць усе налады ?"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:568
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1714
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:565
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1206
+msgid "Security problem. Try again. If this problem persist, contact <a href=\"mailto:amaury@wordpress-fr.net\">plugin author</a>."
+msgstr "Праблема з бяспекай. Паспрабуйце зноў. Калі праблема сталая, звяжыцеся з <a href=\"mailto:amaury@wordpress-fr.net\">аўтарам убудовы</a>."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:601
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:171
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:161
+msgid "Most popular"
+msgstr "Самыя папулярныя"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:602
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:161
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:172
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:151
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:162
+msgid "Least used"
+msgstr "Апошнія скарыстаныя"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:603
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:158
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:169
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:148
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:159
+msgid "Alphabetical"
+msgstr "Алфавіт"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:634
+msgid "Existing Tags"
+msgstr "Наяўныя пазнакі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:638
+msgid "Search tags"
+msgstr "Пошук пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:642
+msgid "Go"
+msgstr "Наперад!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:645
+msgid "Sort Order:"
+msgstr "Парадак сартавання:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:660
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1844
+#, php-format
+msgid "View all posts tagged with %s"
+msgstr "Праглядзець усе запісы, пазначаныя з  %s"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:671
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1859
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1861
+msgid "Previous tags"
+msgstr "Папярэднія пазнакі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:671
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1865
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1867
+msgid "Next tags"
+msgstr "Наступныя пазнакі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:679
+msgid "Rename Tag"
+msgstr "Пераназваць пазнаку"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:680
+msgid "Enter the tag to rename and its new value.  You can use this feature to merge tags too. Click \"Rename\" and all posts which use this tag will be updated."
+msgstr "Увядзіце пазнаку для пераназвання і яе новае значэнне. Вы можаце выкарыстаць гэтую функцыю таксама для аб'яднання пазанак. Націсніце \"Пераназваць\" і ўсе запісы, якія выкарыстаюць гэтую пазнаку, будуць абноўленыя."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:681
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:722
+msgid "You can specify multiple tags to rename by separating them with commas."
+msgstr "Вы можаце вызначыць некалькі пазанак для пераназвання з дапамогай падзелу коскамі."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:686
+msgid "Tag(s) to rename:"
+msgstr "Пазнака(і) для пераназвання:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:687
+msgid "New tag name(s):"
+msgstr "Новае(ые) імя(на) пазнакі(ок):"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:688
+msgid "Rename"
+msgstr "Пераназваць"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:693
+msgid "Delete Tag"
+msgstr "Выдаліць пазнаку"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:694
+msgid "Enter the name of the tag to delete.  This tag will be removed from all posts."
+msgstr "Увядзіце імя пазнакі для выдалення. Гэтая пазнака будзе выдаленая з усіх запісаў."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:695
+msgid "You can specify multiple tags to delete by separating them with commas"
+msgstr "Вы можаце вызначыць некалькі пазанак для выдалення, падзяліўшы іх коскамі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:700
+msgid "Tag(s) to delete:"
+msgstr "Пазнака(і) для выдалення:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:701
+msgid "Delete"
+msgstr "Выдаліць"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:706
+msgid "Add Tag"
+msgstr "Дадаць пазнаку"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:707
+msgid "This feature lets you add one or more new tags to all posts which match any of the tags given."
+msgstr "Гэтая функцыя дазваляе дадаць адну або некалькі новых пазанак ва ўсе запісы якія адпавядаюць зададзеным пазнакам."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:708
+msgid "You can specify multiple tags to add by separating them with commas.  If you want the tag(s) to be added to all posts, then don't specify any tags to match."
+msgstr "Вы можаце задаць мноства пазанак, падзяліўшы іх коскамі. Калі вы жадаеце каб пазнака(і) былі дададзеныя ва ўсе запісы, тады не задавайце ніякіх пазанак для супадзення."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:713
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:728
+msgid "Tag(s) to match:"
+msgstr "Пазнака(і) для супадзення:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:714
+msgid "Tag(s) to add:"
+msgstr "Пазнака(і) для дадання:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:715
+msgid "Add"
+msgstr "Дадаць"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:720
+msgid "Edit Tag Slug"
+msgstr "Рэдагаваць кароткую спасылку пазнакі (slug)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:721
+msgid "Enter the tag name to edit and its new slug. <a href=\"http://codex.wordpress.org/Glossary#Slug\">Slug definition</a>"
+msgstr "Увядзіце імя пазнакі для рэдагавання і яе новую кароткую спасылку. <a href=\"http://codex.wordpress.org/Glossary#Slug\">азначэнне Кароткай спасылкі</a>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:732
+msgid "Slug(s) to set:"
+msgstr "Усталяваць кароткую спасылку(і):"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:737
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:916
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:785
+msgid "Edit"
+msgstr "Рэдагаваць"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:743
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:577
+msgid "Remove empty terms"
+msgstr "Выдаліць пустыя тэрміны"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:744
+msgid "WordPress 2.3 have a small bug and can create empty terms. Remove it !"
+msgstr "WordPress 2.3 мае невялікі баг і можа ствараць пустыя тэрміны. Выдаліць іх !"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:748
+msgid "Clean !"
+msgstr "Ачысціць !"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:849
+msgid "Search terms&hellip;"
+msgstr "Пошук тэрмінаў&hellip;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:854
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:755
+msgid "Quantity&hellip;"
+msgstr "Колькасць…"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:872
+msgid "Author&hellip;"
+msgstr "Аўтар&hellip;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:873
+msgid "Any"
+msgstr "Любы"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:878
+msgid "Type&hellip;"
+msgstr "Тып&hellip;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:880
+msgid "Post"
+msgstr "Запіс"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:882
+msgid "Page"
+msgstr "Старонка"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:888
+msgid "Order&hellip;"
+msgstr "Парадак&hellip;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:890
+msgid "Date (descending)"
+msgstr "Дата (у парадку змяншэння)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:891
+msgid "Date (ascending)"
+msgstr "Дата (у парадку ўзрастання)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:892
+msgid "ID (descending)"
+msgstr "ID (у парадку змяншэння)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:893
+msgid "ID (ascending)"
+msgstr "ID (у парадку ўзрастання)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:898
+msgid "Filter&hellip;"
+msgstr "Фільтр&hellip;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:900
+msgid "All"
+msgstr "Усё"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:901
+msgid "Untagged only"
+msgstr "Толькі без пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:905
+msgid "Filter &#187;"
+msgstr "Фільтраваць &#187;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:912
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:922
+msgid "Update all"
+msgstr "Абнавіць усё"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:936
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:815
+msgid "No content to edit."
+msgstr "Няма кантэнту для рэдагавання."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1053
+msgid "Tags (separate multiple tags with commas: cats, pet food, dogs)"
+msgstr "Пазнакі (падзяляйце некалькі пазанак коскамі: напрыклад: коткі, ежа для жывёлін, сабакі)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1105
+msgid "No new tag specified!"
+msgstr "Новая пазнака не зададзеная!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1124
+msgid "No new/old valid tag specified!"
+msgstr "Новая/старая пазнакі зададзеныя не дакладна!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1156
+msgid "No tag renamed."
+msgstr "Пазнака не пераназваная."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1159
+#, php-format
+msgid "Renamed tag(s) &laquo;%1$s&raquo; to &laquo;%2$s&raquo;"
+msgstr "Пераназваная(ы) пазнака(і) &laquo;%1$s&raquo; у &laquo;%2$s&raquo;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1166
+msgid "No valid new tag."
+msgstr "Новая пазнака не правільная."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1183
+msgid "No objects (post/page) found for specified old tags."
+msgstr "Не знойдзена аб'ектаў (старонак/запісаў) для зададзеных старых пазанак."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1208
+msgid "No tag merged."
+msgstr "Пазнака не аб'яднаная."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1211
+#, php-format
+msgid "Merge tag(s) &laquo;%1$s&raquo; to &laquo;%2$s&raquo;. %3$s objects edited."
+msgstr "Аб'яднанне пазанак &laquo;%1$s&raquo; у &laquo;%2$s&raquo;. %3$s аб'ектаў адрэдагавана."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1214
+msgid "Error. No enough tags for rename. Too for merge. Choose !"
+msgstr "Памылка. Вы задалі нядосыць пазанак у радку для  пераназвання і занадта шмат у радку для аб'яднання. Вылучыце зноў!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1240
+msgid "No tag specified!"
+msgstr "Пазнакі не зададзеныя!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1265
+msgid "No tag deleted."
+msgstr "Пазнака не выдаленая."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1268
+#, php-format
+msgid "%1s tag(s) deleted."
+msgstr "%s пазанак выдаленае."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1280
+msgid "No new tag(s) specified!"
+msgstr "Новая(ые) пазнака(і) не зададзеная(ы)!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1328
+msgid "No tag added."
+msgstr "Пазнака не дададзеная."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1331
+#, php-format
+msgid "Tag(s) added to %1s post(s)."
+msgstr "Пазнака(і) дададзеная(ы) у %1s запіс(і)."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1343
+msgid "No new slug(s) specified!"
+msgstr "Новая(ые) кароткая(іі) спасылка(і) не зададзеная(ы)!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1359
+msgid "Tags number and slugs number isn't the same!"
+msgstr "Лік пазанак і лік кароткіх спасылак не аднолькавае!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1383
+msgid "No slug edited."
+msgstr "Коротная спасылка не змененая."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1386
+#, php-format
+msgid "%s slug(s) edited."
+msgstr "%s кароткая(іх) спасылка(ок) адрэдагаваная(аб)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1404
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1089
+msgid "Nothing to muck. Good job !"
+msgstr "Добрая праца!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1429
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1117
+#, php-format
+msgid "%s rows deleted. WordPress DB is clean now !"
+msgstr "%s радкоў выдаленае. База дадзеных WordPress зараз чыстая !"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1452
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1130
+msgid "Display click tags"
+msgstr "Паказаць клік-пазнакі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1452
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1131
+msgid "Hide click tags"
+msgstr "Схаваць клік-пазнакі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1504
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1148
+msgid "Suggested tags from :"
+msgstr "Прыдатныя пазнакі з : "
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1505
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1149
+msgid "Local tags"
+msgstr "Лакальныя пазнакі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1506
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1150
+msgid "Yahoo"
+msgstr "Yahoo"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1507
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1151
+msgid "Tag The Net"
+msgstr "Tag The Net"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1513
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1154
+msgid "Choose a provider to get suggested tags (local, yahoo or tag the net)."
+msgstr "Вылучыце правайдэра для атрымання прыдатных пазанак (лакальны, yahoo or tag the net)."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1742
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1238
+#, php-format
+msgid "%s post(s) tags updated with success !"
+msgstr "%s пазанак запісаў паспяхова абноўленае !"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:1744
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1236
+#, php-format
+msgid "%s page(s) tags updated with success !"
+msgstr "%s пазанак старонак паспяхова абноўленае !"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:2155
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1566
+#, php-format
+msgid "&copy; Copyright 2007 <a href=\"http://www.herewithme.fr/\" title=\"Here With Me\">Amaury Balmer</a> | <a href=\"http://wordpress.org/extend/plugins/simple-tags\">Simple Tags</a> | Version %s"
+msgstr "&copy; Капірайт 2007 <a href=\"http://www.herewithme.fr/\" title=\"Here With Me\">Amaury Balmer</a> | <a href=\"http://wordpress.org/extend/plugins/simple-tags\">Simple Tags</a> | Версія %s, пераклад на рускую мову <a href=\"http://lecactus.ru/\" title=\"Lecactus\">Lecactus</a>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:2195
+msgid "Page: "
+msgstr "Старонка:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:2274
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1668
+msgid "General"
+msgstr "Асноўныя"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:2277
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1671
+msgid "Administration"
+msgstr "Адміністраванне"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:2280
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1674
+msgid "Meta Keyword"
+msgstr "Ключавыя словы"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:2283
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1677
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:242
+msgid "Embedded Tags"
+msgstr "Убудавальныя пазнакі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:2286
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1680
+msgid "Tags for Current Post"
+msgstr "Пазнакі для бягучага запісу"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:2289
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1683
+msgid "Related Posts"
+msgstr "Звязаныя запісы"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:2292
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1686
+msgid "Related Tags"
+msgstr "Звязаныя пазнакі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.admin.php:2295
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1689
+msgid "Tag cloud"
+msgstr "Воблака пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:143
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:133
+msgid "Empty field will use default value."
+msgstr "Пустыя вобласці будуць выкарыстаць значэнні па змаўчанні."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:146
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:136
+msgid "Title:"
+msgstr "Загаловак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:151
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:141
+msgid "Max tags to display: (default: 45)"
+msgstr "Максімальнае кол-у пазанак дл адлюстраванні: (па змаўчанні: 45)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:156
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:146
+msgid "Tags selection:"
+msgstr "Выбар пазанак:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:159
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:170
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:149
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:160
+msgid "Inverse Alphabetical"
+msgstr "Алфавіт у зваротным парадку"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:160
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:150
+msgid "Most popular (default)"
+msgstr "Найболей папулярныя (па змаўчанні)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:162
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:152
+msgid "Random"
+msgstr "Выпадкова"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:173
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:163
+msgid "Random (default)"
+msgstr "Выпадкова (па змаўчанні)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:178
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:168
+msgid "Font size mini: (default: 8)"
+msgstr "Мінімальны памер шрыфта: (па змаўчанні: 8)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:183
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:173
+msgid "Font size max: (default: 22)"
+msgstr "Максімальны памер шрыфта: (па змаўчанні: 22)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:188
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:178
+msgid "Unit font size:"
+msgstr "Адзінка памеру шрыфта:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:190
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:180
+msgid "Point (default)"
+msgstr "Кропкі (па змаўчанні)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:191
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:181
+msgid "Pixel"
+msgstr "Пікселі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:192
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:182
+msgid "Em"
+msgstr "Em"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:193
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:183
+msgid "Pourcent"
+msgstr "Адсоткі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:198
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:188
+msgid "Format:"
+msgstr "Фармат:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:200
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:190
+msgid "Flat (default)"
+msgstr "Flat (па змаўчанні)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:201
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:191
+msgid "List (UL/LI)"
+msgstr "Спіс (UL/LI)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:207
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:197
+msgid "Use auto color cloud:"
+msgstr "Выкарыстаць аўтаматычную размалёўку воблака:"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:211
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:201
+msgid "Font color mini: (default: #CCCCCC)"
+msgstr "Колер шрыфта мінімальных: (па змаўчанні: #CCCCCC)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:216
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:206
+msgid "Font color max: (default: #000000)"
+msgstr "Колер шрыфта максімальных (па змаўчанні: #000000)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:221
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:211
+msgid "Extended format: (advanced usage)"
+msgstr "Пашыраны фармат: (пашыранае выкарыстанне)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:252
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:242
+msgid "Tag Cloud Widgets"
+msgstr "Виджеты аблокі пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:253
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:243
+msgid "How many tag cloud widgets would you like?"
+msgstr "Як шмат виджетов аблокаў пазанак вы жадаеце?"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:257
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:247
+msgid "Save"
+msgstr "Захаваць"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:274
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.3/inc/simple-tags.widgets.php:275
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:265
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:266
+#, php-format
+msgid "Extended Tag Cloud %d"
+msgstr "Пашыранае воблака пазанак %d"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:111
+msgid "No tags for this post."
+msgstr "У запісы няма пазанак."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:123
+msgid "No related tags found."
+msgstr "Звязаных пазанак не знойдзена."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:1113
+msgid "<a %tag_rel% href=\"%tag_link_remove%\" title=\"Remove %tag_name_attribute% from search\">Remove %tag_name%</a>"
+msgstr "<a %tag_rel% href=\"%tag_link_remove%\" title=\"Прыбраць %tag_name_attribute% from search\">Прыбраць %tag_name%</a>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/simple-tags.client.php:1502
+msgid "<a href=\"%tag_link%\" title=\"%tag_name_attribute%\" %tag_rel%>%tag_name%</a>"
+msgstr "<a href=\"%tag_link%\" title=\"%tag_name_attribute%\" %tag_rel%>%tag_name%</a>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:218
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:522
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:575
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:818
+msgid "Visit the <a href=\"http://code.google.com/p/simple-tags/\">plugin's homepage</a> for further details. If you find a bug, or have a fantastic idea for this plugin, <a href=\"mailto:amaury@wordpress-fr.net\">ask me</a> !"
+msgstr "Наведаеце <a href=\"http://code.google.com/p/simple-tags/\">хатнюю старонку ўбудовы</a> для вялікіх дэталяў. Калі вы знайшлі памылку, або маеце фантастычную ідэю для гэтай убудовы, <a href=\"mailto:amaury@wordpress-fr.net\">звяжыцеся са мной</a> !"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:225
+msgid "Options"
+msgstr "Налады"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:229
+msgid "Activation"
+msgstr "Актывацыя"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:236
+msgid "Tags database"
+msgstr "База дадзеных пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:243
+msgid "Target"
+msgstr "Мэта"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:250
+msgid "Keywords list"
+msgstr "Спіс ключавых слоў"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:253
+msgid "Separated with a comma"
+msgstr "Падзеленыя коскамі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:259
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:525
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:548
+msgid "Update options &raquo;"
+msgstr "Абнавіць налады &raquo;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:263
+msgid "Auto tags all content &raquo;"
+msgstr "Аўтаматычна пазначыць пазнакамі ўвесь кантэнт &raquo;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:301
+#, php-format
+msgid "All done! %s tags added."
+msgstr "Усё гатова! %s пазанак дададзена."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:317
+msgid "Active tags for page:"
+msgstr "Актываваць пазнакі для старонак::"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:318
+msgid "This feature allow page to be tagged. This option add pages in tags search. Also this feature add tag management in write page."
+msgstr "Гэтая функцыя дазволіць прызначаць пазнакі старонкам. Гэтая опцыя дадасць старонкі ў вынікі пошуку па пазнаках. Таксама, гэтая функцыя дадасць кіраванне пазнакамі ў акно стварэння старонак."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:340
+msgid "Includes the meta keywords tag automatically in your header (most, but not all, themes support this). These keywords are sometimes used by search engines.<br /><strong>Warning:</strong> If the plugin \"All in One SEO Pack\" is installed and enabled. This feature is automatically disabled."
+msgstr "Уключае пазнакі ў meta keywords аўтаматычна ў ваш загаловак (большасць, але не ўсе тэмы падтрымліваюць гэта). Гэтыя ключавыя часам выкарыстоўваюцца пошукавымі машынамі. <br /><strong>Увага:</strong> Калі ўбудова \"All in One SEO Pack\" усталяваны і ўключаны,гэтая функцыя будзе адключаная."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:574
+msgid "Advanced tags management"
+msgstr "Пашыранае кіраванне пазнакамі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:581
+msgid "WordPress 2.3 have a small bug and can create empty terms."
+msgstr "WordPress 2.3 мае невялікі баг і можа ствараць пустыя тэрміны."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:581
+msgid "Clean it !"
+msgstr "Ачысціць іх !"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:615
+msgid "Published"
+msgstr "Апублікавана"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:615
+msgid "Published posts"
+msgstr "Апублікаваныя запісы"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:616
+msgid "Scheduled"
+msgstr "Запланавана"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:616
+msgid "Scheduled posts"
+msgstr "Запланаваныя запісы"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:617
+msgid "Pending Review"
+msgstr "Чакае ўхвалы"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:617
+msgid "Pending posts"
+msgstr "Якія чакаюць запісы"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:618
+msgid "Draft"
+msgstr "Чарнавік"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:619
+msgid "Private"
+msgstr "Асабістае"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:619
+msgid "Private posts"
+msgstr "Асабістыя запісы"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:663
+msgid "Mass edit tags"
+msgstr "Масавае рэдагаванне пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:670
+msgid "All Posts"
+msgstr "Усе запісы"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:691
+msgid "All Pages"
+msgstr "Усе старонкі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:700
+msgid "Search Posts"
+msgstr "Пошук запісаў"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:732
+msgid "Show all dates"
+msgstr "Паказаць за ўвесь час"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:752
+msgid "View all categories"
+msgstr "Праглядзець усе рубрыкі"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:765
+msgid "Filter"
+msgstr "Фільтраваць"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:795
+msgid "Update all &raquo;"
+msgstr "Абнавіць усё &raquo;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1009
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.admin.php:1024
+msgid "Tags <small>(separate multiple tags with commas: cats, pet food, dogs)</small>"
+msgstr "Пазнакі <small>(падзяляйце некалькі пазанак коскамі: напрыклад: гарбата, спорт, напоі для адпачынку)</small>"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/2.5/inc/simple-tags.widgets.php:255
+msgid "Your most used tags in cloud format with dynamic color and many options"
+msgstr "Вашы найболей выкарыстоўваныя пазнакі ў фармаце воблака з дынамічнай размалёўкай і мноствам налад"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:57
+msgid "Import Embedded Tags"
+msgstr "Імпарт убудавальных (embedded) пазанак"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:58
+msgid "Steps may take a few minutes depending on the size of your database. Please be patient."
+msgstr "Крокі могуць заняць некалькі хвілін, у залежнасці ад памеру вашай базы дадзеных. Калі ласка, будзьце цярплівыя."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:59
+msgid "Visit the <a href=\"http://www.herewithme.fr/wordpress-plugins/simple-tags\">plugin's homepage</a> for further details. If you find a bug, or have a fantastic idea for this plugin, <a href=\"mailto:amaury@wordpress-fr.net\">ask me</a> !"
+msgstr "Наведаеце <a href=\"http://www.herewithme.fr/wordpress-plugins/simple-tags\">хатнюю старонку ўбудовы</a> для вялікіх дэталяў. Калі вы знайшлі памылку, або маеце фантастычную ідэю для гэтай убудовы, <a href=\"mailto:amaury@wordpress-fr.net\">напішыце мне</a> !"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:68
+msgid "Howdy! This imports tags from embedded tags into this blog using the new WordPress native tagging structure."
+msgstr "Прывітаю! Гэта імпартуе пазнакі з убудавальных (embedded) пазанак у гэтым блогу ў новую натыўную структуру пазанак Wordpress."
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:69
+msgid "To accommodate larger databases for those tag-crazy authors out there, we have made this into an easy 4-step program to help you kick that nasty Embedded Tags habit. Just keep clicking along and we will let you know when you are in the clear!"
+msgstr "Каб апрацаваць вялікія базы дадзеных для гэтых пазанак ( вар'яты аўтары там), мы зрабілі гэтую простую 4-шаговую праграму, каб дапамагчы вам пазбавіцца ад звычкі выкарыстаць  Embedded пазнакі. Проста працягвайце пстрыкаць мышкай і мы паведамім вам калі ўсё будзе гатова!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:70
+msgid "Don&#8217;t be stupid - backup your database before proceeding!"
+msgstr "Не тупіце - зрабіце бэкап вашай базы дадзеных перад гэтым працэсам!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:72
+msgid "Step 1 &raquo;"
+msgstr "Крок 1 &raquo;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:95
+msgid "Missing parameters in URL. (Start or End)"
+msgstr "Згубленыя параметры ў URL. (Пачатак або Канец)"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:107
+msgid "Configure and add tags to posts&#8230;"
+msgstr "Наладзіць і дадаць пазнакі ў запісы&#8230;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:114
+msgid "Start marker"
+msgstr "Маркер пачатку"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:117
+msgid "End marker"
+msgstr "Маркер канчатка"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:120
+msgid "Delete embedded tags once imported ?"
+msgstr "Выдаліць убудавальныя (embedded) пазнакі пасля імпарту?"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:122
+msgid "Import also embedded tags from page ?"
+msgstr "Імпартаваць таксама ўбудавальныя (embedded) пазнакі са старонкі?"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:125
+msgid "Start import &raquo;"
+msgstr "Пачаць імпарт &raquo;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:180
+msgid "Done!"
+msgstr "Гатова!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:182
+msgid "Step 2 &raquo;"
+msgstr "Крок 2 &raquo;"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:199
+msgid "Import Complete!"
+msgstr "Імпарт завершаны!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:200
+msgid "OK, so we lied about this being a 4-step program! You&#8217;re done!"
+msgstr "ОК, што бы мы рабілі без гэтай выдатнай 4-шаговой праграмы! Усё гатова!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:201
+msgid "Now wasn&#8217;t that easy?"
+msgstr "Не ці праўда было проста?"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:202
+msgid "You can manage tags now !"
+msgstr "Зараз вы можаце кіраваць пазнакамі!"
+
+#: X:\web\???????????\wordpress\tags\simple-tags-wp23-wp25\simple-tags/extras/simple-tags.importer.php:242
+msgid "Import Embedded Tags into the new WordPress native tagging structure."
+msgstr "Імпарт убудавальных (embedded) пазанак у новую натыўную структуру пазанак WordPress."
+
+#~ msgid "Close"
+#~ msgstr "Зачыніць"
+#~ msgid "%s terms updated with success !"
+#~ msgstr "%s тэрмінаў паспяхова абноўленае !"
+#~ msgid "Category"
+#~ msgstr "Рубрыка"
+#~ msgid "Simple Tags: Advanced Edit Terms"
+#~ msgstr "Simple Tags: Пашыранае рэдагаванне тэрмінаў"
+#~ msgid ""
+#~ "Be careful with this page ! You can cause important damages, and lost all "
+#~ "tags and categories of your WordPress installation."
+#~ msgstr ""
+#~ "Будзьце асцярожныя з гэтай старонкай! Вы можаце выклікаць сур'ёзныя "
+#~ "пашкоджанні і страціць усе вашы пазнакі і рубрыкі вашай усталёўкі "
+#~ "WordPress."
+#~ msgid "Taxonomy&hellip;"
+#~ msgstr "Таксанамія&hellip;"
+#~ msgid "Counter (descending)"
+#~ msgstr "Колькасць (у парадку змяншэння)"
+#~ msgid "Counter (ascending)"
+#~ msgstr "Колькасць (у парадку ўзрастання)"
+#~ msgid "Name (descending)"
+#~ msgstr "Імя (у парадку змяншэння)"
+#~ msgid "Name (ascending)"
+#~ msgstr "Імя (у парадку ўзрастання)"
+#~ msgid "ID (no editing)"
+#~ msgstr "ID (не рэдагуецца)"
+#~ msgid "Name"
+#~ msgstr "Назоў"
+#~ msgid "Slug (unique)"
+#~ msgstr "Кароткая спасылка (унікальная)"
+#~ msgid "Term group"
+#~ msgstr "Група тэрміна"
+#~ msgid "Taxonomy"
+#~ msgstr "Таксанамія"
+#~ msgid "Count"
+#~ msgstr "Рахунак"
+#~ msgid "Parent"
+#~ msgstr "Бацька"
+#~ msgid "Description"
+#~ msgstr "Апісанне"
+#~ msgid "Delete ?"
+#~ msgstr "Выдаліць ?"
+#~ msgid "Update all terms"
+#~ msgstr "Абнавіць усе тэрміны"
+#~ msgid "No terms to edit."
+#~ msgstr "Няма тэрмінаў для рэдагавання."
+

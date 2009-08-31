@@ -1,0 +1,1057 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-03-03 02:56-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: podpress.php:86
+msgid ""
+"It appears you are upgrading podPress, but left the pre-4.x version of "
+"podpress.php file in the plugins directory. Please delete this file to "
+"continue."
+msgstr ""
+
+#: podpress.php:143
+msgid "Stats"
+msgstr ""
+
+#: podpress.php:145
+msgid "Feed/iTunes Settings"
+msgstr ""
+
+#: podpress.php:146
+msgid "General Settings"
+msgstr ""
+
+#: podpress.php:147 podpress_admin_player_class.php:44
+msgid "Player Settings"
+msgstr ""
+
+#: podpress.php:181 podpress_theme.php:70
+msgid "Play Now"
+msgstr ""
+
+#: podpress.php:182
+msgid "Hide Player"
+msgstr ""
+
+#: podpress.php:211
+msgid "Checking for updates... Failed"
+msgstr ""
+
+#: podpress.php:220
+msgid "Stats Summary"
+msgstr ""
+
+#: podpress.php:222 podpress_admin_stats_class.php:277
+msgid "Feed"
+msgstr ""
+
+#: podpress.php:222 podpress_admin_stats_class.php:278
+msgid "Web"
+msgstr ""
+
+#: podpress.php:222 podpress_admin_stats_class.php:279
+msgid "Play"
+msgstr ""
+
+#: podpress.php:222 podpress_admin_stats_class.php:151
+#: podpress_admin_stats_class.php:280
+msgid "Total"
+msgstr ""
+
+#: podpress.php:259
+msgid "new version available"
+msgstr ""
+
+#: podpress.php:303
+msgid "Podcast Powered by "
+msgstr ""
+
+#: podpress.php:303
+msgid "the dream plugin for podcasting with WordPress"
+msgstr ""
+
+#: podpress_admin_class.php:142 podpress_admin_class.php:144
+msgid "Podcasting"
+msgstr ""
+
+#: podpress_admin_class.php:144 podpress_admin_stats_class.php:283
+#: podpress_admin_stats_class.php:285 podpress_admin_stats_class.php:287
+msgid "Files"
+msgstr ""
+
+#: podpress_admin_class.php:160
+msgid "Media File"
+msgstr ""
+
+#: podpress_admin_class.php:162
+msgid "Move Up"
+msgstr ""
+
+#: podpress_admin_class.php:163
+msgid "Move Down"
+msgstr ""
+
+#: podpress_admin_class.php:164
+msgid "Remove File"
+msgstr ""
+
+#: podpress_admin_class.php:169 podpress_admin_general_class.php:342
+msgid "Location"
+msgstr ""
+
+#: podpress_admin_class.php:179
+msgid "Specify URL"
+msgstr ""
+
+#: podpress_admin_class.php:197
+msgid ".torrent Location"
+msgstr ""
+
+#: podpress_admin_class.php:206
+msgid "Title"
+msgstr ""
+
+#: podpress_admin_class.php:206
+msgid "optional"
+msgstr ""
+
+#: podpress_admin_class.php:214
+msgid "Type"
+msgstr ""
+
+#: podpress_admin_class.php:222
+msgid "Size"
+msgstr ""
+
+#: podpress_admin_class.php:225 podpress_admin_class.php:233
+msgid "Auto Detect"
+msgstr ""
+
+#: podpress_admin_class.php:230
+msgid "Duration"
+msgstr ""
+
+#: podpress_admin_class.php:233
+msgid "May take several seconds/minutes"
+msgstr ""
+
+#: podpress_admin_class.php:239
+msgid "Preview Image URL"
+msgstr ""
+
+#: podpress_admin_class.php:247
+msgid "Preview Image"
+msgstr ""
+
+#: podpress_admin_class.php:254
+msgid "Dimensions"
+msgstr ""
+
+#: podpress_admin_class.php:268
+msgid "Included in"
+msgstr ""
+
+#: podpress_admin_class.php:271
+msgid "RSS2"
+msgstr ""
+
+#: podpress_admin_class.php:272
+msgid "ATOM"
+msgstr ""
+
+#: podpress_admin_class.php:274
+msgid "Subscription"
+msgstr ""
+
+#: podpress_admin_class.php:276
+msgid "Free"
+msgstr ""
+
+#: podpress_admin_class.php:288
+msgid "Disable Player"
+msgstr ""
+
+#: podpress_admin_class.php:297
+msgid "Tag (ID3) Info"
+msgstr ""
+
+#: podpress_admin_class.php:314
+msgid "Post specific settings for iTunes"
+msgstr ""
+
+#: podpress_admin_class.php:321 podpress_admin_class.php:705
+#: podpress_admin_feed_class.php:155
+msgid "iTunes:Subtitle"
+msgstr ""
+
+#: podpress_admin_class.php:325 podpress_admin_class.php:346
+msgid "Use Post Excerpt"
+msgstr ""
+
+#: podpress_admin_class.php:326 podpress_admin_class.php:348
+#: podpress_admin_class.php:371 podpress_admin_class.php:393
+#: podpress_admin_class.php:616 podpress_admin_class.php:643
+#: podpress_admin_class.php:658 podpress_admin_class.php:676
+#: podpress_admin_class.php:691 podpress_admin_class.php:709
+#: podpress_admin_class.php:736 podpress_admin_class.php:787
+msgid "Custom"
+msgstr ""
+
+#: podpress_admin_class.php:331 podpress_admin_class.php:715
+msgid ""
+"By default this is taken from the first 25 characters of the blog Post text."
+msgstr ""
+
+#: podpress_admin_class.php:342 podpress_admin_class.php:612
+#: podpress_admin_feed_class.php:110
+msgid "iTunes:Summary"
+msgstr ""
+
+#: podpress_admin_class.php:347 podpress_admin_class.php:370
+#: podpress_admin_class.php:392 podpress_admin_class.php:577
+#: podpress_admin_class.php:602 podpress_admin_class.php:615
+#: podpress_admin_class.php:630 podpress_admin_class.php:642
+#: podpress_admin_class.php:657 podpress_admin_class.php:675
+#: podpress_admin_class.php:690 podpress_admin_class.php:708
+#: podpress_admin_class.php:723 podpress_admin_class.php:735
+#: podpress_admin_class.php:752 podpress_admin_class.php:757
+#: podpress_admin_class.php:761 podpress_admin_class.php:772
+#: podpress_admin_class.php:786 podpress_admin_class.php:805
+msgid "Use Global"
+msgstr ""
+
+#: podpress_admin_class.php:353 podpress_admin_class.php:623
+msgid "By default this is taken from the blog Post text."
+msgstr ""
+
+#: podpress_admin_class.php:365 podpress_admin_class.php:732
+#: podpress_admin_feed_class.php:173
+msgid "iTunes:Keywords"
+msgstr ""
+
+#: podpress_admin_class.php:369
+msgid "Use WordPress Categories"
+msgstr ""
+
+#: podpress_admin_class.php:376 podpress_admin_class.php:742
+msgid "Not visible in iTunes, but used for searches."
+msgstr ""
+
+#: podpress_admin_class.php:382 podpress_admin_class.php:739
+msgid "Separate multiples with commas"
+msgstr ""
+
+#: podpress_admin_class.php:382 podpress_admin_class.php:739
+#: podpress_admin_feed_class.php:176
+msgid "max 8"
+msgstr ""
+
+#: podpress_admin_class.php:388
+msgid "iTunes:Author"
+msgstr ""
+
+#: podpress_admin_class.php:399 podpress_admin_class.php:683
+msgid "Used if this Author is different than the feeds author."
+msgstr ""
+
+#: podpress_admin_class.php:409 podpress_admin_class.php:769
+#: podpress_admin_feed_class.php:216
+msgid "iTunes:Explicit"
+msgstr ""
+
+#: podpress_admin_class.php:413 podpress_admin_class.php:430
+msgid "Use Default"
+msgstr ""
+
+#: podpress_admin_class.php:414 podpress_admin_class.php:431
+#: podpress_admin_class.php:773 podpress_admin_class.php:806
+#: podpress_admin_feed_class.php:183 podpress_admin_feed_class.php:219
+#: podpress_admin_feed_class.php:253 podpress_admin_general_class.php:432
+msgid "No"
+msgstr ""
+
+#: podpress_admin_class.php:415 podpress_admin_class.php:432
+#: podpress_admin_class.php:774 podpress_admin_class.php:807
+#: podpress_admin_feed_class.php:182 podpress_admin_feed_class.php:220
+#: podpress_admin_feed_class.php:254 podpress_admin_general_class.php:431
+msgid "Yes"
+msgstr ""
+
+#: podpress_admin_class.php:416 podpress_admin_class.php:775
+#: podpress_admin_feed_class.php:221
+msgid "Clean"
+msgstr ""
+
+#: podpress_admin_class.php:421 podpress_admin_class.php:778
+msgid "Headphones Required? Sets the parental advisory graphic in name column."
+msgstr ""
+
+#: podpress_admin_class.php:426 podpress_admin_class.php:802
+#: podpress_admin_feed_class.php:250
+msgid "iTunes:Block"
+msgstr ""
+
+#: podpress_admin_class.php:437 podpress_admin_class.php:810
+msgid "Prevent this episode or podcast from appearing in iTunes."
+msgstr ""
+
+#: podpress_admin_class.php:443
+msgid "End of podPress. File Uploading support is not part of podPress"
+msgstr ""
+
+#: podpress_admin_class.php:539
+msgid "podPress CategoryCasting"
+msgstr ""
+
+#: podpress_admin_class.php:540
+msgid "Enable Category Casting"
+msgstr ""
+
+#: podpress_admin_class.php:549 podpress_admin_feed_class.php:41
+msgid "Podcast Feed Options"
+msgstr ""
+
+#: podpress_admin_class.php:553 podpress_admin_feed_class.php:49
+msgid "iTunes Settings"
+msgstr ""
+
+#: podpress_admin_class.php:554 podpress_admin_feed_class.php:50
+msgid "Standard Settings"
+msgstr ""
+
+#: podpress_admin_class.php:559 podpress_admin_feed_class.php:58
+msgid "iTunes:FeedID"
+msgstr ""
+
+#: podpress_admin_class.php:566 podpress_admin_feed_class.php:70
+msgid "Podcast Feed URL"
+msgstr ""
+
+#: podpress_admin_class.php:568 podpress_admin_feed_class.php:72
+msgid "The RSS Feed URL to your podcast."
+msgstr ""
+
+#: podpress_admin_class.php:574 podpress_admin_feed_class.php:78
+msgid "iTunes:New-Feed-Url"
+msgstr ""
+
+#: podpress_admin_class.php:578 podpress_admin_feed_class.php:81
+msgid "Disable"
+msgstr ""
+
+#: podpress_admin_class.php:579 podpress_admin_feed_class.php:82
+msgid "Enable"
+msgstr ""
+
+#: podpress_admin_class.php:581 podpress_admin_feed_class.php:84
+msgid ""
+"Enabling will set the tag to the \"Podcast Feed URL\".  <a href=\"javascript:"
+"void(null);\" onclick=\"javascript: podPressShowHideRow"
+"('iTunesNewFeedURLHelp');\"><font color=\"red\">(Warning)</font></a>"
+msgstr ""
+
+#: podpress_admin_class.php:590 podpress_admin_feed_class.php:93
+msgid ""
+"Setting this will tell the iTunes Podcast directory and all your iTunes "
+"listeners to use the the URL from the \"Podcast Feed URL\" setting. "
+msgstr ""
+
+#: podpress_admin_class.php:591 podpress_admin_feed_class.php:94
+msgid ""
+"Be careful to only use this if you understand that making a mistake with "
+"this setting could cause loss of listeners and headaches with your listing "
+"in the iTunes Directory"
+msgstr ""
+
+#: podpress_admin_class.php:599 podpress_admin_feed_class.php:102
+msgid "Blog/Podcast title"
+msgstr ""
+
+#: podpress_admin_class.php:603
+msgid "Append Category Name"
+msgstr ""
+
+#: podpress_admin_class.php:604
+msgid "Use Category Name"
+msgstr ""
+
+#: podpress_admin_class.php:627
+msgid "Description"
+msgstr ""
+
+#: podpress_admin_class.php:631
+msgid "Use Category Description"
+msgstr ""
+
+#: podpress_admin_class.php:639 podpress_admin_feed_class.php:125
+msgid "iTunes:Image"
+msgstr ""
+
+#: podpress_admin_class.php:654 podpress_admin_feed_class.php:132
+msgid "Blog/RSS Image"
+msgstr ""
+
+#: podpress_admin_class.php:672 podpress_admin_feed_class.php:142
+msgid "iTunes:Author/Owner"
+msgstr ""
+
+#: podpress_admin_class.php:687 podpress_admin_feed_class.php:147
+msgid "Owner E-mail address"
+msgstr ""
+
+#: podpress_admin_class.php:698
+msgid "Used if this owner of this category is different than the feeds owner."
+msgstr ""
+
+#: podpress_admin_class.php:720 podpress_admin_feed_class.php:161
+msgid "Language"
+msgstr ""
+
+#: podpress_admin_class.php:749 podpress_admin_feed_class.php:191
+msgid "iTunes:Categories"
+msgstr ""
+
+#: podpress_admin_class.php:783 podpress_admin_feed_class.php:226
+msgid "RSS Copyright"
+msgstr ""
+
+#: podpress_admin_class.php:795
+msgid "Used if this dates are different than the global copyright dates."
+msgstr ""
+
+#: podpress_admin_feed_class.php:32 podpress_admin_general_class.php:37
+#: podpress_admin_player_class.php:36
+msgid "Settings Saved"
+msgstr ""
+
+#: podpress_admin_feed_class.php:35
+msgid "Podcast Settings"
+msgstr ""
+
+#: podpress_admin_feed_class.php:35 podpress_admin_general_class.php:86
+#: podpress_admin_player_class.php:44 podpress_admin_stats_class.php:121
+msgid "Checking for updates... Failed."
+msgstr ""
+
+#: podpress_admin_feed_class.php:104
+msgid "Used for both Blog and Podcast."
+msgstr ""
+
+#: podpress_admin_feed_class.php:113
+msgid "Used as iTunes description."
+msgstr ""
+
+#: podpress_admin_feed_class.php:116
+msgid "Blog Description"
+msgstr ""
+
+#: podpress_admin_feed_class.php:119
+msgid "Standard feed description."
+msgstr ""
+
+#: podpress_admin_feed_class.php:158 podpress_admin_feed_class.php:167
+msgid "Used as default Podcast Episode Title"
+msgstr ""
+
+#: podpress_admin_feed_class.php:158 podpress_admin_feed_class.php:167
+msgid "characters"
+msgstr ""
+
+#: podpress_admin_feed_class.php:164
+msgid "Select Language"
+msgstr ""
+
+#: podpress_admin_feed_class.php:176
+msgid "Comma seperated list"
+msgstr ""
+
+#: podpress_admin_feed_class.php:179
+msgid "Show Download Links in RSS Encoded Content"
+msgstr ""
+
+#: podpress_admin_feed_class.php:185
+msgid ""
+"Yes will put download links in the RSS encoded content. That means users can "
+"download from any site displaying the link."
+msgstr ""
+
+#: podpress_admin_feed_class.php:194
+msgid "Select Primary"
+msgstr ""
+
+#: podpress_admin_feed_class.php:198
+msgid "Select Second"
+msgstr ""
+
+#: podpress_admin_feed_class.php:202
+msgid "Select Third"
+msgstr ""
+
+#: podpress_admin_feed_class.php:207
+msgid "RSS Category"
+msgstr ""
+
+#: podpress_admin_feed_class.php:223
+msgid "Sets the parental advisory graphic in name column."
+msgstr ""
+
+#: podpress_admin_feed_class.php:240
+msgid "iTunes:TTL"
+msgstr ""
+
+#: podpress_admin_feed_class.php:240
+msgid "time-to-live"
+msgstr ""
+
+#: podpress_admin_feed_class.php:243
+msgid "Mins. Minimum is 24hrs which is 1440 mins."
+msgstr ""
+
+#: podpress_admin_feed_class.php:256
+msgid ""
+"Use this if you are no longer creating a podcast and you want it removed "
+"from iTunes."
+msgstr ""
+
+#: podpress_admin_feed_class.php:263 podpress_admin_general_class.php:519
+#: podpress_admin_general_class.php:598 podpress_admin_player_class.php:392
+msgid "Update Options"
+msgstr ""
+
+#: podpress_admin_general_class.php:43
+msgid "Theme Compatibility Problem"
+msgstr ""
+
+#: podpress_admin_general_class.php:45
+msgid "Theme Compatibility Check Required"
+msgstr ""
+
+#: podpress_admin_general_class.php:49
+msgid "Current Theme is not compliant"
+msgstr ""
+
+#: podpress_admin_general_class.php:51
+msgid "Current Theme needs to be tested"
+msgstr ""
+
+#: podpress_admin_general_class.php:86
+msgid "General Options"
+msgstr ""
+
+#: podpress_admin_general_class.php:89
+msgid "Media File Locations"
+msgstr ""
+
+#: podpress_admin_general_class.php:92
+msgid "URI of media files directory"
+msgstr ""
+
+#: podpress_admin_general_class.php:97 podpress_admin_general_class.php:116
+#: podpress_admin_general_class.php:489
+msgid "Suggested"
+msgstr ""
+
+#: podpress_admin_general_class.php:105
+msgid "Point this to the full url where you put your media files."
+msgstr ""
+
+#: podpress_admin_general_class.php:105
+msgid "For example"
+msgstr ""
+
+#: podpress_admin_general_class.php:106
+msgid "Can be local or remote location."
+msgstr ""
+
+#: podpress_admin_general_class.php:111
+msgid "Local path to media files directory (optional)"
+msgstr ""
+
+#: podpress_admin_general_class.php:116 podpress_admin_general_class.php:489
+msgid "Directory Not Valid or Not Accessible"
+msgstr ""
+
+#: podpress_admin_general_class.php:134 podpress_admin_stats_class.php:121
+msgid "Download Statistics"
+msgstr ""
+
+#: podpress_admin_general_class.php:137
+msgid "Enable podPress Statistics"
+msgstr ""
+
+#: podpress_admin_general_class.php:185
+msgid ""
+"Warning: It appears you are not using WordPress permalinks or 404 handling. "
+"Due to this enabling podPress stats may cause media file downloads to fail."
+msgstr ""
+
+#: podpress_admin_general_class.php:186
+msgid ""
+"According to WordPress, if your <code>.htaccess</code> file in your main "
+"WordPress directory were <a href=\"http://codex.wordpress.org/"
+"Make_a_Directory_Writable\">writable</a>, we could do this automatically, "
+"but it isn&#8217;t so these are the mod_rewrite rules you should have in "
+"your <code>.htaccess</code> file. Click in the field and press <kbd>CTRL + "
+"a</kbd> to select all."
+msgstr ""
+
+#: podpress_admin_general_class.php:196
+msgid "Stat Method"
+msgstr ""
+
+#: podpress_admin_general_class.php:198
+msgid "Use WP Permalinks"
+msgstr ""
+
+#: podpress_admin_general_class.php:199
+msgid "Optional Files podpress_trac directory"
+msgstr ""
+
+#: podpress_admin_general_class.php:200
+msgid "Use download.mp3"
+msgstr ""
+
+#: podpress_admin_general_class.php:229
+msgid "Stat Logging"
+msgstr ""
+
+#: podpress_admin_general_class.php:231
+msgid "Counts Only"
+msgstr ""
+
+#: podpress_admin_general_class.php:232
+msgid "Full"
+msgstr ""
+
+#: podpress_admin_general_class.php:253
+msgid "Enable PodTrac Statistics"
+msgstr ""
+
+#: podpress_admin_general_class.php:260
+msgid "Note: The two stats services can be used together"
+msgstr ""
+
+#: podpress_admin_general_class.php:264
+msgid "Post Editing"
+msgstr ""
+
+#: podpress_admin_general_class.php:267
+msgid "Max Number of Media Files"
+msgstr ""
+
+#: podpress_admin_general_class.php:279
+msgid "Premium Content"
+msgstr ""
+
+#: podpress_admin_general_class.php:282
+msgid "Enable Premium Content"
+msgstr ""
+
+#: podpress_admin_general_class.php:297 podpress_admin_stats_class.php:177
+msgid "Method"
+msgstr ""
+
+#: podpress_admin_general_class.php:300
+msgid "Digest"
+msgstr ""
+
+#: podpress_admin_general_class.php:301
+msgid "Basic"
+msgstr ""
+
+#: podpress_admin_general_class.php:312
+msgid "Use fake enclosure"
+msgstr ""
+
+#: podpress_admin_general_class.php:339
+msgid "Post Content"
+msgstr ""
+
+#: podpress_admin_general_class.php:345
+msgid "Start"
+msgstr ""
+
+#: podpress_admin_general_class.php:346
+msgid "End"
+msgstr ""
+
+#: podpress_admin_general_class.php:352
+msgid "Image"
+msgstr ""
+
+#: podpress_admin_general_class.php:355
+msgid "Button"
+msgstr ""
+
+#: podpress_admin_general_class.php:356
+msgid "Icon"
+msgstr ""
+
+#: podpress_admin_general_class.php:357
+msgid "None"
+msgstr ""
+
+#: podpress_admin_general_class.php:363
+msgid "Player"
+msgstr ""
+
+#: podpress_admin_general_class.php:366 podpress_admin_general_class.php:387
+#: podpress_admin_general_class.php:398 podpress_admin_general_class.php:409
+#: podpress_admin_general_class.php:420
+msgid "Enabled"
+msgstr ""
+
+#: podpress_admin_general_class.php:367
+msgid "Inline Only"
+msgstr ""
+
+#: podpress_admin_general_class.php:368
+msgid "Popup Only"
+msgstr ""
+
+#: podpress_admin_general_class.php:369 podpress_admin_general_class.php:388
+#: podpress_admin_general_class.php:399 podpress_admin_general_class.php:410
+#: podpress_admin_general_class.php:421
+msgid "Disabled"
+msgstr ""
+
+#: podpress_admin_general_class.php:376
+msgid "Display Player/Preview"
+msgstr ""
+
+#: podpress_admin_general_class.php:384 podpress_class.php:727
+#: podpress_theme.php:86
+msgid "Download"
+msgstr ""
+
+#: podpress_admin_general_class.php:395
+msgid "Show Download Text"
+msgstr ""
+
+#: podpress_admin_general_class.php:406
+msgid "Show Download Stats"
+msgstr ""
+
+#: podpress_admin_general_class.php:417
+msgid "Show Duration"
+msgstr ""
+
+#: podpress_admin_general_class.php:428
+msgid "Before"
+msgstr ""
+
+#: podpress_admin_general_class.php:428
+msgid "tag"
+msgstr ""
+
+#: podpress_admin_general_class.php:441
+msgid "Audio Comments"
+msgstr ""
+
+#: podpress_admin_general_class.php:444
+msgid "Enable Mobatalk Audio Comments"
+msgstr ""
+
+#: podpress_admin_general_class.php:453
+msgid "MobaTalk ID"
+msgstr ""
+
+#: podpress_admin_general_class.php:465
+msgid "TorrentCasting"
+msgstr ""
+
+#: podpress_admin_general_class.php:468
+msgid "Enable TorrentCasting"
+msgstr ""
+
+#: podpress_admin_general_class.php:480
+msgid "Feed Caching"
+msgstr ""
+
+#: podpress_admin_general_class.php:484
+msgid "Path to feed cache directory (optional)"
+msgstr ""
+
+#: podpress_admin_general_class.php:501
+msgid "Credit"
+msgstr ""
+
+#: podpress_admin_general_class.php:504
+msgid "Show PodPress footer."
+msgstr ""
+
+#: podpress_admin_general_class.php:529
+msgid "Frapper Map."
+msgstr ""
+
+#: podpress_admin_general_class.php:544
+msgid "Donations Appreciated."
+msgstr ""
+
+#: podpress_admin_general_class.php:586
+msgid "Complete Upgrade Process"
+msgstr ""
+
+#: podpress_admin_general_class.php:589
+msgid "Remove Pre v.40 database clutter."
+msgstr ""
+
+#: podpress_admin_player_class.php:47
+msgid "MP3 Player Colors"
+msgstr ""
+
+#: podpress_admin_player_class.php:50
+msgid "Colour map"
+msgstr ""
+
+#: podpress_admin_player_class.php:55
+msgid "Background"
+msgstr ""
+
+#: podpress_admin_player_class.php:312
+msgid "Left background"
+msgstr ""
+
+#: podpress_admin_player_class.php:318
+msgid "Right background"
+msgstr ""
+
+#: podpress_admin_player_class.php:324
+msgid "Right background (hover)"
+msgstr ""
+
+#: podpress_admin_player_class.php:330
+msgid "Left icon"
+msgstr ""
+
+#: podpress_admin_player_class.php:336
+msgid "Right icon"
+msgstr ""
+
+#: podpress_admin_player_class.php:342
+msgid "Right icon (hover)"
+msgstr ""
+
+#: podpress_admin_player_class.php:348
+msgid "Text"
+msgstr ""
+
+#: podpress_admin_player_class.php:354
+msgid "Slider"
+msgstr ""
+
+#: podpress_admin_player_class.php:360
+msgid "Progress bar track"
+msgstr ""
+
+#: podpress_admin_player_class.php:366
+msgid "Loader bar"
+msgstr ""
+
+#: podpress_admin_player_class.php:372
+msgid "Progress bar border"
+msgstr ""
+
+#: podpress_admin_player_class.php:378
+msgid "Enable Listen Wrapper"
+msgstr ""
+
+#: podpress_admin_stats_class.php:50
+msgid "Next Entries &raquo;"
+msgstr ""
+
+#: podpress_admin_stats_class.php:56
+msgid "&laquo; Previous Entries"
+msgstr ""
+
+#: podpress_admin_stats_class.php:77
+msgid "of"
+msgstr ""
+
+#: podpress_admin_stats_class.php:149
+msgid "The Unique Downloaders"
+msgstr ""
+
+#: podpress_admin_stats_class.php:151 podpress_admin_stats_class.php:177
+#: podpress_admin_stats_class.php:276
+msgid "Media"
+msgstr ""
+
+#: podpress_admin_stats_class.php:175
+msgid "The raw list"
+msgstr ""
+
+#: podpress_admin_stats_class.php:177
+msgid "IP"
+msgstr ""
+
+#: podpress_admin_stats_class.php:177
+msgid "UserAgent"
+msgstr ""
+
+#: podpress_admin_stats_class.php:202
+msgid "Top IP Addresses"
+msgstr ""
+
+#: podpress_admin_stats_class.php:204
+msgid "IP Address"
+msgstr ""
+
+#: podpress_admin_stats_class.php:204
+msgid "Total Count"
+msgstr ""
+
+#: podpress_admin_stats_class.php:232
+msgid "Downloads by Post"
+msgstr ""
+
+#: podpress_admin_stats_class.php:232
+msgid "Last 100 posts"
+msgstr ""
+
+#: podpress_admin_stats_class.php:247
+msgid "Downloads by date"
+msgstr ""
+
+#: podpress_admin_stats_class.php:247
+msgid "Last 100 days"
+msgstr ""
+
+#: podpress_admin_stats_class.php:271
+msgid "The counts"
+msgstr ""
+
+#: podpress_admin_stats_class.php:274
+msgid "Post"
+msgstr ""
+
+#: podpress_admin_stats_class.php:275
+msgid "Date"
+msgstr ""
+
+#: podpress_admin_stats_class.php:284 podpress_admin_stats_class.php:286
+#: podpress_admin_stats_class.php:288
+msgid "%"
+msgstr ""
+
+#: podpress_class.php:727 podpress_theme.php:53
+msgid "title"
+msgstr ""
+
+#: podpress_functions.php:33
+msgid "Access Denied"
+msgstr ""
+
+#: podpress_functions.php:638
+msgid "MP3 - Standard Audio (iPod Compliant)"
+msgstr ""
+
+#: podpress_functions.php:639
+msgid "OGG - Audio File"
+msgstr ""
+
+#: podpress_functions.php:640
+msgid "M4A - Enhanced Audio (iPod Compliant)"
+msgstr ""
+
+#: podpress_functions.php:641
+msgid "MP4 - Enhanced Audio (iPod Compliant)"
+msgstr ""
+
+#: podpress_functions.php:642
+msgid "AA - Audible Encoded (iPod Compliant)"
+msgstr ""
+
+#: podpress_functions.php:643
+msgid "M3U - Streaming Audio"
+msgstr ""
+
+#: podpress_functions.php:644
+msgid "MP4 - Video (iPod Compliant)"
+msgstr ""
+
+#: podpress_functions.php:645
+msgid "M4V - Video (iPod Compliant)"
+msgstr ""
+
+#: podpress_functions.php:646
+msgid "MOV - Video (iPod Compliant)"
+msgstr ""
+
+#: podpress_functions.php:647
+msgid "QT - Video (iPod Compliant)"
+msgstr ""
+
+#: podpress_functions.php:648
+msgid "AVI - Video"
+msgstr ""
+
+#: podpress_functions.php:649
+msgid "MPG - Video"
+msgstr ""
+
+#: podpress_functions.php:650
+msgid "ASF - Video"
+msgstr ""
+
+#: podpress_functions.php:651
+msgid "WMV - Video"
+msgstr ""
+
+#: podpress_functions.php:652
+msgid "WMA - Video"
+msgstr ""
+
+#: podpress_functions.php:653
+msgid "FLV - Flash Video"
+msgstr ""
+
+#: podpress_functions.php:654
+msgid "PDF - eBook"
+msgstr ""
+
+#: podpress_functions.php:655
+msgid "??? - Other"
+msgstr ""
+
+#: podpress_functions.php:666
+msgid "Common Dimensions"
+msgstr ""
+
+#: podpress_theme.php:78
+msgid "Play in Popup"
+msgstr ""
+
+#: podpress_theme.php:98
+msgid "Downloads"
+msgstr ""
+
+#: podpress_theme.php:114
+msgid "Watch Now"
+msgstr ""
+
+#: podpress_widgets.php:50 podpress_widgets.php:74
+msgid "Podcast Feeds"
+msgstr ""
+
+#: podpress_widgets.php:55 podpress_widgets.php:123
+msgid "Title:"
+msgstr ""
+
+#: podpress_widgets.php:118 podpress_widgets.php:134
+msgid "Podcast Player"
+msgstr ""

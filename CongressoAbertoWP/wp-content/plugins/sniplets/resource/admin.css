@@ -1,0 +1,236 @@
+/* @override http://local.bestofguangzhou.com/site/wp-content/plugins/sniplets/resource/admin.css?version=1.2 */
+
+
+img
+{
+vertical-align: middle !important;
+}
+
+.sortable
+{
+cursor: move;
+width: 97%;
+}
+
+.sniplets
+{
+margin: 0; padding: 0;
+list-style-type: none;
+margin-top: 10px;
+margin-bottom: 10px;
+}
+
+.sniplets li
+{
+margin-left: 10px;
+}
+
+.sniplets li
+{
+padding-left: 15px;
+background-color: #AEC5E7;
+padding: 5px 7px;
+border-radius: 10px;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+}
+
+.sniplets li code
+{
+background-color: transparent;
+}
+
+.sniplets a
+{
+border: none;
+text-decoration: underline;
+}
+
+.sniplets li a, .sniplets li input
+{
+color: #1C365C;
+}
+
+.sniplets li.warning, .sniplets li.warning a
+{
+background-color: #F7D9D9;
+color: #A8254A;
+}
+
+.sniplets li.notice, .sniplets li.notice a
+{
+background-color: #DCEEEE;
+color: #2530A8;
+}
+
+.sniplets li.inset, .sniplets li.inset a
+{
+background-color: #eee;
+}
+
+
+
+.sniplets li ol
+{
+margin: 0;
+padding: 0px;
+padding-left: 20px;
+list-style-type: decimal;
+}
+
+.sniplets li ol li
+{
+width: 95%;  
+background-color: #809ECC;  
+margin-bottom: 3px;
+padding: 4px 8px 4px 8px;
+}
+
+.sniplets li ol li, .sniplets li ol li select, .sniplets li ol li input
+{
+font-size: 0.9em;
+}
+
+.sniplets li.notice ol li, .sniplets li.notice ol li a
+{
+background-color: #99CFCF;  
+}
+
+.sniplets li.inset ol li, .sniplets li.inset ol li a
+{
+background-color: #ccc; 
+}
+
+.sniplets li.warning ol li, .sniplets li.warning ol li a
+{
+background-color: #E7B1B1;
+}
+
+
+
+
+
+.sniplets .disabled
+{
+background-color: #eee !important;  
+color: #999 !important;
+}
+
+.sniplets .disabled a
+{
+background-color: #eee !important;  
+color: #999 !important;
+}
+
+
+
+
+
+.sort_sniplet
+{
+float: right;
+font-size: 0.8em;
+background-color: #eee;
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+padding: 3px 6px;
+margin: 0px 0px 5px 0px;
+}
+
+.sort_sniplet a
+{
+color: #666;
+border: none;
+text-decoration: underline;
+}
+
+.options
+{
+float: right;
+color: #666;
+}
+
+.options img
+{
+vertical-align: middle;
+}
+
+table th
+{
+text-align: right;
+}
+
+
+#subsubmenu li {
+	display: inline;
+	line-height: 170%;
+	list-style: none;
+	text-align: center;
+}
+
+#subsubmenu {
+  font-size: 0.9em;
+	background: #CDD9E2;
+	border-bottom: none;
+	margin: 0;
+	color: #4F5D69;
+	padding: 2px 2em 0 5em;
+}
+
+#subsubmenu .current {
+	background: #f9fcfe;
+	border-top: 1px solid #045290;
+	color: black;
+}
+
+#subsubmenu a {
+	border: none;
+	color: #4F5D69;
+	font-size: 12px;
+	padding: 3px 1em 2px 1em;
+}
+
+#subsubmenu a:hover {
+	background: #89A5BB;
+	color: #393939;
+}
+
+#subsubmenu li {
+	line-height: 150%;
+}
+
+.pager
+{
+font-size: 0.9em;
+text-align: right;
+margin-bottom: 1em;
+}
+
+.pagertools
+{
+float: right;
+font-size: 0.9em;
+margin-left: 10px;
+margin-bottom: 2px;
+}
+
+.pager select, .pager input { font-size: 0.9em }
+
+.sub
+{
+font-weight: normal;
+font-size: 0.8em;
+color: #666;
+}
+
+.sub ul
+{
+margin: 0; padding: 0;  
+list-style-type: square;
+}
+
+.sub ul li
+{
+  margin: 0; padding: 0;
+margin-left: 20px;  
+}

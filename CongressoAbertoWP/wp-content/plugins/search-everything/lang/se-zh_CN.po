@@ -1,0 +1,120 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Search Everything 5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-03-06 11:22+0800\n"
+"PO-Revision-Date: 2009-03-06 11:35+0800\n"
+"Last-Translator: hit1205 <hit1205 DOT tw AT gmail DOT com>\n"
+"Language-Team: hit1205 <hit1205 DOT tw AT gmail DOT com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: CHINA\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: ..\\..\\\n"
+"X-Poedit-SearchPath-0: search-everything\n"
+
+#: search-everything/SE-Admin.php:29
+msgid "Search Everything Options  <strong>Updated</strong>."
+msgstr "Search Everything 设置 <strong>已更新</strong>。"
+
+#: search-everything/SE-Admin.php:65
+msgid "Use this form to configure your search options."
+msgstr "使用以下表单配置您的搜索设置。"
+
+#: search-everything/SE-Admin.php:66
+msgid "The options selected below will be used in every search query on this site; in addition to the built-in post search."
+msgstr "以下设置会被加到内置的文章搜索中，用在本站的每次搜索里。"
+
+#: search-everything/SE-Admin.php:71
+msgid "Search Options Form"
+msgstr "搜索设置表单"
+
+#: search-everything/SE-Admin.php:73
+msgid "Exclude some post or page IDs"
+msgstr "设置要排除的文章或页面 ID"
+
+#: search-everything/SE-Admin.php:74
+msgid "Comma separated Post IDs (example: 1, 5, 9)"
+msgstr "文章 ID 使用半形逗号分隔（例如：1, 5, 9）"
+
+#: search-everything/SE-Admin.php:78
+msgid "Exclude Categories"
+msgstr "设置要排除的分类"
+
+#: search-everything/SE-Admin.php:79
+msgid "Comma separated category IDs (example: 1, 4)"
+msgstr "分类 ID 使用半形逗号分隔（例如：1, 4）"
+
+#: search-everything/SE-Admin.php:83
+msgid "Search every page (non-password protected)"
+msgstr "搜索未受密码保护的页面"
+
+#: search-everything/SE-Admin.php:85
+msgid "Search approved pages only?"
+msgstr "只搜索公开发表的页面"
+
+#: search-everything/SE-Admin.php:91
+msgid "Search every tag name"
+msgstr "搜索标签名称"
+
+#: search-everything/SE-Admin.php:98
+msgid "Search every category name"
+msgstr "搜索分类名称"
+
+#: search-everything/SE-Admin.php:102
+msgid "Search every comment"
+msgstr "搜索评论"
+
+#: search-everything/SE-Admin.php:105
+msgid "Search approved comments only?"
+msgstr "只搜索通过审核的评论"
+
+#: search-everything/SE-Admin.php:108
+msgid "Search every excerpt"
+msgstr "搜索摘要"
+
+#: search-everything/SE-Admin.php:113
+msgid "Search every draft"
+msgstr "搜索草稿"
+
+#: search-everything/SE-Admin.php:116
+msgid "Search every attachment"
+msgstr "搜索附件"
+
+#: search-everything/SE-Admin.php:118
+msgid "Search every author"
+msgstr "搜索作者"
+
+#: search-everything/SE-Admin.php:120
+msgid "Search every custom field (metadata)"
+msgstr "搜索自定义字段（metadata, 元数据）"
+
+#: search-everything/SE-Admin.php:127
+msgid "Update Options"
+msgstr "更新设置"
+
+#: search-everything/SE-Admin.php:133
+msgid "SE Search Form"
+msgstr "SE 搜索表单"
+
+#: search-everything/SE-Admin.php:136
+msgid "Use this search form to run a live search test."
+msgstr "使用以下表单测试搜索结果。"
+
+#: search-everything/SE-Admin.php:140
+msgid "Site Search"
+msgstr "网站搜索"
+
+#: search-everything/SE-Admin.php:142
+msgid "Enter search terms"
+msgstr "输入搜索字词"
+
+#: search-everything/SE-Admin.php:144
+msgid "Run Test Search"
+msgstr "运行搜索测试"
+
+#~ msgid "SE Search Options"
+#~ msgstr "SE 搜索设置"
+

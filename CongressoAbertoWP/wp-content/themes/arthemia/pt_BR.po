@@ -1,0 +1,376 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Arthemia Premium\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-11-22 14:25+0700\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Miguel Netto <miguelnetto@gmail.com>\n"
+"Language-Team: Colorlabs Project <sales@colorlabsproject.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Indonesian\n"
+"X-Poedit-Country: INDONESIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: c:\\wamp\\www\\wp-content\\themes\\arthemia-premium\n"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/404.php:4
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:9
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:12
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:14
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:16
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:18
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:21
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:79
+#: c:\wamp\www\wp-content\themes\arthemia-premium/author.php:15
+#: c:\wamp\www\wp-content\themes\arthemia-premium/author.php:78
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:178
+#: c:\wamp\www\wp-content\themes\arthemia-premium/page.php:9
+#: c:\wamp\www\wp-content\themes\arthemia-premium/search.php:5
+#: c:\wamp\www\wp-content\themes\arthemia-premium/single.php:9
+#: c:\wamp\www\wp-content\themes\arthemia-premium/unused/headera.php:174
+msgid "Home"
+msgstr "Início"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/404.php:4
+msgid "Error 404"
+msgstr "Erro 404"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/404.php:5
+msgid "Error 404 - Not Found"
+msgstr "Erro 404 - Não Localizado"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/404.php:6
+msgid "Ooops, We cannot find you the page you are looking for. You may try to search our site for another keyword or use the navigational tools in this website."
+msgstr "Ooops, Nós não podemos localizar a página que você está procurando. Você pode tentar a função busca no site por outras palavras chave ou navegue pelo site. "
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:9
+msgid "Archive by Category"
+msgstr "Arquivo por categoria"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:10
+msgid "Articles in "
+msgstr "Artigos em "
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:12
+msgid "Archive by Tags"
+msgstr "Arquivo por etiquetas"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:12
+msgid "Articles tagged with: "
+msgstr "Artigo etiquetado com:"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:14
+msgid "Archive by Day"
+msgstr "Arquivo por dia"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:14
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:16
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:18
+msgid "Article Archive for "
+msgstr "Arquivo de Artigos por"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:16
+msgid "Archive by Month"
+msgstr "Arquivo por mês"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:18
+msgid "Archive by Year"
+msgstr "Arquivo por ano"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:18
+msgid "Year"
+msgstr "Ano"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:21
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:79
+#: c:\wamp\www\wp-content\themes\arthemia-premium/author.php:78
+#: c:\wamp\www\wp-content\themes\arthemia-premium/sidebar.php:153
+msgid "Archive"
+msgstr "Arquivo"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:22
+msgid "The Archive"
+msgstr "O arquivo"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:31
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:22
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:226
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:268
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:328
+#: c:\wamp\www\wp-content\themes\arthemia-premium/index.php:44
+#: c:\wamp\www\wp-content\themes\arthemia-premium/index.php:102
+#: c:\wamp\www\wp-content\themes\arthemia-premium/index.php:185
+#: c:\wamp\www\wp-content\themes\arthemia-premium/search.php:19
+#: c:\wamp\www\wp-content\themes\arthemia-premium/single.php:12
+#: c:\wamp\www\wp-content\themes\arthemia-premium/unused/headera.php:222
+#: c:\wamp\www\wp-content\themes\arthemia-premium/unused/headera.php:263
+#: c:\wamp\www\wp-content\themes\arthemia-premium/unused/headera.php:313
+msgid "No Comment"
+msgstr "Comente"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:31
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:22
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:226
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:268
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:328
+#: c:\wamp\www\wp-content\themes\arthemia-premium/index.php:44
+#: c:\wamp\www\wp-content\themes\arthemia-premium/index.php:102
+#: c:\wamp\www\wp-content\themes\arthemia-premium/index.php:185
+#: c:\wamp\www\wp-content\themes\arthemia-premium/search.php:19
+#: c:\wamp\www\wp-content\themes\arthemia-premium/single.php:12
+#: c:\wamp\www\wp-content\themes\arthemia-premium/unused/headera.php:222
+#: c:\wamp\www\wp-content\themes\arthemia-premium/unused/headera.php:263
+#: c:\wamp\www\wp-content\themes\arthemia-premium/unused/headera.php:313
+msgid "One Comment"
+msgstr "Um comentário"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:31
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:22
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:226
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:268
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:328
+#: c:\wamp\www\wp-content\themes\arthemia-premium/index.php:44
+#: c:\wamp\www\wp-content\themes\arthemia-premium/index.php:102
+#: c:\wamp\www\wp-content\themes\arthemia-premium/index.php:185
+#: c:\wamp\www\wp-content\themes\arthemia-premium/search.php:19
+#: c:\wamp\www\wp-content\themes\arthemia-premium/single.php:12
+#: c:\wamp\www\wp-content\themes\arthemia-premium/unused/headera.php:222
+#: c:\wamp\www\wp-content\themes\arthemia-premium/unused/headera.php:263
+#: c:\wamp\www\wp-content\themes\arthemia-premium/unused/headera.php:313
+msgid "% Comments"
+msgstr "% Comentários"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:80
+#: c:\wamp\www\wp-content\themes\arthemia-premium/author.php:79
+msgid "Not Found"
+msgstr "Não localizado"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/archive.php:82
+#: c:\wamp\www\wp-content\themes\arthemia-premium/author.php:81
+#: c:\wamp\www\wp-content\themes\arthemia-premium/search.php:70
+msgid "No posts found. Try a different search?"
+msgstr "Posts não localizados. Tente uma busca diferente?"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/author.php:15
+msgid "Archive by Author"
+msgstr "Arquivo por Autor"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/author.php:16
+msgid "Articles by"
+msgstr "Artigos por"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:9
+msgid "This post is password protected. Enter the password to view comments."
+msgstr "Esse post está protegido por senha. Entre com a senha para ver os comentários."
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:22
+msgid "Leave a comment"
+msgstr "Comente"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:36
+msgid "said:"
+msgstr "disse:"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:43
+msgid "Your comment is awaiting moderation."
+msgstr "Seu comentário aguarda moderação."
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:50
+msgid "at"
+msgstr "às"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:65
+msgid "Comments are closed."
+msgstr " Comentários estão fechados"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:74
+msgid "Leave a comment!"
+msgstr "Comente!"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:77
+msgid "You must be"
+msgstr "Você precisa estar"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:77
+msgid "logged in"
+msgstr "logado no site"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:77
+msgid "to post a comment."
+msgstr "para postar comentários."
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:84
+msgid "Logged in as"
+msgstr "Logado como,"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:84
+msgid "Log out of this account"
+msgstr "Sair dessa conta"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:84
+msgid "Logout"
+msgstr "Sair"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:88
+msgid "Add your comment below, or"
+msgstr "Adicione um comentário abaixo, ou"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:88
+msgid "trackback"
+msgstr " trackback"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:88
+msgid "from your own site"
+msgstr "para o seu site"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:88
+msgid "You can also"
+msgstr "Você pode também"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:88
+msgid "subscribe to these comments"
+msgstr "inscrever para esse comentários"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:88
+msgid "via RSS."
+msgstr "via RSS."
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:90
+msgid "Be nice. Keep it clean. Stay on topic. No spam."
+msgstr "Seja legal. Mantenha-se no tópico, <strong>não escreva tudo em maiúsculo </strong>e, claro, sem Spam."
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:93
+msgid "Name"
+msgstr "Nome"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:93
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:96
+msgid "(required)"
+msgstr "(necessário)"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:96
+msgid "Mail"
+msgstr "E-mail"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:96
+msgid "(will not be published)"
+msgstr "(não será publicado)"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:99
+msgid "Website"
+msgstr "Seu site"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:99
+msgid "(optional)"
+msgstr "(opcional)"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:104
+msgid "You can use these tags:"
+msgstr "Você também poderá utilizar os seguintes recursos:"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:105
+msgid "This is a Gravatar-enabled weblog. To get your own globally-recognized-avatar, please register at"
+msgstr "Este site utiliza ícones Gravatar para identificar os usuários. Para obter o seu Gravatar, faça o registro em"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/comments.php:107
+msgid "Submit Comment"
+msgstr "Enviar Comentário"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/footer.php:15
+msgid "Random Posts"
+msgstr "Artigos Aleatórios"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/footer.php:59
+msgid "(refresh random posts)"
+msgstr "(mais artigos aleatórios)"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/footer.php:69
+msgid "Latest Video Post"
+msgstr "Último artigo de vídeo"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/footer.php:124
+msgid "Most Commented"
+msgstr "Mais comentado"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/footer.php:143
+msgid "Most Popular"
+msgstr "Artigo mais popular"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/footer.php:152
+msgid "Powered by"
+msgstr "Mantido por"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/footer.php:152
+msgid "Entries (RSS)"
+msgstr "Entradas (RSS)"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/footer.php:152
+msgid "Comments (RSS)"
+msgstr "Comentários (RSS)"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/footer.php:152
+msgid "by"
+msgstr "por"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:228
+#: c:\wamp\www\wp-content\themes\arthemia-premium/header.php:330
+#: c:\wamp\www\wp-content\themes\arthemia-premium/index.php:61
+msgid "Read the full story &raquo;"
+msgstr "Leia o artigo completo &raquo;"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/page.php:14
+msgid "<p>Read the rest of this page &raquo;</p>"
+msgstr "<p>Leia esta oágina completa &raquo;</p>"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/page.php:16
+#: c:\wamp\www\wp-content\themes\arthemia-premium/single.php:75
+msgid "<p><strong>Pages:</strong>"
+msgstr "<p><strong>Páginas:</strong>"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/search.php:5
+msgid "Search"
+msgstr "Busca"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/search.php:7
+msgid "Search Results"
+msgstr "Resultados da Busca"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/search.php:9
+msgid "You have just searched for"
+msgstr "Você apenas procurou por"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/search.php:9
+msgid "Here are the results:"
+msgstr "Aqui estão os resultados:"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/sidebar.php:98
+msgid "More articles &raquo;"
+msgstr "Mais artigos &raquo;"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/sidebar.php:163
+msgid "Blogroll"
+msgstr "Links"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/sidebar.php:179
+msgid "Tag Cloud"
+msgstr "Etiquetas Populares"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/single.php:12
+msgid "Submitted by"
+msgstr "Enviado por"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/single.php:12
+msgid "on"
+msgstr "em"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/single.php:73
+msgid "Read the rest of this entry &raquo;"
+msgstr "Leia esse artigo completo &raquo;"
+
+#: c:\wamp\www\wp-content\themes\arthemia-premium/single.php:118
+msgid "Sorry, no posts matched your criteria."
+msgstr "Desculpe, não foram localizados posts sob esse critério de busca."
+

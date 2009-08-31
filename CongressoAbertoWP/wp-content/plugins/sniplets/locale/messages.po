@@ -1,0 +1,57 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR John Godley
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-09-22 17:18+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: sniplets.php:91 sniplets.php:108
+msgid "Add Sniplet"
+msgstr ""
+
+#: sniplets.php:103
+msgid "Cache Expiry"
+msgstr ""
+
+#: sniplets.php:95
+msgid "Contents"
+msgstr ""
+
+#: sniplets_class.php:212 sniplets_class.php:224
+msgid "Display"
+msgstr ""
+
+#: sniplets.php:67
+msgid "Failed to add sniplet (you need a unique name)"
+msgstr ""
+
+#: sniplets.php:94
+msgid "Name"
+msgstr ""
+
+#: sniplets.php:97
+msgid "Processing"
+msgstr ""
+
+#: sniplets.php:42 sniplets.php:77
+msgid "Sniplets"
+msgstr ""
+
+#: sniplets.php:86
+msgid "You have no Sniplets defined yet."
+msgstr ""
+
+#: sniplets.php:105
+msgid "hours (0 means Sniplet is not cached)"
+msgstr ""

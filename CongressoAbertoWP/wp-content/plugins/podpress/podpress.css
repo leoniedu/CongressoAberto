@@ -1,0 +1,151 @@
+
+.podPress_imgicon {
+	vertical-align: middle;
+  border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.podPress_previewImage table td tr {
+	border:0;
+	margin: 0;
+	padding: 0;
+}
+.podPress_previewImage img {
+	vertical-align: middle;
+  border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.podPress_content {
+  border: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 80%;
+	text-align: left;
+}
+
+.podPress_content img {
+  border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.podPress_statshead {
+	color: #fff;
+	font-size: 11px;
+	font-family: Lucida Sans, Helvetica, Arial;
+	font-weight: bold;
+	background-color: #333;
+	padding: 3px;
+}
+
+.podPress_statstable {
+	border: solid 1px #999;
+}
+
+.podPress_statscell  {
+	font-size: 11px;
+	font-family: Lucida Sans, Helvetica, Arial;
+	padding: 3px;
+}
+
+.podPress_linkscell  {
+	font-size: 11px;
+	padding: 2px 2px 10px 8px;
+}
+
+.podPress_detaillinks {
+	color: #900;
+}
+.podPress_captionstats { color: #333;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.podPress_desccell { font-size: 11px;
+	font-family: "Lucida Sans", Helvetica, Arial;
+	line-height: 16px;
+	padding: 10px 2px 5px 5px;
+}
+.podPress_desccell1 { font-size: 11px;
+	font-family: "Lucida Sans", Helvetica, Arial;
+	line-height: 16px;
+	padding: 6px;
+}
+
+/* Navi
+************************************************/
+
+#podPress_navi {
+    clear: both;
+    background-color: #eee;
+    margin-bottom: 1em;
+    padding: 0.4em 1em;
+}
+
+#podPress_navi li {
+    list-style: none;
+    display: inline;
+    margin-right: 0.8em;
+}
+
+#podPress_navi li a {
+    text-decoration: none;
+}
+
+#podPress_navi li a.current {
+    font-weight: bold;
+}
+
+/* Stats
+************************************************/
+
+#podPress_graph {
+    background-color: #000;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+#podPress_graph p {
+    padding-top: 0;
+    margin-top: 0;
+    margin-bottom: 1px;
+}
+
+#podPress_graph table {
+    margin-bottom: 0;
+}
+
+#podPress_graph table th {
+    background-color: #222;
+    color: #999;
+}
+
+#podPress_graph table th, #podPress_graph table td {
+    border: 1px solid #5f5f5f;
+}
+
+#podPress_graph, #podPress_graph a {
+    color: #fff !important;
+    text-decoration: none;
+}
+
+#podPress_paging {
+    float: left;
+    width: 100%;
+    border-top: 1px solid #fff;
+    padding: 0.3em 0;
+}
+
+#podPress_pagingLeft {
+    float: left;
+    padding-left: 1em;
+}
+
+#podPress_pagingRight {
+    float: right;
+    text-align: right;
+    padding-right: 1em;
+}
