@@ -197,10 +197,10 @@ for(i in 1:nrow(party.data)){
     colvec <- alpha(colvec,"1")
     theme_set(theme_grey(base_size = 10))
     pdf(file=paste(pty,"typical.pdf",sep=""), bg="transparent", width=8, height=3) 
-    the.plot<- ggplot(typical.pty, aes(x=rc2, fill=rc))  + 
+    the.plot<- ggplot(typical.pty,  aes(x=rc2, fill=rc))  + 
         geom_bar(width=1) + labs(x=" ", y=" ") +
         coord_flip() # +  opts(legend.position="none")
-    print(the.plot + labs(y="Legisladores "))
+    print(the.plot + labs(y="Legisladores ") )
     dev.off()
     convert.png(file=paste(pty,"typical.pdf",sep=""))
 } 
