@@ -17,6 +17,7 @@ rf <- function(x=NULL) {
     paste(run.from,"/",x,sep='')
   }
 }
+source(rf("R/spatial.R"))
 source(rf("R/wordpress.R"))
 
 connect.db()
@@ -27,30 +28,51 @@ pmedians <- dbGetQueryU(connect, "select * from br_partymedians where finaldate=
 pmedians <- pmedians[order(pmedians$coord1D),]
 
 
-
-
-## roll calls are posts, not pages! (since they follow  a chronology.)
-govwins <- function(rcnow, rcs, rcgov) {
-  if (nrow(rcgov)==0) return(NA)
-  res <- NA
-  billtype <- rcs$billtype
-  if (any(grepl("requerimento", rcs$billdescription, ignore.case=TRUE))) {
-    thresh <- sum(rcnow$rc=="Não")
+getThresh <- function(rc, billtype, billdescription) {
+  Nao <-  sum(rc=="Não")
+  Sim <-  sum(rc=="Sim")
+  Abs <-  sum(rc=="Abstenção")
+  ## simple majority
+  smaj <- round((Nao+Sim)/2)
+  if (any(grepl("requerimento", billdescription, ignore.case=TRUE))) {
+    ## camara rules says that requerimento only needs a simple majority
+    ## with quorum
+    thresh <- smaj
   }
   if (billtype=="PEC") {
+    ## constitutional amendments need 3/5
     thresh <- 308
   } else if (billtype=="PLP") {
+    ## lei complementar need 1/2
     thresh <- 257
   } else {
-    thresh <- sum(rcnow$rc=="Não")
+    ## else need simple majority
+    thresh <- smaj
   }
+  ## But note, you still need a quorum.
+  ## So if e. g.
+  ## Sim=100
+  ## Nao=100
+  ## Abst, Obs, = 0
+  ## then
+  ## needed to complete the quorum: 257-(Sim+Nao+Abs)
+  ## thresh = Sim + max(0, 257-(Sim+Nao+Abs))
+  ## this is the "effective threshold" for _approving_ legislation
+  ## FIX: double check this
+  quorum <- Sim+Nao+Abs
+  c(thresh, if (quorum>256) thresh else Sim + 257-quorum)
+}
+
+
+govwins <- function(rcnow, rcgov, thresh) {
+  if (nrow(rcgov)==0) return(NA)
   pro <- sum(rcnow$rc=="Sim")-thresh
   if (rcgov$rc=="Sim") {
     progov <- pro
   } else  { ## FIX: is this doing it right for abstentions and the like?
     progov <- -pro
   } 
-  list(margin=progov)       
+  progov
 }
 
 
@@ -109,12 +131,14 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
   tagslug <- gsub("[-,.]+","_",tagsname)
   tags <- data.frame(slug=tagslug,name=tagsname)
   billtype <- toupper(rcs$billtype)
-  margin <- govwins(rcnow, rcs, rcgov)
+  threshold <- getThresh(billtype=rcs$billtype,
+                         billdescription=rcs$billdescription,
+                         rc=rcnow$rc)
+  margin <- govwins(rcnow, rcgov, threshold[1])
   post_excerpt <- sumroll(rcnow, margin, rcgov)
   post_category <- data.frame(slug="votacoes",name="Votações")
   img <- paste("images/rollcalls/bar",rcid, sep='')
   if (!is.na(margin))  {
-    barplots <- barplot.rc(rcnow, govpos(rcgov))
     if (margin>0) {
       post_category <- rbind(post_category, data.frame(slug="governo_venceu",name="Governo venceu"))
     } else {
@@ -124,26 +148,40 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
       img <- paste("images/rollcalls/mosaic",rcid, sep='')
       post_category <- rbind(post_category, data.frame(slug="Featured",name="Featured"))
     }
+  } else {
   }
-  ## plots!
-  barplots <- barplot.rc(rcnow, govpos(rcgov))
+  barplots <- barplot.rc(rcnow, govpos(rcgov), threshold=threshold[2])  
   mosaicplots <- mosaic.rc(rcnow, pmedians)
   ## write plots to disk
-  print.png <- function(plots, fn) {
+  print.png <- function(plots, fn, crop=TRUE, small=5, large=6) {
     fns <- rf(fn%+%"small.pdf")
     fnl <- rf(fn%+%"large.pdf")
-    pdf(file=fns, bg="white", width=5)
+    pdf(file=fns, bg="white", width=small, height=small)
     print(plots[["small"]])
     dev.off()
-    convert.png(fns, crop=TRUE)
-    pdf(file=fnl, bg="white")
+    convert.png(fns, crop=crop)
+    pdf(file=fnl, bg="white", width=large, height=large)
     print(plots[["large"]])
     dev.off()
-    convert.png(fnl, crop=TRUE)
+    convert.png(fnl, crop=crop)
   }
   if (saveplot) {
-    print.png(barplots, paste("images/rollcalls/bar",rcid, sep=''))
+    print.png(barplots, paste("images/rollcalls/bar",rcid, sep=''), crop=FALSE, small=2.5)
     print.png(mosaicplots, paste("images/rollcalls/mosaic",rcid, sep=''))
+    ## maps
+    ## small
+    ## large
+    fn <- paste("images/rollcalls/map",rcid, sep='')
+    fns <- rf(fn%+%"small.pdf")
+    fnl <- rf(fn%+%"large.pdf")
+    pdf(file=fns, width=4, height=4, bg="white")
+    map.rc(rcnow, large=FALSE, percent=TRUE)
+    dev.off()
+    pdf(file=fnl,  width=6, height=6, bg="white")
+    map.rc(rcnow, large=TRUE, percent=TRUE)
+    dev.off()
+    convert.png(fns, crop=TRUE)
+    convert.png(fnl, crop=TRUE)
   }
   if (post) {
     postid <- wpAddByName(conwp,post_title=title,post_type="post",post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=post_excerpt,post_category=post_category,
@@ -157,11 +195,25 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
   }
 }
 
-rcsnow <- sort(unlist(dbGetQuery(connect,"select rcvoteid from br_votacoes where legis="%+%"53")))
+
+
+
+m1 <- readShape.cent(rf("data/maps/BRASIL.shp"), "UF")
+
+rcsnow <- dbGetQuery(connect,"select rcvoteid, rcdate from br_votacoes where legis="%+%"53")
+rcsnow <- rcsnow[order(rcsnow$rcdate, decreasing=TRUE),]
+
+
+rcsnow <- rcsnow$rcvoteid
 
 ##billsnow <- bills$billid[sample(1:nrow(bills),2)]
 ##billsnow <- bills$billid[1:nrow(bills)]
 ##t(sapply(rcsnow[-c(1:10)],postroll, saveplot=TRUE, post=FALSE))
 ##t(sapply(rcsnow[-c(1:10)],postroll, saveplot=FALSE, post=FALSE))
-t(sapply(tail(rcsnow,20),postroll, saveplot=FALSE, post=TRUE))
-
+##t(sapply(tail(rcsnow,10),postroll, saveplot=TRUE, post=TRUE))
+##t(sapply(tail(rcsnow,10),postroll, saveplot=TRUE, post=FALSE))
+res <- t(sapply(rcsnow, function(x) {
+  print(x)
+  try(postroll(x, saveplot=TRUE, post=TRUE), silent=TRUE)
+}))
+##try(system("syncCA images"))

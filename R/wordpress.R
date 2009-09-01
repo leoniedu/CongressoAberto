@@ -140,7 +140,6 @@ wpAdd <- function(con,...,custom_fields=NULL,fulltext=NULL,postid=NA,tags=NULL,p
     setTerms(con,postid,tags,"post_tag")
   }
   if (length(post_category)>0) {
-    print("NOW")
     setTerms(con,postid,post_category,"category")
   }
   ## update  custom fields FIX: we delete and replace. anything better?

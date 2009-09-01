@@ -124,7 +124,7 @@ rcparty$rice <- (abs(rcparty$yea-rcparty$nay))/(rcparty$yea+rcparty$nay)
                               return(div)}                 
 divisive.vote <- ddply(rcnew, .(rcvoteid), "divisive")
 rcparty <- merge(rcparty,divisive.vote,by=c("rcvoteid"),all.x=TRUE)
-rcparty$govdeclared <- car::recode(rcparty$rc.gov,"c('Sim','Não','Obstrução')=TRUE;else=FALSE")
+rcparty$govdeclared <- car::recode(rcparty$rc.gov,"c('Sim','NÃ£oo','ObstruÃ§Ã£o')=TRUE;else=FALSE")
 
 #Compute party summary statistics over the entire period
 current.size <-  rcparty[which(rcparty$rcvoteid==max(rcparty$rcvoteid)),c("partyR","nrow")] #

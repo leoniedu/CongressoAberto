@@ -27,7 +27,19 @@ mysql_select_db("DB_Name", $con);
 //mysql_query("set names utf8");
 
 if($_GET["form"]=="bills") {
-  $sql = "select   b.rcvoteid as 'Por partido',   b.rcvoteid as 'Resultado', CAST(b.rcdate AS DATE) as Data,   b.billdescription as Votacao  from (select * from congressoaberto.br_bills as c where c.billid=".$_GET["billid"].") as a,  congressoaberto.br_votacoes as b  where a.billyear=b.billyear and a.billno=b.billno and a.billtype=b.billtype  order by Data DESC" ;  
+  ## given a bill, return all related roll calls
+  $sql = "select   
+b.rcvoteid as 'Resultado',   
+b.rcvoteid as 'Por partido', 
+b.rcvoteid as 'Por estado', 
+CAST(b.rcdate AS DATE) as Data,   
+c.postid as Votacao, 
+b.rcvoteid  from (select * from congressoaberto.br_bills as d where d.billid=".$_GET["billid"].") as a,  
+congressoaberto.br_votacoes as b, 
+congressoaberto.br_rcvoteidpostid as c  
+where a.billyear=b.billyear and a.billno=b.billno and a.billtype=b.billtype  
+and b.rcvoteid=c.rcvoteid
+order by Data DESC" ;  
   ##$sql = "select billyear from congressoaberto.br_bills  where billid=37642";
  }
 

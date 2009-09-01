@@ -44,13 +44,17 @@ function handleQueryResponse(response) {
     return;
   }
   var data = response.getDataTable();
-  var mosaic = new google.visualization.TablePatternFormat('<img src="http://politica.eduardoleoni.com/wp-content/themes/arthemia/scripts/timthumb.php?src=/images/rollcalls/mosaic{0}small.png&w=80&h=80&zc=0&q=90">');
-  var bar = new google.visualization.TablePatternFormat('<img src="http://politica.eduardoleoni.com/wp-content/themes/arthemia/scripts/timthumb.php?src=/images/rollcalls/bar{0}small.png&w=80&h=80&zc=0&q=90">');
-  mosaic.format(data, [0]);
-  bar.format(data, [1]);
-  var formatter = new google.visualization.DateFormat({formatType: 'long'});
+  var mosaic = new google.visualization.TablePatternFormat('<img src="http://politica.eduardoleoni.com/wp-content/themes/arthemia/scripts/timthumb.php?src=/images/rollcalls/mosaic{0}small.png&w=100&h=0&zc=0&q=90">');
+  var bar = new google.visualization.TablePatternFormat('<img src="http://politica.eduardoleoni.com/wp-content/themes/arthemia/scripts/timthumb.php?src=/images/rollcalls/bar{0}small.png&w=100&h=0&zc=0&q=90">');
+  var map = new google.visualization.TablePatternFormat('<img src="/php/timthumb.php?src=/images/rollcalls/map{0}small.png&w=100&h=0&zc=0&q=90">');
+  var rc = new google.visualization.TablePatternFormat('<a href="http://politica.eduardoleoni.com/?p={0}"> Link </a>');
+  rc.format(data, [4]);
+  bar.format(data, [0]);
+  mosaic.format(data, [1]);
+  map.format(data, [2]);
+  var formatter = new google.visualization.DateFormat({pattern: "dd/MM/yyyy"});
   // Reformat our data.
-  formatter.format(data, 1);
+  formatter.format(data, 3);
   options['allowHtml'] = true;
   options['page'] = 'enable';
   options['pageSize'] = 10;

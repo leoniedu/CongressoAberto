@@ -25,7 +25,7 @@ $state = $row[1];
 // $statelegis = $row[2]; FIX: make it not depend on row order (Call by name)
 echo '<table border="0">';
 echo '<tr>';
-print("<td><img src=\"/images/bio/polaroid/foto".$bioid.".png\" alt=\"$namelegis\" width=100/></td>");
+print("<td><img src=\"/php/timthumb.php?src=/images/bio/polaroid/foto".$bioid.".png&w=100&h=0&zc=0\" alt=\"$namelegis\" width=100/></td>");
 print("<td> 
 <p>$namelegis ($state)<br>
 Legislaturas: </p>

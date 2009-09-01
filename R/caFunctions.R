@@ -4,6 +4,11 @@
 ##UPDATE summary AS t, (query) AS q SET t.C=q.E, t.D=q.F WHERE t.X=q.X
 ## use dbInsert (in wordpress.R)
 
+theme_mini <- function() {
+  structure(list(axis.ticks.margin = unit(c(-1), "lines"), plot.margin = unit(c(0, 0, 0, 0), "lines"), panel.margin = unit(0, "lines"), axis.title.y = theme_blank(), axis.text.x=theme_blank(), axis.text.y=theme_blank(), axis.ticks=theme_blank()), class="options") 
+}
+
+
 "%+%" <-  function(x,y) paste(x,y,sep='')
 
 tmptable <- function() paste("t",paste(sample(c(letters,0:9),10,replace=TRUE), collapse=""),sep='')
@@ -818,7 +823,7 @@ map.rc <- function(rc, filenow='',title='', large=TRUE, percent=FALSE) {
   tmp <- recast(rc,state~variable,measure.var="rc2",fun.aggregate=function(x) c(n=length(x),p=pct*sum(x)/length(x)))
   tmp$UF <- tmp$state
   m2 <- merge.sp(m1,tmp,by="UF")
-  par(bg="grey")
+  par(bg="grey90")
   n1 <- 4
   seqx <- c(0,.15,.3,.45,.55,.70,.85,1)*pct
   col.vec <- c(rev(brewer.pal(n1,"Blues")[-1]),"grey95",brewer.pal(n1,"Reds")[-1])
@@ -842,10 +847,14 @@ map.rc <- function(rc, filenow='',title='', large=TRUE, percent=FALSE) {
 }
 
 
-barplot.rc <- function(rc, gov=NA, title="") {
+barplot.rc <- function(rc, gov=NA, title="", threshold=NULL) {
+  n1 <- 5
+  require(RColorBrewer)
   ## FIX: add reference lines for the required number of Yes votes.
   ## Look for quorum.
+  ## color like that of mosaic
   require(ggplot2)
+  rc$rc <- factor(rc$rc, levels=c("Não", "Obstrução", "Abstenção", "Ausente", "Sim"))
   rc$rc2 <- factor(with(rc,car::recode(rc,"'Sim'='A Favor';else='Contra'")),levels=c("Contra","A Favor"))
   if (is.na(gov)) {
     colvec <- rep("transparent",2)
@@ -857,7 +866,7 @@ barplot.rc <- function(rc, gov=NA, title="") {
     colvec <- alpha(colvec,"1")
   }
   ## Stacked barchart
-  wd <- .97
+  wd <- .95
   theme_set(theme_grey(base_size = 10))
   p <- ggplot(rc, aes(x = rc2))+geom_bar(width = wd,aes(fill = rc))+geom_bar(data=rc,colour=colvec,width=wd,size=2,fill="transparent")+scale_y_continuous(name="",limits=c(0,513),expand=c(0,0))
   p <- p+theme_bw()+opts(axis.title.x = theme_blank(),
@@ -867,19 +876,44 @@ barplot.rc <- function(rc, gov=NA, title="") {
                          panel.background=theme_rect(fill = NA, colour = NA),
                          plot.background = theme_rect(colour = NA,fill=NA)
                          ,plot.title = theme_text(size = 10))
-  psmall <- p+opts(legend.position="none",
-                   axis.text.y = theme_blank(),
-                   axis.text.x = theme_blank()
-                   ,axis.ticks = theme_blank()
-                   ,panel.border = theme_blank()
-                   )
-  p <- p+opts(title=title)
-  ## pdf(file=paste(fname,"bar.pdf",sep=""),height=6,width=6)
-  ##   dev.off()
-  ##   pdf(file=paste(fname,"barsmall.pdf",sep=""),height=6,width=4)
-  ##   print(psmall)
-  ##   dev.off()
-  list(large=p, small=psmall)
+  col.rc <- rev(c(brewer.pal(3,"Set1")[1], brewer.pal(4,"Blues")[1:4]) )
+  tx <- table(rc$rc)
+  p <- p + scale_fill_manual(values=col.rc)
+  if (!is.null(threshold)) {
+    p <- p + geom_hline(data=data.frame(y=threshold), aes(yintercept=y), size=2, colour=alpha("orange", .85))
+  }
+  ##lc1 <- c("Não", "Obs", "Abs", "Aus")
+  lc1 <- c("Não", "Obstrução", "Abstenção", "Ausente")
+  rc1 <- factor(rc$rc[rc$rc!="Sim"], levels=lc1)
+  nx <- 15
+  ## do not label if less than nx votes
+  lc1[table(rc1)<nx] <- ""
+  tx <- as.vector(table(rc1))
+  fix.y <- function(x=1) 514*x  
+  y <- cumsum(tx)
+  y <- y-tx/2
+  dfx <- data.frame(x=1, y=y+fix.y, label=lc1)
+  ssim <- sum(rc$rc=="Sim")
+  p <- p + geom_text(data=dfx, aes(x=x, y=y, label=label))  
+  if (ssim>0) {
+    dfy <- data.frame(x=2, y=sum(rc$rc=="Sim")/2 + fix.y, label="Sim")
+    p <- p + geom_text(data=dfy, aes(x=x, y=y, label=label))
+  }
+  plarge <- p + opts(legend.position="none"
+                     ##,axis.text.y = theme_blank()
+                     ##,axis.text.x = theme_blank()
+                     ,axis.ticks = theme_blank()
+                     ##,panel.border = theme_blank()
+                     )
+##   psmall <- p+opts(legend.position="none",
+##                    axis.text.y = theme_blank(),
+##                    axis.text.x = theme_blank()
+##                    ,axis.ticks = theme_blank()
+##                    ,panel.border = theme_blank()
+##                    )
+  psmall <- p+theme_mini() + opts(legend.position="none")
+  plarge <- plarge+opts(title=title)
+  list(large=plarge, small=psmall)
 }
 
 
@@ -1123,21 +1157,22 @@ splitBlocks <- function(data) {
 ## p2 <- p2+geom_text(data=data.frame(x=.75,y=max(table(cut(p2$data$pres.score,seq(0,1,.05))))*.9,label=pred$party[i],pres.score=.5),mapping=aes(x=x,y=y,label=label),size=20,colour="darkblue")+
 ##   theme_bw()
 
-## Layout <- grid.layout( nrow = 2, ncol = 1
-##                       ,widths = unit(c(2,2), c("null","null") ),
-##                       heights = unit (c(1,1), c("null", "null") )
-##                       )
-## vplayout <- function (...) {
-##   grid.newpage()
-##   pushViewport(viewport(
-##                         layout= Layout
-##                         ))
-## }
-## subplot <- function(x, y) viewport(layout.pos.row=x, layout.pos.col=y)
-## vplayout()
-## print(p1, vp=subplot(1,1))
-## print(p2, vp=subplot(2,1))
-
+if (1==2) {
+Layout <- grid.layout( nrow = 2, ncol = 1
+                      ,widths = unit(c(2,2), c("null","null") ),
+                      heights = unit (c(1,1), c("null", "null") )
+                      )
+vplayout <- function (...) {
+  grid.newpage()
+  pushViewport(viewport(
+                        layout= Layout
+                        ))
+}
+subplot <- function(x, y) viewport(layout.pos.row=x, layout.pos.col=y)
+vplayout()
+print(p1, vp=subplot(1,1))
+print(p2, vp=subplot(2,1))
+}
 
 
 
@@ -1205,7 +1240,7 @@ mosaic.rc <- function(rc, pmedians) {
                                  ##"grey20",
                                  rev(brewer.pal(4,"Blues")[1:4]))
                                  ##gray(c(.4,.6,.7,.9)))
-                      ))
+                                 ))
   ## party labels
   textdf <- unique(dfm1[,c("xtext","Partidot")])
   ##browser()
@@ -1221,6 +1256,6 @@ mosaic.rc <- function(rc, pmedians) {
   ## Add text labels. Ifelse used for Partido A labels.
   plarge <- p + geom_text(aes(x=xtext , y=ytext, label=valuet),size=3)
   ## Add Partido labels.
-  plarge <- plarge + annotate("text",x=textdf$xtext, y=1.04, label=paste(textdf$Partidot),size=3, angle=90,just="left")
+  plarge <- plarge + annotate("text",x=textdf$xtext, y=1.04, label=paste(textdf$Partidot),size=2.5, angle=90,just="left")
   list(small=psmall, large=plarge)
 }
