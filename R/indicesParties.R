@@ -195,15 +195,16 @@ for(i in 1:nrow(party.data)){
                                    rep("Contra Governo",max(0,party.data[pty,"current.size"]- #rounding could lead to -1 legislaotrs against the government
                                                            round((party.data[pty,"share.absent"]/100*party.data[pty,"current.size"]+
                                                              party.data[pty,"current.size"]*party.data[pty,"with.execDIV"]/100)))))))
-    typical.pty$rc2 <- car::recode(typical.pty$rc,c("c('Com Governo','Contra Governo')='Votando';else='Não Votando'"))  
+    typical.pty$rc2 <- car::recode(typical.pty$rc,c("c('Com Governo','Contra Governo')='Presentes';else='Ausentes'"))  
     colvec <-c("red","darkblue","orange")
     colvec <- alpha(colvec,"1")
     theme_set(theme_grey(base_size = 10))
     pdf(file=paste(pty,"typical.pdf",sep=""), bg="transparent", width=8, height=3) 
     the.plot<- ggplot(typical.pty,  aes(x=rc2, fill=rc))  + 
-        geom_bar(width=1) + labs(x=" ", y=" ") +
+        geom_bar(width=1) + labs(x=" ", y=" ") + 
+        scale_y_continuous(name="Legisladores") +
         coord_flip() # +  opts(legend.position="none")
-    print(the.plot + labs(y="Legisladores ") )
+    print(the.plot)
     dev.off()
     convert.png(file=paste(pty,"typical.pdf",sep=""))
 } 
