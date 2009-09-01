@@ -168,17 +168,20 @@ dbWriteTableU(connect,"br_partyindices_rank",party.data.ranks)
 for(i in 1:nrow(party.data)){
     setwd(paste(rf("images"),"/governism",sep=""))
     pty<-rownames(party.data)[i]
-    the.party <- subset(rcparty,partyR==p)
+    the.party <- subset(rcparty,partyR==pty)
     the.party <- merge(the.party,rcnow,by="rcvoteid")
     the.party$rcdate <- as.Date(the.party$rcdate,format="%Y-%m-%d")
-    mean.withgov <- function(d) {round(mean(d$withgov, na.rm=TRUE),1)}   #with gvt graphs
-    to.plot <- na.omit(ddply(the.party, .(rcdate), "mean.withgov"))
-    pdf(file=paste(p,"governism.pdf",sep=""), bg="transparent", width=8, height=3) 
+    share.withgov <- function(d) {round(mean(d$withgov/d$nrow, na.rm=TRUE)*100,1)}   #with gvt graphs  
+    to.plot <- na.omit(ddply(the.party, .(rcdate), "share.withgov"))
+    #To plot all votes (and not an average by day), replace previous two lines with the next two lines
+    #to.plot <- the.party
+    #to.plot$share.withgov <- round(to.plot$with.gov/to.plot$nrow*100,1)
+    pdf(file=paste(pty,"governism.pdf",sep=""), bg="transparent", width=8, height=3) 
     par(mar=c(3,3,1.5,0.5))
-    the.plot <- qplot(as.Date(rcdate), mean.withgov, data = to.plot,xlab="",ylab="",ylim=c(0,100))
+    the.plot <- qplot(as.Date(rcdate), share.withgov, data = to.plot,xlab="",ylab="",ylim=c(0,100))
     print(the.plot + stat_smooth() + scale_x_date(major="6 months", format="%b-%Y") + labs(x = "", y = "Votos com o governo (em %)"))
     dev.off()
-    convert.png(file=paste(p,"governism.pdf",sep="")) #convert to png using ghostscript
+    convert.png(file=paste(pty,"governism.pdf",sep="")) #convert to png using ghostscript
 }
 
 
@@ -189,10 +192,10 @@ for(i in 1:nrow(party.data)){
     typical.pty <- data.frame(party=pty,
                               rc=factor(c(rep("Ausente",round(party.data[pty,"current.size"]*party.data[pty,"share.absent"]/100)),
                                    rep("Com Governo",round(party.data[pty,"current.size"]*party.data[pty,"with.execDIV"]/100)),
-                                   rep("Contra Governo",party.data[pty,"current.size"]-
+                                   rep("Contra Governo",max(0,party.data[pty,"current.size"]- #rounding could lead to -1 legislaotrs against the government
                                                            round((party.data[pty,"share.absent"]/100*party.data[pty,"current.size"]+
-                                                             party.data[pty,"current.size"]*party.data[pty,"with.execDIV"]/100))))))
-    typical.pty$rc2 <- car::recode(typical.pty$rc,c("c('Com Governo','Contra Governo')='Votando';else='Não Votando'"))
+                                                             party.data[pty,"current.size"]*party.data[pty,"with.execDIV"]/100)))))))
+    typical.pty$rc2 <- car::recode(typical.pty$rc,c("c('Com Governo','Contra Governo')='Votando';else='Não Votando'"))  
     colvec <-c("red","darkblue","orange")
     colvec <- alpha(colvec,"1")
     theme_set(theme_grey(base_size = 10))
