@@ -1,4 +1,4 @@
-﻿<script language="php">
+<script language="php">
 $host  = "mysql.cluelessresearch.com";
 $con = mysql_connect($host,"monte","e123456");
 $database = 'congressoaberto';
@@ -25,7 +25,7 @@ $sharegovdiv = $row[5];
 $nameparty = $row[8];
 
 ##Get Ranks
-$result = mysql_query("select t1.*, t2.name, t2.number from br_partyindices_rank as t1, br_parties_current as t2 where t1.partyid={$partyid} AND t2.number={$partyid}");
+$result = mysql_query("select t1.*, t2.name, t2.number from br_partyindices_rank as t1, br_parties_current as t2 where t1.partyid=t2.partyid AND t2.number={$partyid}");
 $row = mysql_fetch_row($result);
 $ranksizeparty = $row[0];
 $rankcohesion = $row[2];
@@ -40,7 +40,7 @@ $nparties = $row[0];
 
  echo '<table border="0">';
 echo '<tr>';
-print("<td><img src=\"/images/partylogos/".$partyacronym.".jpg\"  width=100/></td>");
+print("<td><img src=\"/php/timthumb.php?src=/images/partylogos/".$partyacronym.".jpg&w=100&h=0\"  width=100/></td>");
 print("<td><p>$nameparty<br></p>
             Tamanho da Bancada: $sizeparty/513 ($ranksizeparty dentre os $nparties maiores partidos)<br>
             Taxa de Absenteismo  $shareabsent% ($rankshareabsent dentre os $nparties maiores partidos)<br>
@@ -52,6 +52,6 @@ print("<td><p>$nameparty<br></p>
 echo '<table border="0">';
 echo '<tr>';
 print("<td><p>Votos com o Executivo em Cada Votação<br></p></tr>
-       <tr><img src=\"/images/governism/".$partyacronym."governism.png\" width=800/></tr></td></table>");
+       <tr><img src=\"/php/timthumb.php?src=/images/governism/".$partyacronym."governism.png&w=600&h=0\" width=600/></tr></td></table>");
 
 </script>

@@ -27,30 +27,19 @@ dp <- dbGetQueryU(connect,"select t1.*, t2.name, t2.number from br_partyindices 
 dp$pagename <- paste(dp$partyname,dp$number,sep="_")
 
 ## add the parent page "Partidos"
-pid <- dbGetQuery(conwp, paste("select * from ",tname("posts")," where post_title=",shQuote("Partidos")))
-if (nrow(pid)==0) {
-  ## let's create it
-  ## the content is a short php script to list children pages
-  pid <- wpAdd(conwp,post_title="Partidos",post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
-} else {
-  pid <- pid$ID[1]
-}
+
+pid <- wpAddByTitle(conwp,post_title="Partidos",post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
 
 ## add pages
 for (i in 1:nrow(dp)) {
   print(i)
   ## we identify the party pages by name
-  pp <- dbGetQuery(conwp,paste("SELECT ID FROM ",tname("posts")," where post_name=",shQuote(dp$pagename[i])," and post_type='page'"))
-  if (nrow(pp)==0) {
-    ## page does not exist
-    postid <- NA
-  } else {
-    postid <- pp$ID[1]
-  }
- the.content <- paste("<script language='php'>$partyid = ",dp$number[i],";include( 'php/party.php');</script>",sep="")
- sub.content <- paste("
+  the.content <- paste("<script language='php'>$partyid = ",dp$number[i],";include( 'php/party.php');</script>",sep="")
+  sub.content <- paste("
  <ul><?php global $post;$thePostID = $post->ID;wp_list_pages( 'child_of='.$thePostID.'&title_li='); ?></ul>")
- the.content <- paste(the.content,sub.content)
-  pp <- wpAdd(conwp,post_title=dp$partyname[i],post_name=dp$pagename[i],postid=postid,
-              post_content=the.content,post_parent=pid)
+  the.content <- paste(the.content,sub.content)
+  postid <- wpAddByName(conwp,post_name=dp$pagename[i],
+                        post_title=dp$partyname[i],
+                        post_content=the.content,post_parent=pid)
 }
+

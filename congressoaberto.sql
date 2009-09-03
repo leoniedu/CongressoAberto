@@ -15,12 +15,13 @@ use congressoaberto;
 
 DROP TABLE IF EXISTS `br_partymedians`;
 CREATE TABLE IF NOT EXISTS `br_partymedians` (
-  `Partido` varchar(20),
-  `coord1D` double default NULL,
-  `initdate` varchar(10),
-  `finaldate` varchar(10),
+    `Partido` varchar(20),
+    `coord1D` double default NULL,
+    `initdate` date,
+    `finaldate` date,
     PRIMARY KEY (Partido, initdate, finaldate)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 DROP TABLE IF EXISTS `br_bio`;

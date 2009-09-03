@@ -1,3 +1,4 @@
+update.all <-  TRUE
 rf <- function(x=NULL) {
   if (.Platform$OS.type!="unix") {
     run.from <- "C:/reps/CongressoAberto"
@@ -31,20 +32,41 @@ if (update.all) {
 
 tramit <- res <- NULL
 
-for ( i in toup[1:10]) {
+fx <-  function(i)  {
   print(i)
   file <- rf(paste("data/www.camara.gov.br/sileg/Prop_Detalhe.asp?id=", billsf$billid[i], sep=''))
-  resnow <- readbill(file)
-  if (length(grep("Apensado", resnow$tramit)>0)) stop()
-  res <- rbind(res, resnow[["info"]])
-  tramit <- rbind(tramit,resnow[["tramit"]])
+  resnow <- try(readbill(file))
+  if (!"try-error" %in% class(resnow)) {
+    if (length(grep("Apensado", resnow$tramit)>0)) stop()
+    res <- resnow[["info"]]
+    tramit <- resnow[["tramit"]]
+    billst <- data.frame(billsf[toup,],res)
+    dbWriteTableU(connect, "br_bills", billst, append=TRUE)
+    gc()
+    closeAllConnections()
+  } else {
+    res <- NULL
+    tramit <- NULL
+  }
+  list(res, tramit)  
 }
 
+tmp <- lapply(toup, fx)
 
-  
-billst <- data.frame(billsf[toup,],res)
 
-dbWriteTableU(connect, "br_bills", billst, append=TRUE)
+## for ( i in toup) {
+##   print(i)
+##   file <- rf(paste("data/www.camara.gov.br/sileg/Prop_Detalhe.asp?id=", billsf$billid[i], sep=''))
+##   resnow <- try(readbill(file))
+##   if (!"try-error" %in% class(resnow)) {
+##     if (length(grep("Apensado", resnow$tramit)>0)) stop()
+##     res <- rbind(res, resnow[["info"]])
+##     tramit <- rbind(tramit,resnow[["tramit"]])
+##     billst <- data.frame(billsf[toup,],res)
+##   }
+## }
+## billst <- data.frame(billsf[toup,],res)
+
 
 
 

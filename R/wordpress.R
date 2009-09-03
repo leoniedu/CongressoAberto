@@ -167,6 +167,7 @@ wpClean <- function() {
   res <- lapply(c("postmeta","posts","term_relationships","term_taxonomy","terms"),function(x) dbGetQuery(conwp,paste("truncate ",tname(x))))
   dbGetQuery(connect,paste("truncate br_billidpostid"))
   dbGetQuery(connect,paste("truncate br_bioidpostid"))
+  dbGetQuery(connect,paste("truncate br_rcvoteidpostid"))  
   dbDisconnect(conwp)
   dbDisconnect(connect)
   connect.wp()

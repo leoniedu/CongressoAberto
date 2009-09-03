@@ -195,6 +195,25 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
   }
 }
 
+if (1==2) {
+  ## template - there is also a wpAddbyTitle
+  postid <- wpAddByName( ## usually better to add by name -- we (try) to use  unique names
+                        ## by "add by" we mean that the function searches for a post with matching names or title
+                        conwp, ## connection
+                        post_title="post title",
+                        post_type="post", ## can be page
+                        post_content="post content",
+                        ## dates have a special format. use the function wptime
+                        ##post_date,    ## only needed if back dating (e.g. for roll calls, we'd like the date to be the roll call date) - there is a special format.
+                        ##post_date_gmt=date$gmt,  ## not sure why there is two date fields, but whatever
+                        fulltext="full text", ## put in the full text field terms that you'd like the search function to use to  find this post
+                        post_excerpt=" excerpt", ## summary of the post. it is what is shown in the front page, or in the search results.
+                        post_category=data.frame(slug="category_slug",name="category name"), ## categories: can have multiple lines.
+                        custom_fields=data.frame(meta_key="Image",meta_value=img%+%"small.png"), ## this is what is shown in the search results or in the front page you do not need to add the php thumbnail thing here, just the link                      
+                        post_name=  name <- encode("post name"), ## post name. needs to be "nice" (e.g. no accents, spaces, etc.). Use the encode function for this purpose 
+                        tags=data.frame(slug="tagslug",name="tags name") ## tag the post  format similar to categories and custom fields
+                        )
+}
 
 
 

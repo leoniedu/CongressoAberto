@@ -681,8 +681,10 @@ remove.tags <- function(x) gsub("<[^<]*>|\t",  "",  x)
 
 read.tramit <- function(file, encoding="latin1") {
   require(XML)
-  tidy <- readLines(pipe(paste("tidy -raw ",file),encoding="latin1"))
-  html <- htmlTreeParse(tidy, asText=TRUE, useInternalNodes=TRUE)
+  zz <- pipe(paste("tidy -q -raw ",file), encoding="latin1")
+  tidy <- readLines(zz)
+  closeAllConnections() 
+  html <- htmlTreeParse(tidy, asText=TRUE, useInternalNodes=TRUE, encoding="utf8")
   ##html <- htmlTreeParse(readLines(fnow), asText=TRUE, useInternalNodes=TRUE)
   tmp <- xpathSApply(html,"//table[1]/tr[1]",xmlValue)
   tmp <- tmp[grep("Andamento:",tmp):length(tmp)]
@@ -706,7 +708,6 @@ readbill <- function(file) {
   ##FIX: figure out if encoding is necessary
   if(length(grep("Nenhuma proposição encontrada",tmp))>0) return(NULL)
   ## let's get the tramitacao table
-  tramit.df <- read.tramit(tmp)
   ## now get other info
   tmp <-  gsub("\r|&nbsp","",tmp)
   tmp <-  gsub(";+"," ",tmp)

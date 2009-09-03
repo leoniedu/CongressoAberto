@@ -115,15 +115,15 @@ if (download.now) {
   ## -P directory path to put files
   ## -R pattern : reject files matching pattern
   tmp <- system(paste("wget -nH --cut-dirs=2 -r -l 1 -A \"DepNovos_*\" -R \"*foto.asp*\" -P ", rf("data/bio/all"), " 'http://www.camara.gov.br/internet/deputado/",index.url,"' 2>&1",sep=''), intern=TRUE)
-  newfiles <- dir('~/reps/CongressoAberto/data/bio/all',pattern="DepNovos_Detalhe",full.names=TRUE)
-  if (update.all) {
-    files.list <- newfiles
-  }  else {
-    fi <- file.info(newfiles)
-    files.list <- setdiff(newfiles, oldfiles)
-    ## update the bioids updated in the last week as well
-    files.list <- unique(c(files.list,newfiles[(as.Date(fi$mtime)>Sys.Date()-7)]))
-  }
+}
+newfiles <- dir('~/reps/CongressoAberto/data/bio/all',pattern="DepNovos_Detalhe",full.names=TRUE)
+if (update.all) {
+  files.list <- newfiles
+}  else {
+  fi <- file.info(newfiles)
+  files.list <- setdiff(newfiles, oldfiles)
+  ## update the bioids updated in the last week as well
+  files.list <- unique(c(files.list,newfiles[(as.Date(fi$mtime)>Sys.Date()-7)]))
 }
 
 if (length(files.list)>0) {

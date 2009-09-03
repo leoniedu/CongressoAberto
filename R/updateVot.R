@@ -80,7 +80,6 @@ votes <- setdiff(new.LVfiles,old.LVfiles) #compare new files with old to flag re
 ## FIX: use file information to get what files recently modified.
 
 
-## load twitter user passwd
 if (update.all) votes <- new.LVfiles
 nvotes <- length(votes)
 file.table <- cbind(votes,gsub("^LV","HE",votes))
@@ -96,15 +95,13 @@ if (length(votes)>0) {
   votes.new <- dbGetQuery(connect,"select count(*) from br_votacoes")[[1]][1]
   nvotes <- votes.new-votes.old
   ## FIX: perhaps better to do a diff on the database itself?
-  library(twitteR)
-  load(rf("up.RData"))
   ##print(user)
   ##print(password)
   if (nvotes>0) {
-    sess <- initSession(user,password)
+    ## load twitter user passwd
+    load(rf("R/up.RData"))
     tw <- paste(nvotes,"new rollcalls uploaded!")
-    print(tw)
-    ns <- updateStatus(tw,sess)
+    ns <- tweet(tw, userpwd=usrpwd, wait=0)
   }
   print(paste(nvotes, "effectively updated"))
 }

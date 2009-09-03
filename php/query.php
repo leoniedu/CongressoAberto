@@ -45,7 +45,15 @@ order by Data DESC" ;
 
 
 if($_GET["form"]=="votes") {
-$sql = "select CAST(b.rcdate AS DATE) as Data, convert(cast(a.party as char) using binary) as Partido, convert(Convert(a.rc using binary) using latin1)  as Voto, b.bill as Proposicao, b.billdescription as Votacao  from congressoaberto.br_votos as a, congressoaberto.br_votacoes as b  where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND a.legis=53 order by Data DESC" ;  
+$sql = "select CAST(b.rcdate AS DATE) as Data, convert(cast(a.party as char) using binary) as Partido, convert(Convert(a.rc using binary) using latin1)  as Voto, c.postid as `Votacao`    from 
+	congressoaberto.br_votos as a, 
+	congressoaberto.br_votacoes as b,
+	congressoaberto.br_rcvoteidpostid as c  
+  where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND b.rcvoteid=c.rcvoteid AND a.legis=53 order by Data DESC" ;  
+ }
+
+if($_GET["form"]=="rcvotes") {
+$sql = "select CAST(b.rcdate AS DATE) as Data, convert(cast(a.party as char) using binary) as Partido, a.namelegis as nome, a.state as Estado, convert(Convert(a.rc using binary) using latin1)  as Voto, b.bill as Proposicao, b.billdescription as Votacao, b.rcvoteid as ID  from congressoaberto.br_votos as a, congressoaberto.br_votacoes as b  where a.rcvoteid=b.rcvoteid AND a.rcvoteid=".$_GET["rcvoteid"]." order by Partido DESC" ;  
  }
 
 
@@ -58,8 +66,6 @@ if($_GET["limit"]!="all")
   {
 	$sql = $sql." limit ".$_GET["limit"];
   }
-
-
 
 
 //concat(DAY(b.rcdate),'/',MONTH(b.rcdate),'/',YEAR(b.rcdate)) as year,

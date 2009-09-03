@@ -60,11 +60,14 @@ function handleQueryResponse(response) {
   var data = response.getDataTable();
   var formatter = new google.visualization.DateFormat({formatType: 'long'});
   // Reformat our data.
+  var rc = new google.visualization.TablePatternFormat('<a href="/?p={0}"> Link </a>');
   formatter.format(data, 1);
+  rc.format(data, [3]);
   options['page'] = 'enable';
   options['pageSize'] = 10;
   //options['pagingSymbols'] = {prev: 'P', next: 'N'};
   options['pagingButtonsConfiguration'] = 'auto';
+  options['allowHtml'] = true;
   visualization = new google.visualization.Table(document.getElementById('table2'));
   visualization.draw(data, options);
 }

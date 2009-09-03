@@ -33,7 +33,7 @@ posts <- dbGetQuery(conwp, paste("select * from ",tname("posts")))
 ## check that it does not exist
 propid <- wpAddByTitle(conwp,post_title="Proposições",post_name="proposicoes",post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
 
-postbill <- function(bill=37642,skip=FALSE) {
+postbill <- function(bill=37642) {
   dnow <- subset(bills,billid==bill)
   fulltext <- paste(dnow,collapse="\n")
   with(dnow,{
@@ -50,7 +50,7 @@ postbill <- function(bill=37642,skip=FALSE) {
     billtype <- toupper(billtype)
     pp <- wpAddByTitle(conwp,post_content="<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( \"child_of=\".$thePostID.\"&title_li=\"); ?></ul>",post_title=billtype,post_parent=propid)
     postid <- wpAddByTitle(conwp,post_title=title,post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,
-                           tags=tags,post_parent=pp,post_category="test")
+                           tags=tags,post_parent=pp,post_category=data.frame(name="testing",slug="test"))
     dbWriteTableU(connect,"br_billidpostid",data.frame(postid,billid=bill),append=TRUE)
     res <- c(bill,postid)
     print(res)
@@ -58,8 +58,11 @@ postbill <- function(bill=37642,skip=FALSE) {
   })  
 }
 
+billsin <- dbReadTable(connect, "br_billidpostid")
+
 ##billsnow <- bills$billid[sample(1:nrow(bills),2)]
-billsnow <- bills$billid[1:nrow(bills)]
+##billsnow <- bills$billid[1:nrow(bills)]
+billsnow <- bills$billid[!bills$billid%in%billsin$billid]
+
 t(sapply(billsnow,postbill))
 
-t(sapply(,postbill))
