@@ -890,14 +890,14 @@ barplot.rc <- function(rc, gov=NA, title="", threshold=NULL) {
   ## do not label if less than nx votes
   lc1[table(rc1)<nx] <- ""
   tx <- as.vector(table(rc1))
-  fix.y <- function(x=1) 514*x  
+  fix.y <- function(x=.01) 514*x  
   y <- cumsum(tx)
   y <- y-tx/2
-  dfx <- data.frame(x=1, y=y+fix.y, label=lc1)
+  dfx <- data.frame(x=1, y=y+fix.y(), label=lc1)
   ssim <- sum(rc$rc=="Sim")
   p <- p + geom_text(data=dfx, aes(x=x, y=y, label=label))  
   if (ssim>0) {
-    dfy <- data.frame(x=2, y=sum(rc$rc=="Sim")/2 + fix.y, label="Sim")
+    dfy <- data.frame(x=2, y=sum(rc$rc=="Sim")/2 + fix.y(), label="Sim")
     p <- p + geom_text(data=dfy, aes(x=x, y=y, label=label))
   }
   plarge <- p + opts(legend.position="none"
@@ -1259,4 +1259,38 @@ mosaic.rc <- function(rc, pmedians) {
   ## Add Partido labels.
   plarge <- plarge + annotate("text",x=textdf$xtext, y=1.04, label=paste(textdf$Partidot),size=2.5, angle=90,just="left")
   list(small=psmall, large=plarge)
+}
+
+
+
+state.a2L <- function(object) {
+  object <- as.character(tolower(object))
+  require(car)
+  car:::recode(object,"'ac' ='Acre';
+                       'al' ='Alagoas';
+                       'am' ='Amazonas';
+                       'ap' ='Amapá';
+                       'ba' ='Bahia';
+                       'ce' ='Ceará';
+                       'df' ='Distrito Federal';
+                       'es' ='Espírito Santo';
+                       'go' ='Goiás';
+                       'ma' ='Maranhão';
+                       'mg' ='Minas Gerais';
+                       'ms' ='Mato Grosso do Sul';
+                       'mt' ='Mato Grosso';
+                       'pa' ='Pará';
+                       'pb' ='Paraíba';
+                       'pe' ='Pernambuco';
+                       'pi' ='Piauí';
+                       'pr' ='Paraná';
+                       'rj' ='Rio de Janeiro';
+                       'rn' ='Rio Grande do Norte';
+                       'ro' ='Rondônia';
+                       'rr' ='Roraima';
+                       'rs' ='Rio Grande do Sul';
+                       'sc' ='Santa Catarina';
+                       'se' ='Sergipe';
+                       'sp' ='São Paulo';
+                       'to' ='Tocantins'")
 }
