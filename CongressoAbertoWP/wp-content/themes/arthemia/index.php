@@ -12,7 +12,7 @@
 		<?php while (have_posts()) : the_post(); ?>	
 	
 	<div class="title"><a href="<?php the_permalink() ?>" rel="bookmark"><?php the_title(); ?></a></div>
-	<div class="meta">[<?php the_time('j M Y') ?> | <?php comments_popup_link('Não há Comentários', 'One Comment', '% Comments');?> | <?php if(function_exists('the_views')) { the_views(); } ?>]</div>	
+	<div class="meta">[<?php the_time('j M Y') ?> | <?php comments_popup_link('Não há Comentários', 'Um Comentário', '% Comentários');?> | <?php if(function_exists('the_views')) { the_views(); } ?>]</div>	
 	<?php $values = get_post_custom_values("Headline");?>
 	<a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">
  <img src="<?php $values = get_post_custom_values("Image"); echo $values[0]; ?>" 
@@ -39,7 +39,7 @@ $values = get_post_custom_values("Image"); echo $values[0]; ?>&w=100&zc=0&q=100"
 alt="<?php the_title(); ?>" class="left" width="100px" height="100px"  /></a>
       <?php } ?>
 	<div class="info"><a href="<?php the_permalink() ?>" rel="bookmark" class="title"><?php the_title(); ?></a>
-<div class="meta">[<?php the_time('j M Y') ?>  <!--| <?php comments_popup_link('Não há Comentários', 'Um Comentário', '% Comments');?> | <?php if(function_exists('the_views')) { the_views(); } ?> -->
+<div class="meta">[<?php the_time('j M Y') ?>  <!--| <?php comments_popup_link('Não há Comentários', 'Um Comentário', '% Comentários');?> | <?php if(function_exists('the_views')) { the_views(); } ?> -->
 ]</div>	
 <p>	<?php the_excerpt(); ?> </p>
 	
