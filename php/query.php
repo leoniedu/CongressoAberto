@@ -28,18 +28,25 @@ mysql_select_db("DB_Name", $con);
 
 if($_GET["form"]=="bills") {
   ## given a bill, return all related roll calls
+  $billid=$_GET["billid"];  
   $sql = "select   
 b.rcvoteid as 'Resultado',   
 b.rcvoteid as 'Por partido', 
 b.rcvoteid as 'Por estado', 
 CAST(b.rcdate AS DATE) as Data,   
 c.postid as Votacao, 
-b.rcvoteid  from (select * from congressoaberto.br_bills as d where d.billid=".$_GET["billid"].") as a,  
+b.rcvoteid  from (select * from congressoaberto.br_bills as d where d.billid=".$billid.") as a,  
 congressoaberto.br_votacoes as b, 
 congressoaberto.br_rcvoteidpostid as c  
 where a.billyear=b.billyear and a.billno=b.billno and a.billtype=b.billtype  
 and b.rcvoteid=c.rcvoteid
-order by Data DESC" ;  
+order by Data, a.billtype DESC" ;  
+  #$sql = "select billyear from congressoaberto.br_bills  where billid=440177";
+ }
+
+if($_GET["form"]=="allbills") {
+  ##  return all bills
+  $sql = "select *  from  congressoaberto.br_bills order by billyear desc" ;  
   ##$sql = "select billyear from congressoaberto.br_bills  where billid=37642";
  }
 
@@ -53,8 +60,15 @@ $sql = "select CAST(b.rcdate AS DATE) as Data, convert(cast(a.party as char) usi
  }
 
 if($_GET["form"]=="rcvotes") {
-$sql = "select CAST(b.rcdate AS DATE) as Data, convert(cast(a.party as char) using binary) as Partido, a.namelegis as nome, a.state as Estado, convert(Convert(a.rc using binary) using latin1)  as Voto, b.bill as Proposicao, b.billdescription as Votacao, b.rcvoteid as ID  from congressoaberto.br_votos as a, congressoaberto.br_votacoes as b  where a.rcvoteid=b.rcvoteid AND a.rcvoteid=".$_GET["rcvoteid"]." order by Partido DESC" ;  
+$sql = "select CAST(b.rcdate AS DATE) as Data, convert(cast(a.party as char) using binary) as Partido, a.namelegis as nome, a.state as Estado, convert(Convert(a.rc using binary) using latin1)  as Voto, b.bill as Proposicao, b.billdescription as Votacao, b.rcvoteid as ID  
+	from 
+		congressoaberto.br_votos as a, 
+		congressoaberto.br_votacoes as b  
+	where 
+		a.rcvoteid=b.rcvoteid AND 
+		a.rcvoteid=".$_GET["rcvoteid"]." order by Partido DESC" ;  
  }
+
 
 
 if($_GET["form"]=="contrib") 
@@ -62,16 +76,23 @@ if($_GET["form"]=="contrib")
   $sql = "select Convert(Convert((a.donor) using binary) using latin1) as Doador, a.donortype as 'Tipo de doador', a.cpfcnpj as 'CPF/CNPJ do doador', a.contribsum as 'Valor da doacao' from congressoaberto.br_contrib as a, congressoaberto.br_bioidtse as b where b.bioid=".$_GET["bioid"]." AND a.candno=b.candidate_code AND a.state=b.state AND a.year=b.year order by a.contribsum DESC";
 }
 
-if($_GET["limit"]!="all") 
+
+if($_GET["limit"]!="") 
   {
 	$sql = $sql." limit ".$_GET["limit"];
   }
 
 
+
 //concat(DAY(b.rcdate),'/',MONTH(b.rcdate),'/',YEAR(b.rcdate)) as year,
 //+MONTH(b.rcdate)+'/'+YEAR(b.rcdate)
 $result = mysql_query($sql);
-
+if ($_GET["mode"]=="test") {
+  echo $sql;
+  $result = mysql_query($sql);
+  $row = mysql_fetch_row($result);
+  echo $row[0];
+}
 // Initialize the gvStreamerEx object
 $gvJsonObj = new gvStreamerEx();
 

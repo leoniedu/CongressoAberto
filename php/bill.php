@@ -3,7 +3,6 @@ $host  = "mysql.cluelessresearch.com";
 $con = mysql_connect($host,"monte","e123456");
 $database = 'congressoaberto';
 mysql_select_db($database, $con);
-
 // sending query
 $result = mysql_query("SELECT Convert(Convert((billauthor) using binary) using latin1), Convert(Convert((ementa) using binary) using latin1), Convert(Convert((status) using binary) using latin1) FROM br_bills where billid={$billid} limit 1");
 if (!$result) {
@@ -19,7 +18,6 @@ echo '<p>Billid: '.$billid.'</p>';
 
 // what are the roll calls related to this bill
 </script>
-
 
 <script language="javascript" type="text/javascript">
   var billid = "<?php echo $billid; ?>";

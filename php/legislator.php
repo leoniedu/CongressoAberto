@@ -103,7 +103,7 @@ google.setOnLoadCallback(drawVisualization2);
 <div id="table2">
   </div>
   <script language="php">
-  print("<a href=\"/php/query.php?form=votes&bioid=$bioid&limit=all&tqx=reqId:0;out:csv;csvFile:votacoes$bioid\"> Download de todas as votações do legislador em csv</a>");
+  print("<a href=\"/php/query.php?form=votes&bioid=$bioid&tqx=reqId:0;out:csv;csvFile:votacoes$bioid\"> Download de todas as votações do legislador em csv</a>");
 </script>
 
 
@@ -111,7 +111,7 @@ google.setOnLoadCallback(drawVisualization2);
 <div id="table3">
 </div>
 <script language="php">
-print("<a href=\"/php/query.php?form=contrib&bioid=$bioid&limit=all&tqx=reqId:0;out:csv;csvFile:doacoes$bioid\"> Download de todas as doações para o legislador em csv</a>");
+print("<a href=\"/php/query.php?form=contrib&bioid=$bioid&tqx=reqId:0;out:csv;csvFile:doacoes$bioid\"> Download de todas as doações para o legislador em csv</a>");
 </script>
 
 

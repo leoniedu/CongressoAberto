@@ -126,6 +126,7 @@ wpAdd <- function(con,...,custom_fields=NULL,fulltext=NULL,postid=NA,tags=NULL,p
     if (is.null(fields$post_date_gmt) ) fields$post_date_gmt <- ctime[["gmt"]]
     if (is.null(fields$post_name)) fields$post_name <- encode(fields$post_title)
   }
+  ## slugs are lower case
   if(verbose) print(fields)
   ## adding a new page
   ## add the post to _posts
@@ -174,5 +175,35 @@ wpClean <- function() {
   connect.db()
   return()
 }
+
+
+postbill <- function(bill=37642, propid=NULL) {
+  if (is.null(propid)) {
+    propid <- dbGetQueryU(conwp, " select ID from "%+%tname("posts")%+%" where post_title='Proposições'")[1]
+  }
+  dnow <- subset(bills,billid==bill)
+  fulltext <- paste(dnow,collapse="\n")
+  with(dnow,{
+    ## create post data
+    title <- paste(billtype," ",billno,"/",billyear,sep='')
+    name <- encode(title)
+    content <- paste('<script language="php">$billid = ',billid,';include( TEMPLATEPATH . "/bill.php");</script>')
+    date <- wptime(billdate)
+    tagsname <- sapply(c(billtype,tramit,billyear,
+                         if (billauthor=="Poder Executivo") "Executivo"),
+                       encode)
+    tagslug <- gsub("[-,.]+","_",tagsname)
+    tags <- data.frame(slug=tagslug,name=tagsname)
+    billtype <- toupper(billtype)
+    pp <- wpAddByTitle(conwp,post_content="<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( \"child_of=\".$thePostID.\"&title_li=\"); ?></ul>",post_title=billtype,post_parent=propid)
+    postid <- wpAddByTitle(conwp,post_title=title,post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,
+                           tags=tags,post_parent=pp)
+    dbWriteTableU(connect,"br_billidpostid",data.frame(postid,billid=bill),append=TRUE)
+    res <- c(bill,postid)
+    print(res)
+    res
+  })  
+}
+
 
 ##wp_delete_object_term_relationships($postid, array('category', 'post_tag'));

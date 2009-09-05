@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 <!--	// include categories here if needed -->
-  <?php $display_categories = array(42,61,62); ?>
+  <?php $display_categories = array(3,4,5); ?>
 		
 	<?php if(!is_paged()) { ?>
 

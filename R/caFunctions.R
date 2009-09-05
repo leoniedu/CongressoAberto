@@ -11,6 +11,13 @@ theme_mini <- function() {
 
 "%+%" <-  function(x,y) paste(x,y,sep='')
 
+capwords <- function(s, strict = TRUE) {
+  cap <- function(s) paste(toupper(substring(s,1,1)),
+                           {s <- substring(s,2); if(strict) tolower(s) else s},
+                           sep = "", collapse = " " )
+  sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
+}
+
 tmptable <- function() paste("t",paste(sample(c(letters,0:9),10,replace=TRUE), collapse=""),sep='')
 
 usource <- function(...) source(...,encoding="utf8")
@@ -847,13 +854,14 @@ map.rc <- function(rc, filenow='',title='', large=TRUE, percent=FALSE) {
   ##   dev.off()
 }
 
-
 barplot.rc <- function(rc, gov=NA, title="", threshold=NULL) {
-  n1 <- 5
+  ## FIX:
+  ## 1st column: ausencias and obstrucao
+  ## 2nd column: Nao
+  ## 3rd column: Sim
+  ## abstencoes: pile up on the winning vote (sim or nao)
+  rc <- subset(rc, rc!="Ausente")
   require(RColorBrewer)
-  ## FIX: add reference lines for the required number of Yes votes.
-  ## Look for quorum.
-  ## color like that of mosaic
   require(ggplot2)
   rc$rc <- factor(rc$rc, levels=c("Não", "Obstrução", "Abstenção", "Ausente", "Sim"))
   rc$rc2 <- factor(with(rc,car::recode(rc,"'Sim'='A Favor';else='Contra'")),levels=c("Contra","A Favor"))

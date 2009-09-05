@@ -1,4 +1,3 @@
-update.all <-  TRUE
 rf <- function(x=NULL) {
   if (.Platform$OS.type!="unix") {
     run.from <- "C:/reps/CongressoAberto"
@@ -20,17 +19,7 @@ setwd(run.from)
 connect.db()
 
 
-billsf <- dbReadTableU(connect, "br_billid")
-
-
-##FIX: update.all conditional
-if (update.all) {
-  toup <- which(!is.na(billsf$billid))  
-} else {
-  
-}
-
-tramit <- res <- NULL
+##tramit <- res <- NULL
 
 fx <-  function(i)  {
   print(i)
@@ -51,6 +40,14 @@ fx <-  function(i)  {
   list(res, tramit)  
 }
 
+billsf <- dbReadTableU(connect, "br_billid")
+
+if (!update.all) {
+  billsin <- dbGetQueryU(connect, "select billid from br_bills")
+  billsf <- billsf[!billsf$billid%in%billsin$billid,]
+}
+
+toup <- which(!is.na(billsf$billid))  
 tmp <- lapply(toup, fx)
 
 

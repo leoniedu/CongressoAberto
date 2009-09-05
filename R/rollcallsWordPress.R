@@ -2,6 +2,9 @@
 ## possible solutions.
 ## 1. enforce unique title.
 
+if (!exists("update.all", 1)) {  
+  update.all <- FALSE
+}
 
 rf <- function(x=NULL) {
   if (.Platform$OS.type!="unix") {
@@ -150,8 +153,6 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
     }
   } else {
   }
-  barplots <- barplot.rc(rcnow, govpos(rcgov), threshold=threshold[2])  
-  mosaicplots <- mosaic.rc(rcnow, pmedians)
   ## write plots to disk
   print.png <- function(plots, fn, crop=TRUE, small=5, large=6) {
     fns <- rf(fn%+%"small.pdf")
@@ -166,6 +167,8 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
     convert.png(fnl, crop=crop)
   }
   if (saveplot) {
+    barplots <- barplot.rc(rcnow, govpos(rcgov), threshold=threshold[2])  
+    mosaicplots <- mosaic.rc(rcnow, pmedians)
     print.png(barplots, paste("images/rollcalls/bar",rcid, sep=''), crop=FALSE, small=2.5)
     print.png(mosaicplots, paste("images/rollcalls/mosaic",rcid, sep=''))
     ## maps
@@ -197,11 +200,11 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
 
 if (1==2) {
   ## template - there is also a wpAddbyTitle
-  postid <- wpAddByName( ## usually better to add by name -- we (try) to use  unique names
+  postid <- wpAddByTitle( ## usually better to add by name -- we (try) to use  unique names
                         ## by "add by" we mean that the function searches for a post with matching names or title
                         conwp, ## connection
                         post_title="post title",
-                        post_type="post", ## can be page
+                        post_type="page", ## can be page
                         post_content="post content",
                         ## dates have a special format. use the function wptime
                         ##post_date,    ## only needed if back dating (e.g. for roll calls, we'd like the date to be the roll call date) - there is a special format.
@@ -209,10 +212,10 @@ if (1==2) {
                         fulltext="full text", ## put in the full text field terms that you'd like the search function to use to  find this post
                         post_excerpt=" excerpt", ## summary of the post. it is what is shown in the front page, or in the search results.
                         post_category=data.frame(slug="category_slug",name="category name"), ## categories: can have multiple lines.
-                        custom_fields=data.frame(meta_key="Image",meta_value=img%+%"small.png"), ## this is what is shown in the search results or in the front page you do not need to add the php thumbnail thing here, just the link                      
+                        custom_fields=data.frame(meta_key="Image",meta_value="small.png"), ## this is what is shown in the search results or in the front page you do not need to add the php thumbnail thing here, just the link                      
                         post_name=  name <- encode("post name"), ## post name. needs to be "nice" (e.g. no accents, spaces, etc.). Use the encode function for this purpose 
                         tags=data.frame(slug="tagslug",name="tags name") ## tag the post  format similar to categories and custom fields
-                        )
+                        )  
 }
 
 
@@ -220,9 +223,15 @@ if (1==2) {
 m1 <- readShape.cent(rf("data/maps/BRASIL.shp"), "UF")
 
 rcsnow <- dbGetQuery(connect,"select rcvoteid, rcdate from br_votacoes where legis="%+%"53")
+
+## whats already in
+if (!update.all) {
+  rcsin <- dbGetQuery(connect,"select * from br_rcvoteidpostid")
+  rcsnow <- rcsnow[!rcsnow$rcvoteid%in%rcsin$rcvoteid,]
+}
+
+## decreasing order by date
 rcsnow <- rcsnow[order(rcsnow$rcdate, decreasing=TRUE),]
-
-
 rcsnow <- rcsnow$rcvoteid
 
 ##billsnow <- bills$billid[sample(1:nrow(bills),2)]
@@ -231,8 +240,44 @@ rcsnow <- rcsnow$rcvoteid
 ##t(sapply(rcsnow[-c(1:10)],postroll, saveplot=FALSE, post=FALSE))
 ##t(sapply(tail(rcsnow,10),postroll, saveplot=TRUE, post=TRUE))
 ##t(sapply(tail(rcsnow,10),postroll, saveplot=TRUE, post=FALSE))
-res <- t(sapply(rcsnow, function(x) {
-  print(x)
-  try(postroll(x, saveplot=TRUE, post=TRUE), silent=TRUE)
-}))
 ##try(system("syncCA images"))
+
+
+if (!exists("dopar", 1)) {
+  dopar <- FALSE
+}
+
+rcsnow <- rcsnow
+nrc <- length(rcsnow)
+if (nrc>0) {
+  rcsnow[1:min(20,nrc)]
+  if (dopar) {
+    library(doMC)
+    registerDoMC(2)
+    fx <- function(x) {
+      try(connect.db())
+      try(connect.wp())
+      dbListTables(connect)
+      print(x)
+      try(postroll(x, saveplot=TRUE, post=TRUE), silent=FALSE)
+    }
+    system.time(foreach(x=rcsnow[7:10]) %dopar% fx(x))
+  } else {
+    res <- t(sapply(rcsnow, function(x) {
+      print(x)
+    try(postroll(x, saveplot=TRUE, post=TRUE), silent=FALSE)
+    }))
+  }
+}
+  
+
+
+
+
+
+
+
+
+
+
+
