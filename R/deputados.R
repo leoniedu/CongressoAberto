@@ -102,8 +102,8 @@ if (new) {
   ## insert into all deputados deps, appending
   ## Fix: use insert from the current deputies table
   ##TODO: update wordpress
-  library(twitteR)
-  load(rf("up.RData"))
-  sess <- initSession(user,password)
-  ns <- updateStatus(paste("List of deputies updated!",sess))
+  source(rf("R/twitter.R"))           
+  load(rf("R/up.RData"))
+  tw <- paste("List of deputies updated!")
+  ns <- tweet(tw, userpwd=usrpwd, wait=0)
 }

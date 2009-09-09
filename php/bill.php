@@ -1,10 +1,11 @@
 <script language="php">
-$host  = "mysql.cluelessresearch.com";
-$con = mysql_connect($host,"monte","e123456");
-$database = 'congressoaberto';
-mysql_select_db($database, $con);
+include_once("server.php");
+//$host  = "mysql.cluelessresearch.com";
+//$con = mysql_connect($host,"monte","e123456");
+///$database = 'congressoaberto';
+//mysql_select_db($database, $con);
 // sending query
-$result = mysql_query("SELECT Convert(Convert((billauthor) using binary) using latin1), Convert(Convert((ementa) using binary) using latin1), Convert(Convert((status) using binary) using latin1) FROM br_bills where billid={$billid} limit 1");
+$result = mysql_query("SELECT billauthor, ementa, status  FROM br_bills where billid={$billid} limit 1");
 if (!$result) {
   die("Query to show fields from table failed");
  }
@@ -42,10 +43,10 @@ function handleQueryResponse(response) {
     return;
   }
   var data = response.getDataTable();
-  var mosaic = new google.visualization.TablePatternFormat('<img src="http://politica.eduardoleoni.com/wp-content/themes/arthemia/scripts/timthumb.php?src=/images/rollcalls/mosaic{0}small.png&w=100&h=0&zc=0&q=90">');
-  var bar = new google.visualization.TablePatternFormat('<img src="http://politica.eduardoleoni.com/wp-content/themes/arthemia/scripts/timthumb.php?src=/images/rollcalls/bar{0}small.png&w=100&h=0&zc=0&q=90">');
+  var mosaic = new google.visualization.TablePatternFormat('<img src="/php/timthumb.php?src=/images/rollcalls/mosaic{0}small.png&w=100&h=0&zc=0&q=90">');
+  var bar = new google.visualization.TablePatternFormat('<img src="/php/timthumb.php?src=/images/rollcalls/bar{0}small.png&w=100&h=0&zc=0&q=90">');
   var map = new google.visualization.TablePatternFormat('<img src="/php/timthumb.php?src=/images/rollcalls/map{0}small.png&w=100&h=0&zc=0&q=90">');
-  var rc = new google.visualization.TablePatternFormat('<a href="http://politica.eduardoleoni.com/?p={0}"> Link </a>');
+  var rc = new google.visualization.TablePatternFormat('<a href="/?p={0}"> Link </a>');
   rc.format(data, [4]);
   bar.format(data, [0]);
   mosaic.format(data, [1]);

@@ -1,3 +1,7 @@
+## FIX:
+## post names cannot have trailing spaces
+
+
 ## table name
 if (!exists("tname")) {
   tname <- function(name,us="") paste("wp_",us,name,sep='') 
@@ -165,45 +169,46 @@ wpAdd <- function(con,...,custom_fields=NULL,fulltext=NULL,postid=NA,tags=NULL,p
 
 
 wpClean <- function() {
-  res <- lapply(c("postmeta","posts","term_relationships","term_taxonomy","terms"),function(x) dbGetQuery(conwp,paste("truncate ",tname(x))))
-  dbGetQuery(connect,paste("truncate br_billidpostid"))
-  dbGetQuery(connect,paste("truncate br_bioidpostid"))
-  dbGetQuery(connect,paste("truncate br_rcvoteidpostid"))  
-  dbDisconnect(conwp)
-  dbDisconnect(connect)
-  connect.wp()
-  connect.db()
-  return()
+    res <- lapply(c("postmeta","posts","term_relationships","term_taxonomy","terms"),function(x) dbGetQuery(conwp,paste("truncate ",tname(x))))
+    dbGetQuery(connect,paste("truncate br_billidpostid"))
+    dbGetQuery(connect,paste("truncate br_bioidpostid"))
+    dbGetQuery(connect,paste("truncate br_rcvoteidpostid"))  
+    dbDisconnect(conwp)
+    dbDisconnect(connect)
+    connect.wp()
+    connect.db()
+    return()
 }
 
 
 postbill <- function(bill=37642, propid=NULL) {
-  if (is.null(propid)) {
-    propid <- dbGetQueryU(conwp, " select ID from "%+%tname("posts")%+%" where post_title='Proposições'")[1]
-  }
-  dnow <- subset(bills,billid==bill)
-  fulltext <- paste(dnow,collapse="\n")
-  with(dnow,{
+    if (is.null(propid)) {
+        propid <- dbGetQueryU(conwp, " select ID from "%+%tname("posts")%+%" where post_title='Proposições'")[1]
+    }
+    dnow <- subset(bills,billid==bill)
+    ementashort <- dnow$ementashort
+    if (is.na(ementashort)) ementashort <- dnow$ementa
+    excerpt <- paste(dnow$billauthor, ementashort, dnow$status, sep="<br>")
+    fulltext <- paste(dnow,collapse="\n")
     ## create post data
-    title <- paste(billtype," ",billno,"/",billyear,sep='')
-    name <- encode(title)
-    content <- paste('<script language="php">$billid = ',billid,';include( TEMPLATEPATH . "/bill.php");</script>')
-    date <- wptime(billdate)
-    tagsname <- sapply(c(billtype,tramit,billyear,
-                         if (billauthor=="Poder Executivo") "Executivo"),
-                       encode)
+    title <- with(dnow, paste(billtype," ",billno,"/",billyear,sep=''))
+    name <- with(dnow, encode(title))
+    content <- with(dnow, paste('<script language="php">$billid = ',billid,';include( "php/bill.php");</script>'))
+    date <- with(dnow, wptime(billdate))    
+    tagsname <- with(dnow, sapply(c(billtype,tramit,billyear, if (billauthor=="Poder Executivo") "Executivo"), encode))
+    tagsname <- tagsname[tagsname!="NA"]
     tagslug <- gsub("[-,.]+","_",tagsname)
-    tags <- data.frame(slug=tagslug,name=tagsname)
-    billtype <- toupper(billtype)
+    tags <- with(dnow, data.frame(slug=tagslug,name=tagsname))
+    billtype <- with(dnow, toupper(billtype))
     pp <- wpAddByTitle(conwp,post_content="<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( \"child_of=\".$thePostID.\"&title_li=\"); ?></ul>",post_title=billtype,post_parent=propid)
-    postid <- wpAddByTitle(conwp,post_title=title,post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,
+    postid <- wpAddByTitle(conwp,post_title=title,post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=excerpt,
                            tags=tags,post_parent=pp)
     dbWriteTableU(connect,"br_billidpostid",data.frame(postid,billid=bill),append=TRUE)
     res <- c(bill,postid)
     print(res)
     res
-  })  
-}
+}  
+
 
 
 ##wp_delete_object_term_relationships($postid, array('category', 'post_tag'));

@@ -1,13 +1,13 @@
 <?php get_header(); ?>
 <!--	// include categories here if needed -->
-  <?php $display_categories = array(3,4,5); ?>
+  <?php $display_categories = array(41,42,43); ?>
 		
 	<?php if(!is_paged()) { ?>
 
 	<div id="top" class="clearfloat">
 	
 		<div id="headline">
-		<img src="<?php echo get_option('home'); ?>/wp-content/themes/arthemia/images/headline.png" width="75px" height="21px" alt="" />
+<!--		<img src="<?php echo get_option('home'); ?>/wp-content/themes/arthemia/images/headline.png" width="75px" height="21px" alt="" /> -->
 		<?php query_posts("showposts=1&category_name=Headline"); ?>
 		<?php while (have_posts()) : the_post(); ?>	
 	
@@ -24,7 +24,7 @@ alt="<?php the_title(); ?>" class="left"  border=0  /></a>
 		
 	<div id="featured">
 	
-	<img src="<?php echo get_option('home'); ?>/wp-content/themes/arthemia/images/featured.png" width="72px" height="17px" alt="" />
+<!--	<img src="<?php echo get_option('home'); ?>/wp-content/themes/arthemia/images/featured.png" width="72px" height="17px" alt="" /> -->
 
 	<?php query_posts("showposts=3&category_name=Featured"); $i = 1; ?>
 
@@ -34,7 +34,7 @@ alt="<?php the_title(); ?>" class="left"  border=0  /></a>
 	<?php $values = get_post_custom_values("Image");
 	if (isset($values[0])) { ?>
       <a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">
-	<img src="<?php echo bloginfo('template_url'); ?>/scripts/timthumb.php?src=/<?php
+	<img src="php/timthumb.php?src=/<?php
 $values = get_post_custom_values("Image"); echo $values[0]; ?>&w=100&zc=0&q=100"
 alt="<?php the_title(); ?>" class="left" width="100px" height="100px"  /></a>
       <?php } ?>
@@ -94,7 +94,7 @@ alt="<?php the_title(); ?>" class="left" width="100px" height="100px"  /></a>
 	<?php	$values = get_post_custom_values("Image");
 	if (isset($values[0])) { ?>
       <a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">
-	<img src="<?php echo bloginfo('template_url'); ?>/scripts/timthumb.php?src=/<?php
+	<img src="php/timthumb.php?src=/<?php
 $values = get_post_custom_values("Image"); echo $values[0]; ?>&w=100&h=100&zc=0&q=100"
 alt="<?php the_title(); ?>" class="left" width="100px" height="100px"  /></a>
       <?php } ?>

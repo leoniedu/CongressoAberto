@@ -154,7 +154,7 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
   } else {
   }
   ## write plots to disk
-  print.png <- function(plots, fn, crop=TRUE, small=5, large=6) {
+  print.png.old <- function(plots, fn, crop=TRUE, small=5, large=6) {
     fns <- rf(fn%+%"small.pdf")
     fnl <- rf(fn%+%"large.pdf")
     pdf(file=fns, bg="white", width=small, height=small)
@@ -166,25 +166,36 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
     dev.off()
     convert.png(fnl, crop=crop)
   }
+  print.png <- function(plots, fn, crop=TRUE, small=5, large=6) {
+      ## crop does nothing
+      fns <- webdir(fn%+%"small.png")
+      fnl <- webdir(fn%+%"large.png")
+      png(file=fns, bg="white", width=small*100, height=small*100, pointsize=18)
+      print(plots[["small"]])
+      dev.off()
+      png(file=fnl, bg="white", width=large*100, height=large*100, pointsize=18)
+      print(plots[["large"]])
+      dev.off()
+  }
   if (saveplot) {
-    barplots <- barplot.rc(rcnow, govpos(rcgov), threshold=threshold[2])  
-    mosaicplots <- mosaic.rc(rcnow, pmedians)
-    print.png(barplots, paste("images/rollcalls/bar",rcid, sep=''), crop=FALSE, small=2.5)
-    print.png(mosaicplots, paste("images/rollcalls/mosaic",rcid, sep=''))
-    ## maps
+      barplots <- barplot.rc(rcnow, govpos(rcgov), threshold=threshold[2])  
+      mosaicplots <- mosaic.rc(rcnow, pmedians)
+      print.png(barplots, paste("images/rollcalls/bar",rcid, sep=''), crop=FALSE, small=2.5)
+      print.png(mosaicplots, paste("images/rollcalls/mosaic",rcid, sep=''), large=4)
+      ## maps
     ## small
     ## large
     fn <- paste("images/rollcalls/map",rcid, sep='')
-    fns <- rf(fn%+%"small.pdf")
-    fnl <- rf(fn%+%"large.pdf")
-    pdf(file=fns, width=4, height=4, bg="white")
+    fns <- webdir(fn%+%"small.png")
+    fnl <- webdir(fn%+%"large.png")
+    png(file=fns, width=400, height=400, bg="white")
     map.rc(rcnow, large=FALSE, percent=TRUE)
     dev.off()
-    pdf(file=fnl,  width=6, height=6, bg="white")
+    png(file=fnl,  width=600, height=600, bg="white")
     map.rc(rcnow, large=TRUE, percent=TRUE)
     dev.off()
-    convert.png(fns, crop=TRUE)
-    convert.png(fnl, crop=TRUE)
+    ##convert.png(fns, crop=TRUE)
+    ##convert.png(fnl, crop=TRUE)
   }
   if (post) {
     postid <- wpAddByName(conwp,post_title=title,post_type="post",post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=post_excerpt,post_category=post_category,
@@ -250,33 +261,26 @@ if (!exists("dopar", 1)) {
 rcsnow <- rcsnow
 nrc <- length(rcsnow)
 if (nrc>0) {
-  rcsnow[1:min(20,nrc)]
-  if (dopar) {
-    library(doMC)
-    registerDoMC(2)
-    fx <- function(x) {
-      try(connect.db())
-      try(connect.wp())
-      dbListTables(connect)
-      print(x)
-      try(postroll(x, saveplot=TRUE, post=TRUE), silent=FALSE)
+    ##rcsnow <- rcsnow[1:min(6,nrc)]
+    print(rcsnow)
+    if (dopar) {
+        library(doMC)
+        registerDoMC(2)
+        fx <- function(x) {
+            try(connect.db())
+            try(connect.wp())
+            dbListTables(connect)
+            print(x)
+            try(postroll(x, saveplot=TRUE, post=TRUE), silent=FALSE)
+        }
+      system.time(foreach(x=rcsnow) %dopar% fx(x))
+    } else {
+        res <- t(sapply(rcsnow, function(x) {
+            print(x)
+            try(postroll(x, saveplot=TRUE, post=TRUE), silent=FALSE)
+        }))
     }
-    system.time(foreach(x=rcsnow[7:10]) %dopar% fx(x))
-  } else {
-    res <- t(sapply(rcsnow, function(x) {
-      print(x)
-    try(postroll(x, saveplot=TRUE, post=TRUE), silent=FALSE)
-    }))
-  }
 }
-  
-
-
-
-
-
-
-
 
 
 

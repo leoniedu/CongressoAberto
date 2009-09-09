@@ -24,23 +24,34 @@ usource <- function(...) source(...,encoding="utf8")
 
 options(stringsAsFactors=FALSE)
 
+## save the files directly to web path on server
+webdir <- function(x=NULL) {
+    paste("/var/www/",x,sep='')
+}
+
+
+## sync local repository images with server images
+imagesync <- function() {
+    system("rsync --progress --stats --recursive --chmod=774  ~/reps/CongressoAberto/images  /var/www/.")
+}
+
 run <- FALSE
 if (run) {
   ## paths (put on the beg of R scripts)
-  rf <- function(x=NULL) {
-    if (.Platform$OS.type!="unix") {
-      run.from <- "C:/reps/CongressoAberto"
-    } else {
-      run.from <- "~/reps/CongressoAberto"
-    }
-    ## side effect: load functions
-    source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+    rf <- function(x=NULL) {
+        if (.Platform$OS.type!="unix") {
+            run.from <- "C:/reps/CongressoAberto"
+        } else {
+            run.from <- "~/reps/CongressoAberto"
+        }
+        ## side effect: load functions
+        source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
     if (is.null(x)) {
-      run.from
+        run.from
     } else {
-      paste(run.from,"/",x,sep='')
+        paste(run.from,"/",x,sep='')
     }
-  }
+    }
 }
 
 
@@ -249,17 +260,20 @@ dbWriteTableU <- function(conn,name,value,convert=FALSE,...) {
 
 ## check to see if charset conversion is needed
 dbConvert <- function(connect) {
-  a <- data.frame(word="MaçãMAÇÓES")
-  tmp <- tmptable()
-  dbGetQuery(connect, paste("drop table if exists ", tmp))
-  dbWriteTable(connect, tmp, a)
-  if ((dbReadTable(connect, tmp)==a)[1]) {
-    res <- FALSE
-  } else {
-    res <- TRUE
-  }
-  dbGetQuery(connect, paste("drop table if exists ", tmp))
-  res
+    return(FALSE)
+    if (FALSE) {
+        a <- data.frame(word="MaçãMAÇÓES")
+        tmp <- tmptable()
+        dbGetQuery(connect, paste("drop table if exists ", tmp))
+        dbWriteTable(connect, tmp, a)
+        if ((dbReadTable(connect, tmp)==a)[1]) {
+            res <- FALSE
+        } else {
+        res <- TRUE
+    }
+        dbGetQuery(connect, paste("drop table if exists ", tmp))
+        res
+    }
 }
 
 dbReadTableU <- function(conn,name,...,
@@ -461,37 +475,41 @@ connect.mysql <- function(connection,group) {
   new <- TRUE
   library(RMySQL)  
   if (exists(connection)) {
-    testconnect <- class(try(dbListTables(get(connection)),silent=TRUE))
-    if ("try-error"%in%testconnect) {
-      try(dbDisconnect(get(connection)))
-    } else {
-      new <- FALSE
-    }
+      testconnect <- class(try(dbListTables(get(connection)),silent=TRUE))
+      if ("try-error"%in%testconnect) {
+          try(dbDisconnect(get(connection)))
+      } else {
+          new <- FALSE
+      }
   }
   if (new) {
-    driver <-dbDriver("MySQL")
-    assign(connection,dbConnect(driver,
-                                group=group,
+      driver <-dbDriver("MySQL")
+      assign(connection,dbConnect(driver,
+                                  group=group,
                                 default.file=defaultfile)
-           ,envir = .GlobalEnv)
+             ,envir = .GlobalEnv)
   }
 }
 
 ## connect to wordpress db
 connect.wp <- function() {
-  connect.mysql(connection="conwp",group="congressoabertobeta")
-  table.names <-   dbListTables(conwp)
-  pattern <- "^wp_(.*)_posts$"
-  ## the name in the wordpress databases include a random string. So we redefine
-  ## the tname function to match the current wordpress installation
-  uid <- gsub(pattern,"\\1",table.names[grep(pattern,table.names)])
-  tname <<- function(name) paste("wp_",uid,"_",name,sep='') 
+    connect.mysql(connection="conwp",group="congressoaberto_br")
+    table.names <-   dbListTables(conwp)
+    pattern <- "^wp_(.*)_posts$"
+    ## the name in the wordpress databases include a random string. So we redefine
+    ## the tname function to match the current wordpress installation
+    uid <- gsub(pattern,"\\1",table.names[grep(pattern,table.names)])
+    tname <<- function(name) {
+        tstring <- paste("wp_",uid,"_",name,sep='')
+        tstring <- gsub("_+", "_", tstring)
+        tstring
+    }
 }
 
 
 ## connect to "data" db
 connect.db <- function() {
-  connect.mysql(connection="connect",group="congressoaberto")
+    connect.mysql(connection="connect",group="data_br")
 }
 
 ## reshape votos
@@ -1301,4 +1319,35 @@ state.a2L <- function(object) {
                        'se' ='Sergipe';
                        'sp' ='São Paulo';
                        'to' ='Tocantins'")
+}
+
+
+
+## improved list of objects
+## from http://stackoverflow.com/questions/1358003/tricks-to-manage-the-available-memory-in-an-r-session
+
+.ls.objects <- function (pos = 1, pattern, order.by,
+                        decreasing=FALSE, head=FALSE, n=5) {
+    napply <- function(names, fn) sapply(names, function(x)
+                                         fn(get(x, pos = pos)))
+    names <- ls(pos = pos, pattern = pattern)
+    obj.class <- napply(names, function(x) as.character(class(x))[1])
+    obj.mode <- napply(names, mode)
+    obj.type <- ifelse(is.na(obj.class), obj.mode, obj.class)
+    obj.size <- napply(names, object.size)
+    obj.dim <- t(napply(names, function(x)
+                        as.numeric(dim(x))[1:2]))
+    vec <- is.na(obj.dim)[, 1] & (obj.type != "function")
+    obj.dim[vec, 1] <- napply(names, length)[vec]
+    out <- data.frame(obj.type, obj.size, obj.dim)
+    names(out) <- c("Type", "Size", "Rows", "Columns")
+    if (!missing(order.by))
+        out <- out[order(out[[order.by]], decreasing=decreasing), ]
+    if (head)
+        out <- head(out, n)
+    out
+}
+# shorthand
+lsos <- function(..., n=10) {
+    .ls.objects(..., order.by="Size", decreasing=TRUE, head=TRUE, n=n)
 }

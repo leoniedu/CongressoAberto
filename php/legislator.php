@@ -1,15 +1,16 @@
 <script language="php">
-$host  = "mysql.cluelessresearch.com";
-$con = mysql_connect($host,"monte","e123456");
-$database = 'congressoaberto';
-mysql_select_db($database, $con);
+include_once("server.php");
+//$host  = "mysql.cluelessresearch.com";
+//$con = mysql_connect($host,"monte","e123456");
+//$database = 'congressoaberto';
+//mysql_select_db($database, $con);
 
 $table = 'br_bio';
 ##$bioid = 96734;
 ##$bioid = $_GET["bioid"];
 
 // sending query
-$result = mysql_query("SELECT Convert(Convert((namelegis) using binary) using latin1) FROM br_bio where bioid={$bioid} limit 1");
+$result = mysql_query("SELECT namelegis FROM br_bio where bioid={$bioid} limit 1");
 if (!$result) {
   die("Query to show fields from table failed");
  }
@@ -118,7 +119,7 @@ print("<a href=\"/php/query.php?form=contrib&bioid=$bioid&tqx=reqId:0;out:csv;cs
 <h3> Mapa eleitoral - 2006 </h3>
 <script language="php"> 
 print("<p><a href=\"/php/olmap.php?candno=$candno&state=$state\"> Explore o mapa eleitoral interativo do deputado. (google maps)</a></p>");
-print("<img src=\"/images/elections/2006/deputadofederal$state$candno.png\"  alt=\"Electoral Map\"");
+//print("<img src=\"/images/elections/2006/deputadofederal$state$candno.png\"  alt=\"Electoral Map\"");
 
 </script>
 

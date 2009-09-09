@@ -86,24 +86,25 @@ file.table <- cbind(votes,gsub("^LV","HE",votes))
 connect.db()
 votes.old <- dbGetQuery(connect,"select count(*) from br_votacoes")[[1]][1]
 if (length(votes)>0) {
-  for(LVfile in votes[1:nvotes]) {  #for each new vote, create two new files
-    print(paste("uploading file ",LVfile))
-    ##Read data from VOTE LIST file for the vote
-    readOne(LVfile,post=TRUE)
-    ##dedup.db('br_votos')
-  }
-  votes.new <- dbGetQuery(connect,"select count(*) from br_votacoes")[[1]][1]
-  nvotes <- votes.new-votes.old
-  ## FIX: perhaps better to do a diff on the database itself?
-  ##print(user)
-  ##print(password)
-  if (nvotes>0) {
-    ## load twitter user passwd
-    load(rf("R/up.RData"))
-    tw <- paste(nvotes,"new rollcalls uploaded!")
-    ns <- tweet(tw, userpwd=usrpwd, wait=0)
-  }
-  print(paste(nvotes, "effectively updated"))
+    for(LVfile in votes[1:nvotes]) {  #for each new vote, create two new files
+        print(paste("uploading file ",LVfile))
+        ##Read data from VOTE LIST file for the vote
+        readOne(LVfile,post=TRUE)
+        ##dedup.db('br_votos')
+    }
+    votes.new <- dbGetQuery(connect,"select count(*) from br_votacoes")[[1]][1]
+    nvotes <- votes.new-votes.old
+    ## FIX: perhaps better to do a diff on the database itself?
+    ##print(user)
+    ##print(password)
+    if (nvotes>0) {
+        ## load twitter user passwd
+        source(rf("R/twitter.R"))
+        load(rf("R/up.RData"))
+        tw <- paste(nvotes,"new rollcalls uploaded!")
+        ns <- tweet(tw, userpwd=usrpwd, wait=0)
+    }
+    print(paste(nvotes, "effectively updated"))
 }
 
 ##print(ns)

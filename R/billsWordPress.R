@@ -37,10 +37,10 @@ propid <- wpAddByTitle(conwp,post_title="Proposições",post_name="proposicoes",
 bills <- dbGetQueryU(connect, "select * from br_bills")
 billsin <- dbReadTable(connect, "br_billidpostid")
 
-billsnow <- bills$billid[!bills$billid%in%billsin$billid]
-
+##billsnow <- bills$billid[!bills$billid%in%billsin$billid]
 ##billsnow <- bills$billid[sample(1:nrow(bills),2)]
-##billsnow <- bills$billid[1:nrow(bills)]
+billsnow <- bills$billid[1:nrow(bills)]
 
-t(sapply(billsnow,postbill, propid=propid))
-
+for (i in billsnow) {
+    postbill(i, propid=propid)
+}

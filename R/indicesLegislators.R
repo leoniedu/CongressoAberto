@@ -1,3 +1,10 @@
+### DEPRECATED: use abstentionsWordpress.R
+
+
+
+
+
+
 ## Model the most absent legislators
 ## Basic idea: random effects model with legislator+roll call+party random effects.
 ## to be Updated monthly?
@@ -60,52 +67,6 @@ res$Partido <- recode.party(res$party)
 fsum <- function(x) c(prop=sum(x)/length(x), total=length(x), count=sum(x))
 
 presente <- recast(res,bioid+party~variable,measure.var="presente",id.var=c("bioid", "party"),fun.aggregate=fsum)
-
-ausente <- recast(res,bioid~variable,measure.var="ausente",id.var=c("bioid"),fun.aggregate=fsum)
-
-## the top 10 in absenteism
-infodeps <- dbGetQueryU(connect,"select a.*, b.* from br_deputados_current as a, br_bio as b where a.bioid=b.bioid")
-
-##links
-links <- dbGetQuery(connect, "select * from br_bioidpostid")
-
-faltosos <- ausente[order(ausente$ausente_count, decreasing=TRUE)[1:10],]
-faltosos <- merge(faltosos,infodeps)
-faltosos <- merge(faltosos,links)
-
-
-## their pics
-faltosos.pics <- rf("images/bio/polaroid/foto"%+%faltosos$bioid%+%".png")
-## create one pic
-
-
-fn <- "images/abstentions/top"%+%format(Sys.Date(),"%Y%m")%+%".png"
-
-cmd <- paste("convert ",
-             " \\( -size 300x xc:none ",faltosos.pics[1]," +append \\)",
-             " \\( ", paste(faltosos.pics[2:4], collapse=" "), " +append \\)",
-             " \\( ", paste(faltosos.pics[5:7], collapse=" "), " +append \\)",
-             " \\( ", paste(faltosos.pics[8:10], collapse=" ")," +append \\)",
-             "-background none -append -resize 200x  -quality 95 -depth 8  ", rf(fn), collapse=" ")
-
-system(cmd)
-
-##FIX: change final comma to "e" 
-excerpt <- paste(capwords(paste(trimm(faltosos$namelegis.1), collapse=", ")), "são os dez deputados que mais faltaram às votações nominais na Câmara dos Deputados no  período de ", format(init.date,"%d-%m-%Y"), "a", format(final.date,"%d-%m-%Y"))
-
-wpAddByTitle(conwp,post_title="Os 10 mais faltosos", post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,
-             ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
-             post_type="post",
-             custom_fields=data.frame(meta_key="Image",meta_value=fn))
-
-
-       
-
-       
-# convert \( foto123000.jpg foto123001.jpg +append \) \
-#           \( foto123002.jpg foto123003.jpg +append \) \
-#           -background none -append   append_array.jpg
-
 
 ## recode parties - n largest are kept, others recoded as "outro";
 presente$Partido <- recode.party(presente$party,n=8,label.other="Outros Partidos")

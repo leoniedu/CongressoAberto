@@ -14,7 +14,13 @@
 		<array>
 			<dict>
 				<key>DocumentURL</key>
-				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/themes/arthemia/index.php</string>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/themes/arthemia/footer.php</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/themes/arthemia/style.css</string>
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
@@ -26,7 +32,19 @@
 			</dict>
 			<dict>
 				<key>DocumentURL</key>
-				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/themes/arthemia/style.css</string>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/themes/arthemia/index.php</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-login.php</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/themes/arthemia/archive.php</string>
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>

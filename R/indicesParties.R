@@ -39,10 +39,10 @@ rf <- function(x=NULL) {
 
 
 f <- function(pnow=c("PFL","DEM")) {
-  res <- lapply(pnow,function(n) {
-    (names(which.max(table(subset(rc,partyR==n & rc%in%c("Sim","Não"),biopartyR)))))
+    res <- lapply(pnow,function(n) {
+        (names(which.max(table(subset(rc,partyR==n & rc%in%c("Sim","NÃ£o"),biopartyR)))))
 })
-  unlist(res)[1]
+    unlist(res)[1]
 }
 
 recode.party1 <- function(x) {
@@ -66,23 +66,26 @@ rc <- dbGetQuery(connect,
 
 
 
-rc$quorum <- with(rc, ave(!(rc%in%c("Ausente","Obstrução")),rcvoteid,FUN=sum))
+rc$quorum <- with(rc, ave(!(rc%in%c("Ausente","ObstruÃ§Ã£o")),rcvoteid,FUN=sum))
 #rc <- subset(rc,quorum>256)   #Turned off subseting
 rc$secret <- with(rc, ave(!(rc%in%c("Presente","Ausente")),rcfile,FUN=sum))==0  #TRUE IS SECRET VOTE
 rc <- subset(rc,secret==FALSE)   #Droping secret votes
 rc$partyR <- recode.party1(rc$party)
 rc$biopartyR <- with(rc,paste(bioid,partyR,sep=";"))
-rc$rcr <- car::recode(rc$rc,"'Sim'=1;'Ausente'=9;else=0")  #orgiinal coding is Abtenção, Não, Sim, Obstrução, and for secret votes Presente, Ausente.
-                                        #Here we're lumping Absteção, Não, Obstrucao and Presente together
+rc$rcr <- car::recode(rc$rc,"'Sim'=1;'Ausente'=9;else=0")  #orgiinal coding is AbtenÃ§Ã£o, NÃ£o, Sim, ObstruÃ§Ã£o, and for secret votes Presente, Ausente.
+                                        #Here we're lumping AbsteÃ§Ã£o, NÃ£o, Obstrucao and Presente together
 
 rc.leaders <- dbGetQuery(connect,
                          paste("select t1.*, t2.legis  from br_leaders as t1, br_votacoes as t2 where  t1.rcvoteid=t2.rcvoteid AND t2.legis=",j)
                          )
 rc.leaders$partyR <- recode.party1(rc.leaders$party)
-rc.leaders$rcr <- car::recode(rc.leaders$rc,"'Sim'=1;'Ausente'=9;else=0")  #orgiinal coding is Abtenção, Não, Sim, Obstrução, and for secret votes Presente, Ausente.
-                                        #Here we're lumping Absteção, Não, Obstrucao and Presente together                       
+rc.leaders$rcr <- car::recode(rc.leaders$rc,"'Sim'=1;'Ausente'=9;else=0")  #orgiinal coding is AbtenÃ§Ã£o, NÃ£o, Sim, ObstruÃ§Ã£o, and for secret votes Presente, Ausente.
+                                        #Here we're lumping AbsteÃ§Ã£o, NÃ£o, Obstrucao and Presente together                       
 
 rcnew <- merge(rc,rc.leaders,by=c("rcvoteid","partyR","legis"),suffixes=c("",".ldr"),all.x=TRUE) #this excludes gov votes, but keeps parties without leaders
+rm(rc)
+gc()
+
 rc.gov <- subset(rc.leaders,party=="GOV")[,c("rcvoteid","rc","rcr")] #sepparate out the gov votes from leaders, to add as variables in rcparty
 rcnew <- merge(rcnew,rc.gov,by="rcvoteid",suffixes=c("",".gov"),all.x=TRUE)
 rcnew$withldr <- as.numeric(with(rcnew,rcr.ldr==rcr))
@@ -114,8 +117,12 @@ rcparty$rice <- (abs(rcparty$yea-rcparty$nay))/(rcparty$yea+rcparty$nay)
                               div <- ifelse(abs(sum(yea)-sum(nay))/ (sum(yea)+sum(nay))>0.8,FALSE,TRUE)  
                               return(div)}                 
 divisive.vote <- ddply(rcnew, .(rcvoteid), "divisive")
+rm(rcnew)
+gc()
+
+
 rcparty <- merge(rcparty,divisive.vote,by=c("rcvoteid"),all.x=TRUE)
-rcparty$govdeclared <- car::recode(rcparty$rc.gov,"c('Sim','Não','Obstrução')=TRUE;else=FALSE")
+rcparty$govdeclared <- car::recode(rcparty$rc.gov,"c('Sim','NÃ£o','ObstruÃ§Ã£o')=TRUE;else=FALSE")
 
 #Compute party summary statistics over the entire period
 current.size <-  rcparty[which(rcparty$rcvoteid==max(rcparty$rcvoteid)),c("partyR","nrow")] #
