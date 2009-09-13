@@ -37,28 +37,15 @@ $ranksharegovdiv = $row[5];
 $result = mysql_query("select count(*) as row_ct from br_partyindices");
 $row = mysql_fetch_row($result);
 $nparties = $row[0];
+</script>
 
 
 
-echo '<table border="0">';
-echo '<tr>';
-print("<td><img src=\"/images/partylogos/".$partyacronym.".jpg\"  width=100/></td>");
-print("<td><h3>$nameparty</h3></p>
-            Tamanho da Bancada: $sizeparty legisladores ($ranksizeparty&ordm)<br>
-            Taxa de Absenteismo  $shareabsent% ($rankshareabsent&ordm dentre os $nparties maiores partidos)<br>
-            Taxa de Governismo: $sharegovdiv% em votações contenciosas ($ranksharegovdiv&ordm dentre os $nparties maiores partidos) <br>
-            Índice de Coesão:  $cohesion ($rankcohesion&ordm dentre os $nparties maiores partidos)
-</td></tr></table>");
-
-
-echo '<table border="0">';
-echo '<tr>';
-print("<br><h3>Comportamento Típico do $partyacronym</h3></tr>");
-print("<tr><img src=\"/images/typical/".$partyacronym."typical.png\" width=800/></tr></table>");
-
-echo '<table border="0">';
-echo '<tr>';
-print("<br><h3>Taxa de Governismo do $partyacronym</h3></tr>");
-print("<tr><img src=\"/images/governism/".$partyacronym."governism.png\" width=800/></tr></table>");
-
+<script language="php"> 
+print("<img src=\"/images/partylogos/".$partyacronym.".jpg\"  width=100/>");
+print("<h3>$nameparty </h3>");
+print("Tamanho da Bancada: $sizeparty/513 ($ranksizeparty dentre os $nparties maiores partidos)<br>
+            Taxa de Absenteismo  $shareabsent% ($rankshareabsent dentre os $nparties maiores partidos)<br>
+            Taxa de Governismo: $sharegovdiv% em votações contenciosas ($ranksharegovdiv dentre os $nparties maiores partidos) <br>
+            Índice de Coesão:  $cohesion ($rankcohesion dentro os $nparties maiores partidos)");
 </script>

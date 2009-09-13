@@ -1,10 +1,12 @@
 <?php
 
   //The response should be utf8 encoded
-header('Content-Type: text/html; charset=utf-8');
+    header('Content-Type: text/html; charset=utf-8');
 
 //Include the extended API
 include_once("gvServerAPIEx.php");
+
+include_once("server.php");
 
 //------------------------------------------
 
@@ -18,36 +20,146 @@ include_once("gvServerAPIEx.php");
 $tqx = $_GET['tqx'];
 $resHandler = $_GET['responseHandler'];
 
-// Read the data from MySql
-$host  = "mysql.cluelessresearch.com";
-$con = mysql_connect($host,"monte","e123456");
-mysql_select_db("DB_Name", $con);
-// $sql = "SELECT distinct state, count(party) as count FROM congressoaberto.br_bio group by state";
-
 //mysql_query("set names utf8");
 
-if($_GET["form"]=="votes") {
-$sql = "select CAST(b.rcdate AS DATE) as Data, convert(cast(a.party as char) using binary) as Partido, convert(Convert(a.rc using binary) using latin1)  as Voto, b.bill as Proposicao, b.billdescription as Votacao  from congressoaberto.br_votos as a, congressoaberto.br_votacoes as b  where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND a.legis=53 order by Data DESC" ;  
+if($_GET["form"]=="bill_list") {
+  $sql = "   
+  select e.postid,  concat(d.billtype, ' N&#170 ', d.billno, '/ ', d.billyear) as proposicao, d.billauthor as Autoria, d.status,   count(*) as 'votacoes nominais'  from br_votacoes as c, 
+  (select a.billtype, a.billyear, a.billno, a.billauthor, a.status, b.billid 
+        from    br_bills as a, 
+                br_billid as b 
+        where  a.billno=b.billno and a.billtype=b.billtype and a.billyear=b.billyear) 
+    as d, 
+    br_billidpostid as e
+  where d.billid=e.billid and d.billno=c.billno and d.billyear=c.billyear and d.billtype=c.billtype group by d.billno, d.billtype, d.billyear order by d.billyear desc, d.billtype, d.billno" ;  
+ #$sql = "select billyear from br_bills  where billid=440177";
  }
+
+
+if($_GET["form"]=="listrcs") {
+  ## called from bill.php
+  ## given a bill, return all related roll calls
+  $billid=$_GET["billid"];  
+  $sql = "select   
+b.rcvoteid as 'Resultado',   
+b.rcvoteid as 'Por partido', 
+b.rcvoteid as 'Por estado', 
+CAST(b.rcdate AS DATE) as Data,   
+c.postid as Votacao, 
+b.billdescription as Votacao, 
+b.rcvoteid  from (select * from br_bills as d where d.billid=".$billid.") as a,  
+br_votacoes as b, 
+br_rcvoteidpostid as c  
+where a.billyear=b.billyear and a.billno=b.billno and a.billtype=b.billtype  
+and b.rcvoteid=c.rcvoteid
+order by Data, a.billtype DESC" ;  
+ #$sql = "select billyear from br_bills  where billid=440177";
+ }
+
+if($_GET["form"]=="tramit") {
+  ## called from bill.php
+  ## given a bill, return tramitacao
+  $sql = "select date as Data, event as Evento
+  from br_tramit
+  where  billid=".$_GET["billid"]."
+  order by Data DESC
+  ";
+ }
+
+if($_GET["form"]=="allbills") {
+  ##  return all bills
+  $sql = "select *  from  br_bills order by billyear desc" ;  
+  ##$sql = "select billyear from br_bills  where billid=37642";
+ }
+
+
+if($_GET["form"]=="votes") {
+ ## given a bioid, return roll call votes
+$sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, a.rc  as Voto, c.postid, b.billproc as `Votacao`    from 
+    br_votos as a, 
+    br_votacoes as b,
+    br_rcvoteidpostid as c  
+    where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND b.rcvoteid=c.rcvoteid AND a.legis=53 order by Data DESC" ; 
+    #$sql = "select * from br_votos limit 1";
+    #echo $sql;
+ }
+
+if($_GET["form"]=="rcvotes") {
+$sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, a.namelegis as nome, a.state as Estado, a.rc as Voto, b.bill as Proposicao, b.billdescription as Votacao, b.rcvoteid as ID  
+    from 
+        br_votos as a, 
+        br_votacoes as b  
+    where 
+        a.rcvoteid=b.rcvoteid AND 
+        a.rcvoteid=".$_GET["rcvoteid"]." order by Partido DESC" ;  
+ }
+
 
 
 if($_GET["form"]=="contrib") 
 {
-  $sql = "select Convert(Convert((a.donor) using binary) using latin1) as Doador, a.donortype as 'Tipo de doador', a.cpfcnpj as 'CPF/CNPJ do doador', a.contribsum as 'Valor da doacao' from congressoaberto.br_contrib as a, congressoaberto.br_bioidtse as b where b.bioid=".$_GET["bioid"]." AND a.candno=b.candidate_code AND a.state=b.state AND a.year=b.year order by a.contribsum DESC";
+  ## given a bioid, returns the contributors    
+  $sql = "select a.donor as Doador, a.donortype as 'Tipo de doador', a.cpfcnpj as 'CPF/CNPJ do doador', a.contribsum as 'Valor da doacao' from br_contrib as a, br_bioidtse as b where b.bioid=".$_GET["bioid"]." AND a.candno=b.candidate_code AND a.state=b.state AND a.year=b.year order by a.contribsum DESC";
 }
 
-if($_GET["limit"]!="all") 
+
+if($_GET["form"]=="legislist") 
+{
+  $sql = "SELECT b.namelegis as Nome
+                    , d.postid
+                    , cast(a.party as binary) as Partido 
+                    , cast(upper(a.state) as binary) as Estado
+                    , round(c.ausente_prop*100) `Ausencias (%)`
+FROM
+br_deputados_current as a,
+br_bio as b,
+br_legis_stats as c,
+br_bioidpostid as d
+WHERE a.bioid=b.bioid and a.bioid=c.bioid and a.bioid=d.bioid 
+";
+}
+
+if($_GET["form"]=="partylist") 
+{
+  $sql = "SELECT b.namelegis as Nome
+                    , d.postid
+                    , cast(a.party as binary) as Partido 
+                    , cast(upper(a.state) as binary) as Estado
+                    , round(c.ausente_prop*100) `Ausencias (%)`
+FROM
+br_deputados_current as a,
+br_bio as b,
+br_legis_stats as c,
+br_bioidpostid as d
+WHERE a.bioid=b.bioid and a.bioid=c.bioid and a.bioid=d.bioid 
+";
+}
+// , , 
+//, 
+//order by Estado, Partido DESC
+
+if($_GET["limit"]!="") 
   {
-	$sql = $sql." limit ".$_GET["limit"];
+    $sql = $sql." limit ".$_GET["limit"];
   }
 
+
+if($_GET["form"]=="test") 
+  {
+    $sql = "select * from br_votos limit 10"; 
+  }
 
 
 
 //concat(DAY(b.rcdate),'/',MONTH(b.rcdate),'/',YEAR(b.rcdate)) as year,
 //+MONTH(b.rcdate)+'/'+YEAR(b.rcdate)
 $result = mysql_query($sql);
-
+if ($_GET["mode"]=="test") {
+  echo $sql;
+  $result = mysql_query($sql);
+  $row = mysql_fetch_row($result);
+  echo $row[0];
+}
 // Initialize the gvStreamerEx object
 $gvJsonObj = new gvStreamerEx();
 
@@ -56,7 +168,7 @@ $gvJsonObj = new gvStreamerEx();
 if($gvJsonObj->init($tqx, $resHandler) == true);
 {
     //convert the entire query result into the compliant response
-    $gvJsonObj->convertMysqlRes($result, "%01.1f", "d/m/Y", "G:i:s","d/m/Y G:i:s");
+    $gvJsonObj->convertMysqlRes($result, "%01.0f", "d/m/Y", "G:i:s","d/m/Y G:i:s");
 //    $gvJsonObj->setColumnPattern(3,"#0.0########");
 }
 
