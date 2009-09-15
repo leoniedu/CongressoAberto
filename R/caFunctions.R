@@ -32,7 +32,7 @@ webdir <- function(x=NULL) {
 
 ## sync local repository images with server images
 imagesync <- function() {
-    system("rsync --progress --stats --recursive --chmod=774  ~/reps/CongressoAberto/images  /var/www/.")
+    system("rsync  --stats --recursive -u --chmod=o+r  ~/reps/CongressoAberto/images/  /var/www/images/.")
 }
 
 run <- FALSE
@@ -469,7 +469,7 @@ state.l2a <- function(object) {
 connect.mysql <- function(connection,group) {
   if (.Platform$OS.type!="unix") {
     defaultfile <- "C:/my.cnf"
-  } else {
+} else {
     defaultfile <- "~/.my.cnf"
   }
   new <- TRUE
@@ -685,7 +685,9 @@ getbill <- function(sigla="MPV",numero=447,ano=2008,overwrite=TRUE, deletefirst=
   ## -N for overwriting, -nc for not overwriting
   ##tmp <- system(paste("wget -r -l1 -t 15  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/www.camara.gov.br/sileg  2>&1",sep=''),intern=TRUE)
   ##if (deletefirst)   unlink(paste("~/reps/data/", billurl, sep=''))
-  tmp <- system(paste("wget -r -l1 -t 15 --force-html --base=url  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/  2>&1",sep=''),intern=TRUE)
+  cmd <- paste("wget -t 15 -x --accept Prop_Deta* --force-html --base=url  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/  2>&1",sep='')
+  print(cmd)  
+  tmp <- system(cmd,intern=TRUE)
   tmp <- iconv(tmp,from="latin1")
   urlloc <- grep(".*www.camara.gov.br/sileg/.*id=.*",tmp)[1]
   ##url <- Prop_Detalhe.asp?id=
@@ -705,35 +707,29 @@ getbill <- function(sigla="MPV",numero=447,ano=2008,overwrite=TRUE, deletefirst=
 remove.tags <- function(x) gsub("<[^<]*>|\t",  "",  x)
 
 read.tramit <- function(file, encoding="latin1") {
-  require(XML)
-  zz <- pipe(paste("tidy -q -raw ",file), encoding="latin1")
-  tidy <- readLines(zz)
-  closeAllConnections() 
-  html <- htmlTreeParse(tidy, asText=TRUE, useInternalNodes=TRUE, encoding="utf8")
-  ##html <- htmlTreeParse(readLines(fnow), asText=TRUE, useInternalNodes=TRUE)
-  tmp <- xpathSApply(html,"//table[1]/tr[1]",xmlValue)
-  tmp <- tmp[grep("Andamento:",tmp):length(tmp)]
-  tmp <- strsplit(tmp[-1],"\n")
-  df <- data.frame(do.call(rbind,lapply(tmp,function(x) c(x[2],trimm(paste(x[3:length(x)],collapse=" "))))))
-  names(df) <- c("date","event")
-  df$id <- 1:nrow(df)
-  df
+    require(XML)
+    zz <- pipe(paste("tidy -q -raw ",file, "2>&1"), encoding="latin1")
+    tidy <- readLines(zz)
+    closeAllConnections() 
+    html <- htmlTreeParse(tidy, asText=TRUE, error=function(...){},
+                          useInternalNodes=TRUE,
+                          encoding="utf8")
+    ##html <- htmlTreeParse(readLines(fnow), asText=TRUE, useInternalNodes=TRUE)
+    tmp <- xpathSApply(html,"//table[1]/tr[1]",xmlValue)
+    tmp <- tmp[grep("Andamento:",tmp):length(tmp)]
+    tmp <- strsplit(tmp[-1],"\n")
+    df <- data.frame(do.call(rbind,lapply(tmp,function(x) c(x[2],trimm(paste(x[3:length(x)],collapse=" "))))))
+    names(df) <- c("date","event")
+    df$id <- 1:nrow(df)
+    df$date <- as.Date(as.character(df$date), "%d/%m/%Y")
+    df
 }
 
-#FIX add to db, first checking that the results were updated.
+                                        #FIX add to db, first checking that the results were updated.
 readbill <- function(file) {  
   if (length(grep("Prop_Erro|Prop_Lista",file))>0)  return(NULL)
   tmp <- readLines(file,encoding="latin1")  
-  ## write file out for debugging
-  ##writeLines(tmp, con="~/reps/CongressoAberto/tmp/tmp.html")
-  tramit.df <- read.tramit(file)
-  ##useful for debugging
-  ##cat(tidy,file="~/Desktop/tmp.html")
-  ##system("open ~/Desktop/tmp.html")
-  ##FIX: figure out if encoding is necessary
   if(length(grep("Nenhuma proposição encontrada",tmp))>0) return(NULL)
-  ## let's get the tramitacao table
-  ## now get other info
   tmp <-  gsub("\r|&nbsp","",tmp)
   tmp <-  gsub(";+"," ",tmp)
   t0 <- tmp[grep("Proposição",tmp)[1]]
@@ -775,7 +771,7 @@ readbill <- function(file) {
   iua <- grep("Última Ação:",tmp)[1]+7
   if (!is.na(iua)) {
     t0 <- tmp[iua]
-    uadate <- trimm(gsub("<b>([^<]*).*","\\1",  tmp[iua]))
+    uadate <- as.Date(trimm(gsub("<b>([^<]*).*","\\1",  tmp[iua])), format="%d/%m/%Y")
     iua.e <- grep("</table>",tmp[-c(1:iua)])[1]+iua
     t0 <- paste(tmp[(iua+1):iua.e],  collapse=" ")
     t0 <- trimm(gsub("<[^<]*>|\t",  "",  t0))
@@ -805,7 +801,7 @@ readbill <- function(file) {
   if (("try-error"%in%class(res))) {   
     res <- NULL
   } 
-  list(info=res,tramit=tramit.df)
+  res
 }
 
 factors2strings <- function(x) data.frame(lapply(x,function(z) {
@@ -852,7 +848,7 @@ map.rc <- function(rc, filenow='',title='', large=TRUE, percent=FALSE) {
   par(bg="grey90")
   n1 <- 4
   seqx <- c(0,.15,.3,.45,.55,.70,.85,1)*pct
-  col.vec <- c(rev(brewer.pal(n1,"Blues")[-1]),"grey95",brewer.pal(n1,"Reds")[-1])
+  col.vec <- c(rev(brewer.pal(n1,"Reds")[-1]),"grey95",brewer.pal(n1,"Blues")[-1])
   ##pdf(file=paste(fname,"small.pdf",sep=""),height=6,width=6)
   ##par(mai=c(0,0,0,0))
   ##plot.heat(m2,NULL,"concpt_p",title="Proporção votando\njunto com o PT",breaks=seqx,reverse=FALSE,cex.legend=1,bw=1,col.vec=col.vec,plot.legend=FALSE)
@@ -872,72 +868,136 @@ map.rc <- function(rc, filenow='',title='', large=TRUE, percent=FALSE) {
   ##   dev.off()
 }
 
-barplot.rc <- function(rc, gov=NA, title="", threshold=NULL) {
-  ## FIX:
-  ## 1st column: ausencias and obstrucao
-  ## 2nd column: Nao
-  ## 3rd column: Sim
-  ## abstencoes: pile up on the winning vote (sim or nao)
-  rc <- subset(rc, rc!="Ausente")
-  require(RColorBrewer)
-  require(ggplot2)
-  rc$rc <- factor(rc$rc, levels=c("Não", "Obstrução", "Abstenção", "Ausente", "Sim"))
-  rc$rc2 <- factor(with(rc,car::recode(rc,"'Sim'='A Favor';else='Contra'")),levels=c("Contra","A Favor"))
-  if (is.na(gov)) {
-    colvec <- rep("transparent",2)
-  } else {
-    colvec <- c("red","darkblue")
-    if (gov=="A Favor") {
-      colvec <- rev(colvec)
+
+barplot.rc.simple <- function(rc, gov=NA, title="", threshold=NULL) {
+    require(RColorBrewer)
+    require(ggplot2)
+    rc <- subset(rc, rc%in%c("Sim", "Não"))
+    rc$rc <- factor(rc$rc)
+    if (is.na(gov)) {
+        colvec <- rep("transparent",2)
+    } else {
+        colvec <- c("grey20","transparent")
+        if (gov=="A Favor") {
+            colvec <- rev(colvec)
+        }
+        colvec <- alpha(colvec,"1")
     }
-    colvec <- alpha(colvec,"1")
-  }
-  ## Stacked barchart
-  wd <- .95
-  theme_set(theme_grey(base_size = 10))
-  p <- ggplot(rc, aes(x = rc2))+geom_bar(width = wd,aes(fill = rc))+geom_bar(data=rc,colour=colvec,width=wd,size=2,fill="transparent")+scale_y_continuous(name="",limits=c(0,513),expand=c(0,0))
-  p <- p+theme_bw()+opts(axis.title.x = theme_blank(),
-                         axis.title.y = theme_blank(),
-                         panel.grid.minor = theme_blank(),
-                         panel.grid.major=theme_blank(),
-                         panel.background=theme_rect(fill = NA, colour = NA),
-                         plot.background = theme_rect(colour = NA,fill=NA)
-                         ,plot.title = theme_text(size = 10))
-  col.rc <- rev(c(brewer.pal(3,"Set1")[1], brewer.pal(4,"Blues")[1:4]) )
-  tx <- table(rc$rc)
-  p <- p + scale_fill_manual(values=col.rc)
-  if (!is.null(threshold)) {
-    p <- p + geom_hline(data=data.frame(y=threshold), aes(yintercept=y), size=2, colour=alpha("orange", .85))
-  }
-  ##lc1 <- c("Não", "Obs", "Abs", "Aus")
-  lc1 <- c("Não", "Obstrução", "Abstenção", "Ausente")
-  rc1 <- factor(rc$rc[rc$rc!="Sim"], levels=lc1)
-  nx <- 15
-  ## do not label if less than nx votes
-  lc1[table(rc1)<nx] <- ""
-  tx <- as.vector(table(rc1))
-  fix.y <- function(x=.01) 514*x  
-  y <- cumsum(tx)
-  y <- y-tx/2
-  dfx <- data.frame(x=1, y=y+fix.y(), label=lc1)
-  ssim <- sum(rc$rc=="Sim")
-  p <- p + geom_text(data=dfx, aes(x=x, y=y, label=label))  
-  if (ssim>0) {
+    ## Stacked barchart
+    wd <- .95
+    theme_set(theme_grey(base_size = 10))
+    p <- ggplot(rc, aes(x = rc))+geom_bar(width = wd,aes(fill = rc))+geom_bar(data=rc,colour=colvec,width=wd,size=2,fill="transparent")+scale_y_continuous(name="",limits=c(0,513),expand=c(0,0))
+    p <- p+theme_bw()+opts(axis.title.x = theme_blank(),
+                           ##axis.title.y = theme_blank(),
+                           panel.grid.minor = theme_blank(),
+                           panel.grid.major=theme_blank(),
+                           panel.background=theme_rect(fill = NA, colour = NA),
+                           plot.background = theme_rect(colour = NA,fill=NA)
+                           ,plot.title = theme_text(size = 10))
+    col.rc <- alpha(rev(c(brewer.pal(3,"Blues")[3], brewer.pal(3,"Reds")[3]) ), .7)
+    tx <- table(rc$rc)
+    p <- p + scale_fill_manual(values=col.rc)
+    if (!is.null(threshold)) {
+        p <- p + geom_hline(data=data.frame(y=threshold), aes(yintercept=y), size=1.75, colour=alpha("orange", .85))
+    }
+    ##lc1 <- c("Não", "Obs", "Abs", "Aus")
+    lc1 <- c("Não", "Obstrução", "Abstenção", "Ausente")
+    rc1 <- factor(rc$rc[rc$rc!="Sim"], levels=lc1)
+    nx <- 15
+    ## do not label if less than nx votes
+    lc1[table(rc1)<nx] <- ""
+    tx <- as.vector(table(rc1))
+    fix.y <- function(x=.01) 514*x  
+    y <- cumsum(tx)
+    y <- y-tx/2
+    dfx <- data.frame(x=1, y=y+fix.y(), label=lc1, label.large=paste(lc1,": ",tx, sep=''))
+    dfx$label.large <- ifelse(tx>0, dfx$label.large, "")
+    ssim <- sum(rc$rc=="Sim")
+    plarge <- p + opts(legend.position="none"
+                       ##,axis.ticks = theme_blank()
+                       )
+    psmall <- p+theme_mini() + opts(legend.position="none")
+    plarge <- plarge+opts(title=title, axis.text.x=theme_blank())
+    psmall <- psmall + geom_text(data=dfx, aes(x=x, y=y, label=label.large))
+    plarge <- plarge + geom_text(data=dfx, aes(x=x, y=y, label=label.large))
+    if (ssim>0) {
+        sy <- sum(rc$rc=="Sim")
+        dfy <- data.frame(x=2, y=sy/2 + fix.y(),
+                          label="Sim",
+                          label.large=paste("Sim:",sy))
+        dfy$label.large <- ifelse(sy>0, dfy$label.large, "")
+        psmall <- psmall + geom_text(data=dfy, aes(x=x, y=y, label=label.large))
+        plarge <- plarge + geom_text(data=dfy, aes(x=x, y=y, label=label.large))
+    }
+    list(large=plarge, small=psmall)
+}
+
+barplot.rc <- function(rc, gov=NA, title="", threshold=NULL) {
+    ## FIX:
+    ## 1st column: ausencias and obstrucao
+    ## 2nd column: Nao
+    ## 3rd column: Sim
+    ## abstencoes: pile up on the winning vote (sim or nao)
+    ##rc <- subset(rc, !rc%in%c("Ausente"))
+    require(RColorBrewer)
+    require(ggplot2)
+    rc$rc <- factor(rc$rc, levels=c("Não", "Obstrução", "Abstenção", "Ausente", "Sim"))
+    rc$rc2 <- factor(with(rc,car::recode(rc,"'Sim'='A Favor';else='Contra'")),levels=c("Contra","A Favor"))
+    if (is.na(gov)) {
+        colvec <- rep("transparent",2)
+    } else {
+        colvec <- c("red","darkblue")
+        if (gov=="A Favor") {
+            colvec <- rev(colvec)
+        }
+        colvec <- alpha(colvec,"1")
+    }
+    ## Stacked barchart
+    wd <- .95
+    theme_set(theme_grey(base_size = 10))
+    p <- ggplot(rc, aes(x = rc2))+geom_bar(width = wd,aes(fill = rc))+geom_bar(data=rc,colour=colvec,width=wd,size=2,fill="transparent")+scale_y_continuous(name="",limits=c(0,513),expand=c(0,0))
+    p <- p+theme_bw()+opts(axis.title.x = theme_blank(),
+                           axis.title.y = theme_blank(),
+                           panel.grid.minor = theme_blank(),
+                           panel.grid.major=theme_blank(),
+                           panel.background=theme_rect(fill = NA, colour = NA),
+                           plot.background = theme_rect(colour = NA,fill=NA)
+                           ,plot.title = theme_text(size = 10))
+    col.rc <- alpha(rev(c(brewer.pal(3,"Blues")[3], brewer.pal(4,"Reds")[1:4]) ), .5)
+    tx <- table(rc$rc)
+    p <- p + scale_fill_manual(values=col.rc)
+    if (!is.null(threshold)) {
+        p <- p + geom_hline(data=data.frame(y=threshold), aes(yintercept=y), size=2, colour=alpha("orange", .85))
+    }
+    ##lc1 <- c("Não", "Obs", "Abs", "Aus")
+    lc1 <- c("Não", "Obstrução", "Abstenção", "Ausente")
+    rc1 <- factor(rc$rc[rc$rc!="Sim"], levels=lc1)
+    nx <- 15
+    ## do not label if less than nx votes
+    lc1[table(rc1)<nx] <- ""
+    tx <- as.vector(table(rc1))
+    fix.y <- function(x=.01) 514*x  
+    y <- cumsum(tx)
+    y <- y-tx/2
+    dfx <- data.frame(x=1, y=y+fix.y(), label=lc1)
+    ssim <- sum(rc$rc=="Sim")
+    p <- p + geom_text(data=dfx, aes(x=x, y=y, label=label))  
+    if (ssim>0) {
     dfy <- data.frame(x=2, y=sum(rc$rc=="Sim")/2 + fix.y(), label="Sim")
     p <- p + geom_text(data=dfy, aes(x=x, y=y, label=label))
-  }
-  plarge <- p + opts(legend.position="none"
-                     ##,axis.text.y = theme_blank()
-                     ##,axis.text.x = theme_blank()
-                     ,axis.ticks = theme_blank()
-                     ##,panel.border = theme_blank()
-                     )
-##   psmall <- p+opts(legend.position="none",
-##                    axis.text.y = theme_blank(),
-##                    axis.text.x = theme_blank()
-##                    ,axis.ticks = theme_blank()
-##                    ,panel.border = theme_blank()
-##                    )
+}
+    plarge <- p + opts(legend.position="none"
+                       ##,axis.text.y = theme_blank()
+                       ##,axis.text.x = theme_blank()
+                       ,axis.ticks = theme_blank()
+                       ##,panel.border = theme_blank()
+                       )
+    ##   psmall <- p+opts(legend.position="none",
+    ##                    axis.text.y = theme_blank(),
+    ##                    axis.text.x = theme_blank()
+    ##                    ,axis.ticks = theme_blank()
+    ##                    ,panel.border = theme_blank()
+    ##                    )
   psmall <- p+theme_mini() + opts(legend.position="none")
   plarge <- plarge+opts(title=title)
   list(large=plarge, small=psmall)
@@ -1090,7 +1150,11 @@ getLeaders <- function(x) {    #x is a string with the name of the vote.file (.t
   ## we try downloading the file first because
   ## readLines directly chokes when the page is missing an end of file code
   down <- try(download.file(the.url,tfile))
-  raw.data <-try(readLines(tfile,500,encoding="latin1"),silent=TRUE)
+  raw.data <-try(readLines(tfile,500),silent=TRUE)
+  if(any(grepl("Ã£o",raw.data))) {
+      ## fix encoding
+      raw.data <-try(readLines(tfile,500,encoding="latin1"),silent=TRUE)
+  }
   if(class(raw.data)=="try-error") {
     print(the.url)
     cat("Connection problems",vote.name,"Will try again soon\n")
@@ -1098,17 +1162,19 @@ getLeaders <- function(x) {    #x is a string with the name of the vote.file (.t
     cat("\t Attempting to connect...\n")
     flush.console()
     down <- try(download.file(the.url,tfile))
-    raw.data <-try(readLines(tfile,500,encoding="latin1"),silent=TRUE)
+    raw.data <-try(readLines(tfile,500),silent=TRUE)
     if(class(raw.data)=="try-error") {
-      cat("\t No data for",vote.name,"\n")
-      return(NULL)
+        warning("\t No data for",vote.name,"\n")
+        return(NULL)
     }
-  }
-  orientation.line <- grep("Orientação",raw.data)                 #Check for encoding problems here
+}
+  orientation.line <- grep("Orientação",raw.data)
+  ##Check for encoding problems here  
   if(length(orientation.line)==0){
-    cat("No data for",vote.name,"\n")
-    flush.console()
-    return(NULL)
+      browser()
+      cat("No data for",vote.name,"\n")
+      flush.console()
+      return(NULL)
   } #No leadership votes
   raw.orientation <- raw.data[grep("Orientação",raw.data):(grep("Parlamentar",raw.data)-10)]
   raw.leadership <- raw.orientation[grep(":",raw.orientation)]#make sure all parties are caps, for later matches
@@ -1263,9 +1329,9 @@ mosaic.rc <- function(rc, pmedians) {
          panel.grid.minor=theme_line(colour=NA))+
            coord_equal(ratio=1/508)+
              scale_fill_manual(values=rev(c(
-                                 brewer.pal(3,"Set1")[1],
+                               alpha(brewer.pal(3,"Blues")[3],.8),
                                  ##"grey20",
-                                 rev(brewer.pal(4,"Blues")[1:4]))
+                               alpha(rev(brewer.pal(4,"Reds")[1:4]), .8))
                                  ##gray(c(.4,.6,.7,.9)))
                                  ))
   ## party labels
@@ -1278,12 +1344,12 @@ mosaic.rc <- function(rc, pmedians) {
   print(lp)
   textdfsmall <- textdf[textdf$Partidot%in%lp,]
   psmall <- p + annotate("text",x=textdfsmall$xtext, y=.1, label=paste(textdfsmall$Partidot),size=8, angle=45,just="left")
-  psmall <- psmall + opts(plot.margin = unit(c(0, 0, 0, 0), "lines"), legend.position = "none")
+  psmall <- psmall + opts(plot.margin = unit(c(0, 0, 0, 0), "lines"), legend.position = "none") + theme_mini()
   ## large
   ## Add text labels. Ifelse used for Partido A labels.
-  plarge <- p + geom_text(aes(x=xtext , y=ytext, label=valuet),size=3)
+  plarge <- p + geom_text(aes(x=xtext , y=ytext, label=valuet),size=4)
   ## Add Partido labels.
-  plarge <- plarge + annotate("text",x=textdf$xtext, y=1.04, label=paste(textdf$Partidot),size=2.5, angle=90,just="left")
+  plarge <- plarge + annotate("text",x=textdf$xtext, y=1.05, label=paste(textdf$Partidot),size=3.5, angle=75,just="right")
   list(small=psmall, large=plarge)
 }
 

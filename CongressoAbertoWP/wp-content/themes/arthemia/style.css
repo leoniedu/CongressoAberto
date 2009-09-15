@@ -23,6 +23,12 @@ body {
 	color: #333;
 	}
 
+explain {
+	font: 90% Arial, Helvetica;
+	background: #FFF;
+	color: #333;
+	}
+
 p {	
 	margin: 15px 0;
 	}

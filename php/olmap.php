@@ -121,7 +121,7 @@ function init(){
 </head>
 <body onload="init()">
 <h1>Votações</h1>
-<h2><div id="info">Hover!</div></h2>
+<h2><div id="info">Coloque o mouse sobre um município para ver a votação do candidato.</div></h2>
 <div id="map" style="width: 500px; height: 300px;"></div> 
 <!-- <p>The programming part was lifted from <a href="http://blog.thematicmapping.org/2008/04/proportional-symbol-mapping-with.html">this nice blog post</a> at thematicmapping.org</p>. -->
 

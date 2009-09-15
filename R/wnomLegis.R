@@ -61,11 +61,11 @@ for (j in legis) {
   wnall[[paste(j)]] <- wnominate(rcr,polarity=pol,dims=2)  
 }
 
-save(wnall,file=rf("tmp/wnLegisYN.RDta"))
+save(wnall,file=rf("out/wnLegisYN.RDta"))
 
 ##load(file=rf("tmp/wn3.RDta"))
 
-load(file=rf("tmp/wnLegisYN.RDta"))
+load(file=rf("out/wnLegisYN.RDta"))
 
 
 wb <- NULL
@@ -91,42 +91,65 @@ wb <- subset(wb,select=c(legis,bioid,partyR,dim1p,dim1))
 
 ## get list of votacoes
 rcnow <- dbGetQueryU(connect,
-                     paste("select * from br_votacoes where legis>=50")
+                     paste("select rcvoteid, rcdate, legisyear  from br_votacoes where legis>=50")
                      )
+dim(rcnow)
+##FIX this vote has too much missin party information
+rcnow <- subset(rcnow, rcvoteid!="100000747")
+dim(rcnow)
+rcnow <- rcnow[!duplicated(rcnow$rcdate),]
+dim(rcnow)
 rcnow <- rcnow[order(rcnow$rcdate),]
+dim(rcnow)
+
+
 
 medians <- NULL
 ## now, for each roll call, calculated the median
 for(i in 1:nrow(rcnow)) {
 ##for(i in 1:20) {
-  if (i%%20==0) {
-    print(paste(round(i/nrow(rcnow),2)*100,'%',sep=''))
-  }
+    if (i%%20==0) {
+        print(paste(round(i/nrow(rcnow),2)*100,'%',sep=''))
+        print(table(medians$legisyear))
+    }
   ##for(i in 1:10) {
-  ## first get the rc votes
-  rc <- dbGetQueryU(connect,
-                    paste("select * from br_votos where rcfile='",rcnow$rcfile[i],"'",sep='')
+    ## first get the rc votes
+    rc <- dbGetQueryU(connect,
+                      paste("select * from br_votos where rcvoteid='",rcnow$rcvoteid[i],"'",sep='')
                     )
-  rc <- merge(rc,rcnow[i,])
-  rc$partyR <- recode.party(rc$party)
-  ## merge with the wnominate date
-  rc <- merge(rc,wb)
-  rc <- with(rc,unique(data.frame(legisyear,rcdate,legis,
-                                  ct=length(na.omit(dim1)),
-                                  median1=median(dim1p,na.rm=TRUE))))
-  medians <- rbind(medians,rc)
+    ## There exists rollcalls with missing party info. break if this happens
+    if (sum(rc$party=="S.Part.">50)) stop("missing party information!")
+    rc <- merge(rc,rcnow[i,])  
+    rc$partyR <- recode.party1(rc$party)
+    ## merge with the wnominate date
+    rc <- merge(rc,wb)
+    rc <- with(rc,unique(data.frame(legisyear,rcdate,legis,
+                                    ct=length(na.omit(dim1)),
+                                    median1p=median(dim1p,na.rm=TRUE),
+                                    min1p=min(dim1p,na.rm=TRUE),
+                                    max1p=max(dim1p,na.rm=TRUE),
+                                    median1=median(dim1,na.rm=TRUE),
+                                    min1=min(dim1,na.rm=TRUE),
+                                    max1=max(dim1,na.rm=TRUE)
+                                    )))  
+    medians <- rbind(medians,rc)
 }
+medians0 <- medians
+
+
 medians$rcdate <- as.Date(as.character(medians$rcdate))
-medians$sup1 <- with(medians,ifelse(legisyear>=2003,median1*-1,median1))
-### there is a roll call with too many missing party information, so we take it out.
-medians <- (subset(medians,!(legisyear<2000 & median1<.55)))
+medians$sup1 <- with(medians,ifelse(legisyear>=2003,median1p*-1,median1p))
 medians$yearmonth <- (as.character(format(medians$rcdate,"%Y%m")))
+medians$mdate <- format.Date(medians$rcdate, "15/%m/%Y")
 
 
 medians.c <- recast(subset(medians, ct>510),
-                    legisyear+legis+yearmonth~.,
-                    measure.var="median1",
-                    fun.aggregate=function(x) c(median=median(x),count=length(x)))
+                    legisyear+legis+yearmonth+mdate~variable,
+                    id.var=c("yearmonth","legisyear","legis", "mdate"),
+                    measure.var=c("median1p",
+                    "min1p","max1p","median1","min1","max1"),
+                    fun.aggregate=function(x) c(median=median(x)))
+medians.c$mdate <- as.Date(medians.c$mdate, format="%d/%m/%Y")
 
 write.csv(medians.c, file="~/Desktop/medians.csv")
 

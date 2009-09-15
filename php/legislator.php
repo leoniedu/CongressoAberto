@@ -61,16 +61,18 @@ function handleQueryResponse(response) {
   var data = response.getDataTable();
   var formatter = new google.visualization.DateFormat({formatType: 'long'});
   // Reformat our data.
-  var rc = new google.visualization.TablePatternFormat('<a href="/?p={0}"> Link </a>');
+  var rc = new google.visualization.TablePatternFormat('<a href="/?p={1}"> {0} </a>');
   formatter.format(data, 1);
-  rc.format(data, [3]);
+  rc.format(data, [4,3]);
   options['page'] = 'enable';
   options['pageSize'] = 10;
   //options['pagingSymbols'] = {prev: 'P', next: 'N'};
   options['pagingButtonsConfiguration'] = 'auto';
   options['allowHtml'] = true;
+  var view = new google.visualization.DataView(data);
+  view.hideColumns([3]);
   visualization = new google.visualization.Table(document.getElementById('table2'));
-  visualization.draw(data, options);
+  visualization.draw(view, options);
 }
 
 google.setOnLoadCallback(drawVisualization);
@@ -91,6 +93,8 @@ function handleQueryResponse2(response) {
   var data2 = response.getDataTable();
   options2['page'] = 'enable';
   options2['pageSize'] = 10;
+  //options2['width'] = '600px';
+  //options2['height'] = '600px';
   //options['pagingSymbols'] = {prev: 'P', next: 'N'};
   options2['pagingButtonsConfiguration'] = 'auto';
   visualization2 = new google.visualization.Table(document.getElementById('table3'));

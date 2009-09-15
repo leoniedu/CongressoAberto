@@ -206,7 +206,7 @@ CREATE TABLE  `br_bills` (
     `billyear` int,
     `billauthor` varchar(100),
     `billauthorid` int,
-    `billdate` varchar(10),
+    `billdate` date,
     `billno` int,
     `billid` int,
     `propno` int,
@@ -219,10 +219,29 @@ CREATE TABLE  `br_bills` (
     `ementashort` varchar(1000),
     `indexa` varchar(1000),
     `lastaction` varchar(1000),
-    `lastactiondate` varchar(100),
+    `lastactiondate` date,
     PRIMARY KEY  (`billtype`,`billyear`,`billno`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ;
+
+
+
+DROP TABLE IF EXISTS `br_tramit`;
+CREATE TABLE  `br_tramit` (
+    `billid` int,
+    `id` int,
+    `date` date,
+    `event` varchar(1000),
+    PRIMARY KEY  (`billid`,`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+;
+
+
+
+
+
+
+
 
 
 -- table to hold all deputados
@@ -316,6 +335,20 @@ CREATE TABLE  `br_vote_parties` (
     PRIMARY KEY (`party`,`year`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+
+
+
+---- FIX accents
+-- update br_municipios set municipality_tse06=cast(cast(municipality_tse06 as binary) as char);
+-- update br_municipios set nome_meso=cast(cast(nome_meso as binary) as char);
+-- update br_municipios set nome_micro=cast(cast(nome_micro as binary) as char);
+
+
+
+-- update br_vote_candidates set name=cast(cast(name as binary) as char);
+-- update br_vote_candidates set name_short=cast(cast(name_short as binary) as char);
+-- update br_vote_candidates set sit=cast(cast(sit as binary) as char);
 
 
 

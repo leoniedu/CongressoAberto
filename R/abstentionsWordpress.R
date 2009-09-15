@@ -31,41 +31,135 @@ sql <- paste("select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a,
 res <- dbGetQueryU(connect,sql)
 res$ausente <- res$rc=="Ausente"
 res$party <- recode.party(res$party)
+##res0 <- res
+
+
+## merge with leaders table
+lead <- dbGetQuery(connect, "select * from br_leaders")
+
+res <- merge(subset(lead, select=c(rcvoteid, rc, party)), res, by=c("rcvoteid", "party"), all.y=TRUE,
+             suffixes=c(".party",""))
+res <- merge(subset(lead, party=="GOV", select=c(rcvoteid, rc)),
+             res, by=c("rcvoteid"), all.y=TRUE, suffixes=c(".gov",""))
+
+rm(lead)
+
 
 fsum <- function(x) c(prop=sum(x)/length(x), total=length(x), count=sum(x))
 ausente <- recast(res,bioid~variable,measure.var="ausente",id.var=c("bioid"),fun.aggregate=fsum)
+
+##last seen in congress
+lastseen <- recast(subset(res,rc!="Ausente"),bioid~variable,measure.var="rcdate", id.var=c("bioid"),max)
+lastseen<- with(lastseen, data.frame(bioid, lastseen=as.Date(rcdate)))
+
+##follow government
+tmp <- subset(res, rc.gov%in%c("Sim", "Não"))
+tmp$cgov <- as.numeric(tmp$rc==tmp$rc.gov)
+cgov <- recast(tmp, bioid~variable, measure.var="cgov", id.var=c("bioid")
+               , fun.aggregate=fsum)
+
+
+##follow party
+tmp <- subset(res, rc.party%in%c("Sim", "Não"))
+## only keep those members of the same party throughout the period
+## FIX: take care of party renames
+nparty <- recast(tmp, bioid ~ variable, fun.aggregate=function(x) length(unique(x)), measure.var="party")
+nparty <- subset(nparty, party==1)
+tmp <- tmp[tmp$bioid%in%nparty$bioid,]
+tmp$cparty <- as.numeric(tmp$rc==tmp$rc.party)
+cparty <- recast(tmp, bioid~variable, measure.var="cparty", id.var=c("bioid")
+                 , fun.aggregate=fsum)
+
+stats <- merge(ausente, lastseen, all=TRUE, by="bioid")
+stats <- merge(stats, cparty, all=TRUE)
+stats <- merge(stats, cgov, all=TRUE)
+## missing info on cparty (due to party change)
+mp <- is.na(stats$cparty_prop)
+## code missing as zero
+## FIX; see if this makes sense
+stats$cparty_prop[mp] <- stats$cparty_count[mp] <- stats$cparty_total[mp] <- 0
+
+
+
 ## write db table ## FIX: should be a long format with dates at some point
-dbRemoveTable(connect, "br_ausencias")
-dbWriteTableU(connect, "br_ausencias", data.frame(ausente))
+dbRemoveTable(connect, "br_legis_stats")
+dbWriteTableU(connect, "br_legis_stats", data.frame(stats))
 
 
 
-## the top 10 in absenteism
 infodeps <- dbGetQueryU(connect,"select a.*, b.* from br_deputados_current as a, br_bio as b where a.bioid=b.bioid")
-faltosos <- ausente
-faltosos <- merge(faltosos,infodeps)
-faltosos <- faltosos[with(faltosos, order(ausente_count, ausente_prop, decreasing=TRUE))[1:10], ]
-
-## their pics
-faltosos.pics <- webdir(paste("images/bio/polaroid/foto",faltosos$bioid,".png", sep=""))
-
-## create one pic
-fn <- "images/abstentions/top"%+%format(Sys.Date(),"%Y%m")%+%".png"
-cmd <- paste("convert ",
-             " \\( -size 300x xc:none ",faltosos.pics[1]," +append \\)",
-             " \\( ", paste(faltosos.pics[2:4], collapse=" "), " +append \\)",
-             " \\( ", paste(faltosos.pics[5:7], collapse=" "), " +append \\)",
-             " \\( ", paste(faltosos.pics[8:10], collapse=" ")," +append \\)",
-             "-background none -append -resize 200x  -quality 95 -depth 8  ", webdir(fn), collapse=" ")
-system(cmd)
 
 
-faltosos$npstate <- with(faltosos, paste(capwords(as.character(trimm(namelegis.1))), party, toupper(state), sep=" - "))
+stats <- merge(stats,infodeps)
+
+getpics <- function(s) {
+    statsnow <- stats
+    statsnow <- statsnow[with(statsnow, order(get(s%+%"_count"),get(s%+%"_prop"), decreasing=TRUE))[1:10], ]
+    ## their pics
+    statsnow.pics <- webdir(paste("images/bio/polaroid/foto",statsnow$bioid,".png", sep=""))
+    ## create one pic
+    fn <- "images/"%+%s%+%"top"%+%format(Sys.Date(),"%Y%m")%+%".png"
+    cmd <- paste("convert ",
+                 " \\( -size 300x xc:none ",statsnow.pics[1]," +append \\)",
+             " \\( ", paste(statsnow.pics[2:4], collapse=" "), " +append \\)",
+                 " \\( ", paste(statsnow.pics[5:7], collapse=" "), " +append \\)",
+                 " \\( ", paste(statsnow.pics[8:10], collapse=" ")," +append \\)",
+                 "-background none -append -resize 200x  -quality 95 -depth 8  ", webdir(fn), collapse=" ")
+    system(cmd)
+    statsnow$npstate <- with(statsnow, paste(capwords(as.character(trimm(namelegis.1))), party, toupper(state), sep=" - "))
+    list(statsnow,fn)
+}
+
+faltosos <- getpics("ausente")
+
+governistas <- getpics("cgov")
+
+partidarios <- getpics("cparty")
+
+
+
+
+
+
+
+
+statsnow <- governistas[[1]]
+fn <- governistas[[2]]
+statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"cgov_prop"])
+## change final comma to "e" 
+excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais seguiram a indicação do governo nas votações nominais na Câmara dos Deputados no  período de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
+##FIX: insert date in the post?
+wpAddByTitle(conwp,post_title="Os Governistas"## %+%format(final.date,"%m/%Y")
+             ,post_content=""
+             ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("governismo",slug="governismo")),
+             ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
+             post_type="post",
+             custom_fields=data.frame(meta_key="Image",meta_value=fn))
+
+
+statsnow <- partidarios[[1]]
+fn <- partidarios[[2]]
+statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"cparty_prop"])
+## change final comma to "e" 
+excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais seguiram a indicação dos seus partidos  nas votações nominais na Câmara dos Deputados no  período de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
+##FIX: insert date in the post?
+wpAddByTitle(conwp,post_title="Os Fiéis"## %+%format(final.date,"%m/%Y")
+             ,post_content=""
+             ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("partidos",slug="partidos")),
+             ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
+             post_type="post",
+             custom_fields=data.frame(meta_key="Image",meta_value=fn))
+
+
+
+
+
+
+
+
 faltosos$npstate <- reorder(faltosos$npstate, faltosos$ausente_prop)
 ## change final comma to "e" 
 excerpt <- paste(paste(faltosos$npstate, collapse=", "), " são os dez deputados que mais faltaram às votações nominais na Câmara dos Deputados no  período de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
-
-
 ##FIX: insert date in the post?
 wpAddByTitle(conwp,post_title="Os 10 mais faltosos"## %+%format(final.date,"%m/%Y")
              ,post_content=""
@@ -73,6 +167,14 @@ wpAddByTitle(conwp,post_title="Os 10 mais faltosos"## %+%format(final.date,"%m/%
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
+
+
+
+
+
+
+
+
 
 
 
@@ -135,8 +237,8 @@ dev.off()
 convert.png(rf(fn))
 
 
-
-pp <- dbGetQuery(conwp,paste("select * from ", tname("posts"), " where post_title='Desempenho da Câmara'"))$ID[1]
+pt <- "Dados e Análises"
+pp <- dbGetQuery(conwp,paste("select * from ", tname("posts"), " where post_title=", shQuote(pt)))$ID[1]
 
 
 ## page under "desempenho"

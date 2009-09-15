@@ -24,18 +24,19 @@ connect.db()
 fx <-  function(i)  {
   print(i)
   file <- rf(paste("data/www.camara.gov.br/sileg/Prop_Detalhe.asp?id=", billsf$billid[i], sep=''))
-  resnow <- try(readbill(file))
-  if (!"try-error" %in% class(resnow)) {
-    if (length(grep("Apensado", resnow$tramit)>0)) stop()
-    res <- resnow[["info"]]
-    tramit <- resnow[["tramit"]]
-    billst <- data.frame(billsf[toup,],res)
-    dbWriteTableU(connect, "br_bills", billst, append=TRUE)
-    gc()
-    closeAllConnections()
+  res <- try(readbill(file))
+  tramit <- try(read.tramit(file))
+  if (!"try-error" %in% class(res)) {
+      if (length(grep("Apensado", tramit)>0)) stop()
+      billst <- data.frame(billsf[i,],res)
+      tramit <- data.frame(billid=billsf[i,"billid"],tramit)
+      dbWriteTableU(connect, "br_bills", billst, append=TRUE)
+      dbWriteTableU(connect, "br_tramit", tramit, append=TRUE)      
+      gc()
+      closeAllConnections()
   } else {
-    res <- NULL
-    tramit <- NULL
+      res <- NULL
+      tramit <- NULL
   }
   list(res, tramit)  
 }
@@ -43,11 +44,12 @@ fx <-  function(i)  {
 billsf <- dbReadTableU(connect, "br_billid")
 
 if (!update.all) {
-  billsin <- dbGetQueryU(connect, "select billid from br_bills")
-  billsf <- billsf[!billsf$billid%in%billsin$billid,]
+    billsin <- dbGetQueryU(connect, "select billid from br_bills")
+    billsf <- billsf[!billsf$billid%in%billsin$billid,]
 }
 
-toup <- which(!is.na(billsf$billid))  
+toup <- which(!is.na(billsf$billid))
+
 tmp <- lapply(toup, fx)
 
 

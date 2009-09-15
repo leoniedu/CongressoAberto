@@ -1,3 +1,4 @@
+##FIX get the hour the vote occurred!
 ##FIX The process order is changing everytime this is run, which creates the possibility that results will differ due to approx merges.
 ##FIX USe Rcurl instead of system wget?
 ##need var "update.all" set to something

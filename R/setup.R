@@ -54,7 +54,24 @@ usource("wnomLastYear.R", echo=TRUE)
 ## electoral finance tables (by election)
 ##usource("/Users/eduardo/reps/CongressoAberto/R/br_contribAssemble.R",echo=TRUE,encoding="latin1")
 
-## post legislators to wp db (finance,  rcs,  bio, bills)
+
+## post legislators main page
+usource("legisListWordPress.R", echo=TRUE)
+##post legislators
+usource("legisWordPress.R", echo=TRUE)
+##post bills
+usource("billsWordPress.R", echo=TRUE)
+## post about us (quem somos) page
+usource("aboutusWordPress.R")
+## post parties
+usource("partiesWordPress.R")
+## post plio
+usource("plioWordPress.R")
+## indices camara (also posts main page "desempenho")
+usource("indicesCamara.R")
+
+usource("abstentionsWordpress.R")
+
 
 ## post roll calls to wp db
 

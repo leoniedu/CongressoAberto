@@ -8,11 +8,12 @@
 	
 		<div id="headline">
 <!--		<img src="<?php echo get_option('home'); ?>/wp-content/themes/arthemia/images/headline.png" width="75px" height="21px" alt="" /> -->
-		<?php query_posts("showposts=1&category_name=Headline"); ?>
+<!-- we select one of the headlines randomly -->
+		<?php query_posts("showposts=1&category_name=Headline&orderby=rand"); ?>
 		<?php while (have_posts()) : the_post(); ?>	
 	
 	<div class="title"><a href="<?php the_permalink() ?>" rel="bookmark"><?php the_title(); ?></a></div>
-	<div class="meta">[<?php the_time('j M Y') ?> | <?php comments_popup_link('Não há Comentários', 'Um Comentário', '% Comentários');?> | <?php if(function_exists('the_views')) { the_views(); } ?>]</div>	
+	<div class="meta">[<?php the_time('j M Y') ?> | <?php comments_popup_link('Não há Comentários', 'Um Comentário', '% Comentários');?><?php if(function_exists('the_views')) { echo " |"; the_views(); } ?>]</div>	
 	<?php $values = get_post_custom_values("Headline");?>
 	<a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">
  <img src="<?php $values = get_post_custom_values("Image"); echo $values[0]; ?>" 
@@ -34,12 +35,12 @@ alt="<?php the_title(); ?>" class="left"  border=0  /></a>
 	<?php $values = get_post_custom_values("Image");
 	if (isset($values[0])) { ?>
       <a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">
-	<img src="php/timthumb.php?src=/<?php
+	<img src="/php/timthumb.php?src=/<?php
 $values = get_post_custom_values("Image"); echo $values[0]; ?>&w=100&zc=0&q=100"
 alt="<?php the_title(); ?>" class="left" width="100px" height="100px"  /></a>
       <?php } ?>
 	<div class="info"><a href="<?php the_permalink() ?>" rel="bookmark" class="title"><?php the_title(); ?></a>
-<div class="meta">[<?php the_time('j M Y') ?>  <!--| <?php comments_popup_link('Não há Comentários', 'Um Comentário', '% Comentários');?> | <?php if(function_exists('the_views')) { the_views(); } ?> -->
+<div class="meta">[<?php the_time('j M Y') ?> <?php comments_popup_link('Não há Comentários', 'Um Comentário', '% Comentários');?><?php if(function_exists('the_views')) { echo"|";the_views(); } ?>
 ]</div>	
 <p>	<?php the_excerpt(); ?> </p>
 	
@@ -88,15 +89,15 @@ alt="<?php the_title(); ?>" class="left" width="100px" height="100px"  /></a>
 	<div class="clearfloat">
 	<h3 class=cat_title><?php the_category(', '); ?> &raquo</h3>
 	<div class="title"><a href="<?php the_permalink() ?>" rel="bookmark"><?php the_title(); ?></a></div>
-	<div class="meta">[<?php the_time('j M Y') ?> | <?php comments_popup_link('Não há comentários', 'Um comentário', '% Commentários');?> | <?php if(function_exists('the_views')) { the_views(); } ?>]</div>	
+	<div class="meta">[<?php the_time('j M Y') ?> | <?php comments_popup_link('Não há comentários', 'Um comentário', '% Commentários');?><?php if(function_exists('the_views')) { echo "|"; the_views(); } ?>]</div>	
 	
 	<div class="spoiler">
 	<?php	$values = get_post_custom_values("Image");
 	if (isset($values[0])) { ?>
       <a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">
-	<img src="php/timthumb.php?src=/<?php
-$values = get_post_custom_values("Image"); echo $values[0]; ?>&w=100&h=100&zc=0&q=100"
-alt="<?php the_title(); ?>" class="left" width="100px" height="100px"  /></a>
+	<img src="/php/timthumb.php?src=/<?php
+$values = get_post_custom_values("Image"); echo $values[0]; ?>&w=100&h=0&zc=0&q=100"
+alt="<?php the_title(); ?>" class="left" width="100px"   /></a>
       <?php } ?>
 	<?php the_excerpt(); ?>
 	</div>

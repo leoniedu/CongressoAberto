@@ -34,7 +34,6 @@ connect.wp()
 ## ")
 
 ## add parent page (deputados)
-pname <- "Deputados Federais"
-pp <- dbGetQuery(conwp,paste("SELECT ID FROM ",tname("posts")," where post_title=",shQuote(pname)," and post_type='page'"))
+pname <- "Deputados"
 pdeps <- wpAddByTitle(conwp,post_title=pname,
                       post_content='<?php include_once("php/legislist.php"); ?>')

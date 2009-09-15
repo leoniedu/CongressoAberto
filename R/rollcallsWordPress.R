@@ -1,6 +1,4 @@
-## FIX: title is not unique!!!!
-## possible solutions.
-## 1. enforce unique title.
+## FIX: A linha de limite (laranja) neste gráfico está errada. http://www.congressoaberto.com.br/2008/10/14/mpv-436-2008-3454/
 
 if (!exists("update.all", 1)) {  
   update.all <- FALSE
@@ -38,19 +36,19 @@ getThresh <- function(rc, billtype, billdescription) {
   ## simple majority
   smaj <- round((Nao+Sim)/2)
   if (any(grepl("requerimento", billdescription, ignore.case=TRUE))) {
-    ## camara rules says that requerimento only needs a simple majority
-    ## with quorum
-    thresh <- smaj
+      ## camara rules says that requerimento only needs a simple majority
+      ## with quorum
+      thresh <- smaj
   }
   if (billtype=="PEC") {
-    ## constitutional amendments need 3/5
-    thresh <- 308
+      ## constitutional amendments need 3/5
+      thresh <- 308
   } else if (billtype=="PLP") {
-    ## lei complementar need 1/2
-    thresh <- 257
+      ## lei complementar need 1/2
+      thresh <- 257
   } else {
-    ## else need simple majority
-    thresh <- smaj
+      ## else need simple majority
+      thresh <- smaj
   }
   ## But note, you still need a quorum.
   ## So if e. g.
@@ -63,7 +61,7 @@ getThresh <- function(rc, billtype, billdescription) {
   ## this is the "effective threshold" for _approving_ legislation
   ## FIX: double check this
   quorum <- Sim+Nao+Abs
-  c(thresh, if (quorum>256) thresh else Sim + 257-quorum)
+  if (quorum>256) thresh else thresh+256-quorum
 }
 
 
@@ -91,7 +89,7 @@ sumroll <- function(rcnow, margin, rcgov) {
   ## FIX: what happens when there is less than 513 deputies?
   quorum <- sum(rcnow$rc%in%c("Ausente", "Obstrução"))<257
   if (!quorum) {
-    res <- c(res, "Não houve quorum.")
+      res <- c(res, "Não houve quorum.")
   }
   tx <- table(rcnow$rc)
   ntx <- c("Sim", "Não", "Obstrução", "Abstenção",  "Ausente")
@@ -137,7 +135,7 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
   threshold <- getThresh(billtype=rcs$billtype,
                          billdescription=rcs$billdescription,
                          rc=rcnow$rc)
-  margin <- govwins(rcnow, rcgov, threshold[1])
+  margin <- govwins(rcnow, rcgov, threshold)
   post_excerpt <- sumroll(rcnow, margin, rcgov)
   post_category <- data.frame(slug="votacoes",name="Votações")
   img <- paste("images/rollcalls/bar",rcid, sep='')
@@ -170,42 +168,42 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
       ## crop does nothing
       fns <- webdir(fn%+%"small.png")
       fnl <- webdir(fn%+%"large.png")
-      png(file=fns, bg="white", width=small*100, height=small*100, pointsize=18)
+      png(file=fns, bg="white", width=small*100, height=small*100, res=200)
       print(plots[["small"]])
       dev.off()
-      png(file=fnl, bg="white", width=large*100, height=large*100, pointsize=18)
+      png(file=fnl, bg="white", width=large*100, height=large*100, res=100)
       print(plots[["large"]])
       dev.off()
   }
   if (saveplot) {
-      barplots <- barplot.rc(rcnow, govpos(rcgov), threshold=threshold[2])  
+      barplots <- barplot.rc.simple(rcnow, govpos(rcgov), threshold=threshold)  
       mosaicplots <- mosaic.rc(rcnow, pmedians)
-      print.png(barplots, paste("images/rollcalls/bar",rcid, sep=''), crop=FALSE, small=2.5)
-      print.png(mosaicplots, paste("images/rollcalls/mosaic",rcid, sep=''), large=4)
+      print.png(barplots, paste("images/rollcalls/bar",rcid, sep=''), crop=FALSE, small=4)
+      print.png(mosaicplots, paste("images/rollcalls/mosaic",rcid, sep=''), small= 7, large = 7)
       ## maps
-    ## small
-    ## large
-    fn <- paste("images/rollcalls/map",rcid, sep='')
-    fns <- webdir(fn%+%"small.png")
-    fnl <- webdir(fn%+%"large.png")
-    png(file=fns, width=400, height=400, bg="white")
-    map.rc(rcnow, large=FALSE, percent=TRUE)
-    dev.off()
-    png(file=fnl,  width=600, height=600, bg="white")
-    map.rc(rcnow, large=TRUE, percent=TRUE)
-    dev.off()
-    ##convert.png(fns, crop=TRUE)
-    ##convert.png(fnl, crop=TRUE)
+      ## small
+      ## large
+      fn <- paste("images/rollcalls/map",rcid, sep='')
+      fns <- webdir(fn%+%"small.png")
+      fnl <- webdir(fn%+%"large.png")
+      png(file=fns, width=400, height=400, bg="white")
+      map.rc(rcnow, large=FALSE, percent=TRUE)
+      dev.off()
+      png(file=fnl,  width=1000, height=1000, bg="white", res=160)
+      map.rc(rcnow, large=TRUE, percent=TRUE)
+      dev.off()
+      ##convert.png(fns, crop=TRUE)
+      ##convert.png(fnl, crop=TRUE)
   }
   if (post) {
-    postid <- wpAddByName(conwp,post_title=title,post_type="post",post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=post_excerpt,post_category=post_category,
-                          custom_fields=data.frame(meta_key="Image",meta_value=img%+%"small.png"),
-                          post_name=name,tags=tags)
-    ##FIX: create table in mysql
-    dbWriteTableU(connect,"br_rcvoteidpostid",data.frame(postid,rcvoteid=rcs$rcvoteid),append=TRUE)
+      postid <- wpAddByName(conwp,post_title=title,post_type="post",post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=post_excerpt,post_category=post_category,
+                            custom_fields=data.frame(meta_key="Image",meta_value=img%+%"small.png"),
+                            post_name=name,tags=tags)
+      ##FIX: create table in mysql
+      dbWriteTableU(connect,"br_rcvoteidpostid",data.frame(postid,rcvoteid=rcs$rcvoteid),append=TRUE)
     res <- c(rcid,postid)
-    print(res)
-    res
+      print(res)
+      res
   }
 }
 
@@ -237,13 +235,14 @@ rcsnow <- dbGetQuery(connect,"select rcvoteid, rcdate from br_votacoes where leg
 
 ## whats already in
 if (!update.all) {
-  rcsin <- dbGetQuery(connect,"select * from br_rcvoteidpostid")
-  rcsnow <- rcsnow[!rcsnow$rcvoteid%in%rcsin$rcvoteid,]
+    rcsin <- dbGetQuery(connect,"select * from br_rcvoteidpostid")
+    rcsnow <- rcsnow[!rcsnow$rcvoteid%in%rcsin$rcvoteid,]
 }
 
 ## decreasing order by date
 rcsnow <- rcsnow[order(rcsnow$rcdate, decreasing=TRUE),]
 rcsnow <- rcsnow$rcvoteid
+
 
 ##billsnow <- bills$billid[sample(1:nrow(bills),2)]
 ##billsnow <- bills$billid[1:nrow(bills)]

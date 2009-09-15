@@ -1,7 +1,38 @@
 server=174.143.181.9
 passwd=ca1eu2qwI
 
+
+
+## TODO
+## .screenrc
+# # Suppress screen's startup message
+# startup_message off
+# # Define a bigger scrollback, default is 100 lines
+# defscrollback 10000
+# # An alternative hardstatus to display a bar at the bottom listing the
+# # windownames and highlighting the current windowname in blue.
+# hardstatus alwayslastline "%{.bW}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H %{..Y} %m/%d\
+#  %C%a "
+# # Execute .bash_profile on startup
+# shell -$SHELL
+# # Use C-z instead of C-a as this makes more sense for Emacs
+# escape ^za
+# # Detach on hangup
+# autodetach on
+# termcapinfo xterm-color kD=\E[3~
+# # STARTUP SCREENS
+# screen -t Shell 0 bash
+# select 0
+
+
 ## we will install everything on root, at least for now
+
+
+## from http://www.casualcode.com/2008/05/18/how-to-enable-cron-log-in-ubuntu/
+# Edit /etc/syslog.conf and uncomment the line starting with cron.*
+#/etc/init.d/sysklogd restart
+#/etc/init.d/cron restart
+
 
 
 ## first, lets set up ssh keys so we don't need to type passwords
@@ -24,7 +55,6 @@ locale-gen en_US.UTF-8
 echo 'export LC_CTYPE="en_US.UTF-8"' > ~/.bash_profile
 
 
-
 ## set up apache (web server) 
 apt-get  install -y apache2
 ## check from local machine if the web server works
@@ -32,6 +62,8 @@ apt-get  install -y apache2
 ## set up mysql
 apt-get install libmysqlclient15-dev mysql-server-5.1
 
+#cron
+apt-get install cron
 
 
 ## MySQL
@@ -93,7 +125,7 @@ http://www.congressoaberto.com.br/info.php
 
 
 ## more stuff
-apt-get install -y subversion 
+apt-get install -y subversion screen
 apt-get install -y git-core 
 apt-get install imagemagick
 apt-get installscreen  emacs  texlive
@@ -184,7 +216,9 @@ echo deb http://cran.r-project.org/bin/linux/ubuntu/ jaunty/  >> /etc/apt/source
 gpg --keyserver subkeys.pgp.net --recv-key E2A11821
 gpg -a --export E2A11821 | sudo apt-key add -
 apt-get update
-apt-get -y -t unstable install r-base r-base-dev
+apt-get -y -t unstable install r-base r-base-dev r-cran-xml tidy
+
+
 echo 'options(repos= c(CRAN="http://cran.wustl.edu/"))' > .Rprofile
 echo 'install.packages(c("ggplot2", "car", "RMySQL", "XML", "wnominate", "pcsl", "arm", "maptools", "car", "ggplot2", "wnominate"), dep=TRUE)'  > installpackages.R
 R --no-save < installpackages.R

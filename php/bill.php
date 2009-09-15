@@ -15,7 +15,7 @@ $row = mysql_fetch_row($result);
 echo '<p>Autoria: '.$row[0].'</p>';
 echo '<p>Ementa: '.$row[1].'</p>';
 echo '<p>Status: '.$row[2].'</p>';
-echo '<p>Billid: '.$billid.'</p>';
+//echo '<p>Billid: '.$billid.'</p>';
 
 // what are the roll calls related to this bill
 </script>
@@ -29,11 +29,11 @@ echo '<p>Billid: '.$billid.'</p>';
   google.load('visualization', '1', {packages: ['table']});
 </script>
 <script type="text/javascript">
-  var visualization;
+var visualization;
 var data;
 var options = {'showRowNumber': true};
 function drawVisualization() {
-  var query = new google.visualization.Query('/php/query.php?form=bills&limit=100&tqx=reqId:0;&billid='+billid);    
+  var query = new google.visualization.Query('/php/query.php?form=listrcs&limit=100&tqx=reqId:0;&billid='+billid);    
   // Send the query with a callback function.
     query.send(handleQueryResponse);
 }
@@ -43,11 +43,11 @@ function handleQueryResponse(response) {
     return;
   }
   var data = response.getDataTable();
-  var mosaic = new google.visualization.TablePatternFormat('<img src="/php/timthumb.php?src=/images/rollcalls/mosaic{0}small.png&w=100&h=0&zc=0&q=90">');
+  var mosaic = new google.visualization.TablePatternFormat('<img src="/php/timthumb.php?src=/images/rollcalls/mosaic{0}small.png&w=110&h=0&zc=0&q=90">');
   var bar = new google.visualization.TablePatternFormat('<img src="/php/timthumb.php?src=/images/rollcalls/bar{0}small.png&w=100&h=0&zc=0&q=90">');
   var map = new google.visualization.TablePatternFormat('<img src="/php/timthumb.php?src=/images/rollcalls/map{0}small.png&w=100&h=0&zc=0&q=90">');
-  var rc = new google.visualization.TablePatternFormat('<a href="/?p={0}"> Link </a>');
-  rc.format(data, [4]);
+  var rc = new google.visualization.TablePatternFormat('<a href="/?p={1}"> {0} </a>');
+  rc.format(data, [5,4]);
   bar.format(data, [0]);
   mosaic.format(data, [1]);
   map.format(data, [2]);
@@ -59,13 +59,50 @@ function handleQueryResponse(response) {
   options['pageSize'] = 10;
   //options['pagingSymbols'] = {prev: 'P', next: 'N'};
   options['pagingButtonsConfiguration'] = 'auto';
-  visualization = new google.visualization.Table(document.getElementById('table'));
-  visualization.draw(data, options);
+  var view = new google.visualization.DataView(data);
+  view.hideColumns([4]);
+  visualization = new google.visualization.Table(document.getElementById('table1'));
+  visualization.draw(view, options);
 }
 
 google.setOnLoadCallback(drawVisualization);
+
+var visualization2;
+var data2;
+var options2 = {'showRowNumber': true};
+function drawVisualization2() {
+  var query = new google.visualization.Query('/php/query.php?form=tramit&limit=100&tqx=reqId:0;&billid='+billid);    
+  // Send the query with a callback function.
+    query.send(handleQueryResponse2);
+}
+function handleQueryResponse2(response) {
+  if (response.isError()) {
+    alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+    return;
+  }
+  var data2 = response.getDataTable();
+  options2['allowHtml'] = true;
+  options2['page'] = 'enable';
+  options2['pageSize'] = 5;
+  options2['pagingButtonsConfiguration'] = 'auto';
+  visualization2 = new google.visualization.Table(document.getElementById('table2'));
+  visualization2.draw(data2, options2);
+}
+
+google.setOnLoadCallback(drawVisualization2);
+
 </script>
 
+
 <h3>  Votações nominais </h3>
-<div id="table">
+<div id="table1">  </div>
+
+
+<br>
+<br>
+
+
+<h3>  Tramitação </h3>
+<div id="table2">
   </div>
+

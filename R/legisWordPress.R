@@ -32,7 +32,7 @@ if (!update.all) {
 
 
 ## add parent page (deputados)
-pname <- "Deputados Federais"
+pname <- "Deputados"
 pp <- dbGetQuery(conwp,paste("SELECT ID FROM ",tname("posts")," where post_title=",shQuote(pname)," and post_type='page'"))
 if (nrow(pp)==0) {
     stop("create the legislators main page first!")

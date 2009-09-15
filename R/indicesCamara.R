@@ -29,7 +29,10 @@ connect.wp()
 ## add the parent page "Analises"
 ##pid <- wpAddByTitle(conwp,post_title="Análises",post_name="analises", post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
 
-pid <- wpAddByTitle(conwp,post_title="Desempenho da Câmara",post_name=encode("Desempenho da Câmara"), post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
+pt <- "Dados e Análises"
+pid <- wpAddByTitle(conwp,
+                    post_title=pt,
+                    post_name=encode(pt), post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>')
 
 
 

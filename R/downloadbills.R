@@ -39,10 +39,10 @@ if (update.all) {
 }
 
 for ( i in toup) {
-  print(i)
-  ##billsf[i, c("billurl", "billid")] <- with(billsf,getbill(billtype[i],billno[i],billyear[i],overwrite=download.now))
-  ## FIX: when and what to download?
-  billsf[i, c("billid")] <- with(billsf,getbill(billtype[i],billno[i],billyear[i],overwrite=download.now & update.all))
+    print(i)
+    ##billsf[i, c("billurl", "billid")] <- with(billsf,getbill(billtype[i],billno[i],billyear[i],overwrite=download.now))
+    ## FIX: when and what to download?
+    billsf[i, c("billid")] <- with(billsf,getbill(billtype[i],billno[i],billyear[i],overwrite=download.now & update.all))
 }
 
 toupdate <- billsf[toup, ]

@@ -12,15 +12,15 @@
 
 	<?php /* If this is a tagged archive */ } elseif (is_tag()) { ?>	<h2 class="title">Artigos com  tags: <?php single_tag_title(); ?></h2>
 
- 	<?php /* If this is a daily archive */ } elseif (is_day()) { ?>	<h2 class="title">Articles Archive for <?php the_time('j F Y'); ?></h2>
+ 	<?php /* If this is a daily archive */ } elseif (is_day()) { ?>	<h2 class="title">Artigos: <?php the_time('j F Y'); ?></h2>
 
- 	<?php /* If this is a monthly archive */ } elseif (is_month()) { ?><h2 class="title">Articles Archive for <?php the_time('F Y'); ?></h2>
+ 	<?php /* If this is a monthly archive */ } elseif (is_month()) { ?><h2 class="title">Artigos: <?php the_time('F Y'); ?></h2>
  	
 	<?php /* If this is a yearly archive */ } elseif (is_year()) { ?>
-	<h2 class="title">Articles Archive for Year <?php the_time('Y'); ?></h2>
+	<h2 class="title">Artigos: <?php the_time('Y'); ?></h2>
 
  	<?php /* If this is a paged archive */ } elseif (isset($_GET['paged']) && !empty($_GET['paged'])) { ?>
-	<h2 class="title">The Archives</h2>
+	<h2 class="title">Arquivos</h2>
  	 <?php } ?>
 
 	<div id="archive">
@@ -62,7 +62,7 @@ alt="<?php the_title(); ?>" class="left" width="150px"  /></a>
 	
 	<?php else : ?>
 	
-	<h2 class="title">No posts found. Try a different search?</h2>
+	<h2 class="title">Nenhum artigo foi encontrado.</h2>
 	
 	<?php endif; ?>
 

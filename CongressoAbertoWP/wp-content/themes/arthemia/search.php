@@ -21,9 +21,9 @@
 	<?php	$values = get_post_custom_values("Image");
 	 if (isset($values[0])) { ?> 
 	<a href="<?php the_permalink() ?>" rel="bookmark" title=""> 
-	 <img src="<?php echo bloginfo('template_url'); ?>/scripts/timthumb.php?src=/<?php
-$values = get_post_custom_values("Image"); echo $values[0]; ?>&w=150&h=150&zc=0&q=100"
-alt="" class="left" width="150px" height="150px"  /></a> 
+	 <img src="/php/timthumb.php?src=/<?php
+$values = get_post_custom_values("Image"); echo $values[0]; ?>&w=150&h=0&zc=0&q=100"
+alt="" class="left"  width="150px"  /></a> 
       <?php } ?> 
 	<?php the_excerpt(); ?>
 	</div>

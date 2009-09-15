@@ -201,8 +201,8 @@ postbill <- function(bill=37642, propid=NULL) {
     tags <- with(dnow, data.frame(slug=tagslug,name=tagsname))
     billtype <- with(dnow, toupper(billtype))
     pp <- wpAddByTitle(conwp,post_content="<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( \"child_of=\".$thePostID.\"&title_li=\"); ?></ul>",post_title=billtype,post_parent=propid)
-    postid <- wpAddByTitle(conwp,post_title=title,post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=excerpt,
-                           tags=tags,post_parent=pp)
+    ##postid <- wpAddByTitle(conwp,post_title=as.character(title),post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=excerpt, tags=tags,post_parent=pp)
+    postid <- wpAddByName(conwp,post_title=title,post_name=encode(title),post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=excerpt, tags=tags,post_parent=pp)    
     dbWriteTableU(connect,"br_billidpostid",data.frame(postid,billid=bill),append=TRUE)
     res <- c(bill,postid)
     print(res)
