@@ -1,7 +1,7 @@
 <?php
 
-  //The response should be utf8 encoded
-	header('Content-Type: text/html; charset=utf-8');
+//The response should be utf8 encoded
+header('Content-Type: text/html; charset=utf-8');
 
 //Include the extended API
 include_once("gvServerAPIEx.php");
@@ -22,7 +22,6 @@ $resHandler = $_GET['responseHandler'];
 
 //mysql_query("set names utf8");
 
-
 if($_GET["form"]=="partylist")
 {
   $sql = "SELECT      
@@ -39,7 +38,6 @@ br_partypostid as t3
 WHERE t2.number=t1.partyid and t2.number=t3.number
 ";
 }
-
 
 if($_GET["form"]=="bill_list") {
   $sql = "   
@@ -103,8 +101,6 @@ $sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, a.rc  as Voto
 	#echo $sql;
  }
 
-
-
 if($_GET["form"]=="absvotes") {
  ## given a bioid, return roll call votes
 $sql = "select max(CAST(b.rcdate AS DATE)) as Data, a.party as Partido    from 
@@ -158,9 +154,13 @@ WHERE a.bioid=b.bioid and a.bioid=c.bioid and a.bioid=d.bioid
 //, 
 //order by Estado, Partido DESC
 
+// , , 
+//, 
+//order by Estado, Partido DESC
+
 if($_GET["limit"]!="") 
   {
-	$sql = $sql." limit ".$_GET["limit"];
+    $sql = $sql." limit ".$_GET["limit"];
   }
 
 

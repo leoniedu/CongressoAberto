@@ -126,4 +126,3 @@ print("<p><a href=\"/php/olmap.php?candno=$candno&state=$state\"> Explore o mapa
 //print("<img src=\"/images/elections/2006/deputadofederal$state$candno.png\"  alt=\"Electoral Map\"");
 
 </script>
-

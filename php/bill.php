@@ -105,4 +105,3 @@ google.setOnLoadCallback(drawVisualization2);
 <h3>  Tramitação </h3>
 <div id="table2">
   </div>
-
