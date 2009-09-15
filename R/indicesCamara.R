@@ -100,15 +100,15 @@ p <- p +scale_colour_manual(values = c(alpha("darkgreen",alphan),alpha("darkblue
 fx <- function(x=1,year=2006) paste("Dez ",x+year,"\n(",x,'o. ano)',sep='')
 p <- p+scale_x_continuous(name="",breaks=as.numeric(getlegisdays(paste(2008:2010,"-02-01",sep=''))),labels=fx(1:3),expand=c(0,0))
 p <- p+coord_cartesian(ylim=c(0,25))
-p <- p+scale_y_continuous(name="Dias com votaçoes por semana")
+p <- p+scale_y_continuous(name="Dias com votaçoes por mês")
 p <- p+theme_bw()
 ## we add a little noise to rcdate=0 to make it show in the graph
 p <- p + geom_point(data=rcbymonth,aes(x=legismonth,y=ifelse(rcdate==0,0.05,(rcdate)), colour=Legislatura),size=1.5)
 
-pdf(file=rf("images/camara/rcbyweek.pdf"),width=6,height=4)
+pdf(file=rf("images/camara/rcbymonth.pdf"),width=6,height=4)
 print(p)
 dev.off()
-convert.png(file=rf("images/camara/rcbyweek.pdf"))
+convert.png(file=rf("images/camara/rcbymonth.pdf"))
 
 dx <- function(x) with(x,{
   x$votes <- 1
@@ -133,7 +133,7 @@ convert.png(file=rf("images/camara/cumulativerc.pdf"))
 
 ## add page
 votid <- wpAddByTitle(conwp,post_title="Número de Votações", post_parent=pid,
-                      post_content='<p><img width=400 src="/images/camara/rcbyweek.png" alt="Número de votações por semana" /></p><img width=400 src="/images/camara/cumulativerc.png" alt="Número de votações acumuladas" /> ')
+                      post_content='<p><img width=400 src="/images/camara/rcbymonth.png" alt="Número de votações por mês" /></p><img width=400 src="/images/camara/cumulativerc.png" alt="Número de votações acumuladas" /> ')
 
 
 

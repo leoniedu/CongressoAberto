@@ -1,10 +1,5 @@
-﻿<script language="php">
-$host  = "mysql.cluelessresearch.com";
-$con = mysql_connect($host,"monte","e123456");
-$database = 'congressoaberto';
-mysql_select_db($database, $con);
-
-$table = 'br_partyindices';
+<script language="php">
+include_once("server.php");
 
 // sending query
 $result = mysql_query("SELECT partyname FROM br_partyindices where partyid={$partyid} limit 1");
