@@ -1,10 +1,9 @@
-<script language="php">
-//$host  = "mysql.cluelessresearch.com";
-//$con = mysql_connect($host,"monte","e123456");
-//$database = 'congressoaberto';
-//mysql_select_db($database, $con);
-include_once("server.php");
-##$partyid=25;
+﻿<script language="php">
+$host  = "mysql.cluelessresearch.com";
+$con = mysql_connect($host,"monte","e123456");
+$database = 'congressoaberto';
+mysql_select_db($database, $con);
+
 $table = 'br_partyindices';
 
 // sending query
@@ -16,7 +15,7 @@ $row = mysql_fetch_row($result);
 $partyacronym = $row[0];
 
 #Get some summary statistics
-$result = mysql_query("select t1.*, t2.name, t2.number from br_partyindices as t1, br_parties_current as t2 where t1.partyid={$partyid} AND t2.number={$partyid}");
+$result = mysql_query("select t1.*, Convert(Convert((t2.name) using binary) using latin1), t2.number from br_partyindices as t1, br_parties_current as t2 where t1.partyid={$partyid} AND t2.number={$partyid}");
 $row = mysql_fetch_row($result);
 $sizeparty = $row[0];
 $cohesion = $row[2];
@@ -26,9 +25,7 @@ $sharegovdiv = $row[5];
 $nameparty = $row[8];
 
 ##Get Ranks
-$sql = "select t1.*, t2.name, t2.number from br_partyindices_rank as t1, br_parties_current as t2 where t1.partyid=t2.number AND t2.number={$partyid}";
-##echo $sql;
-$result = mysql_query($sql);
+$result = mysql_query("select t1.*, t2.name, t2.number from br_partyindices_rank as t1, br_parties_current as t2 where t1.partyid={$partyid} AND t2.number={$partyid}");
 $row = mysql_fetch_row($result);
 $ranksizeparty = $row[0];
 $rankcohesion = $row[2];
@@ -45,26 +42,29 @@ $nparties = $row[0];
 
 echo '<table border="0">';
 echo '<tr>';
-print("<td><img src=\"/php/timthumb.php?src=/images/partylogos/resized/".$partyacronym.".jpg&w=100&h=0\"  width=100/></td>");
-print("<td><p>$nameparty<br></p>
-            Tamanho da Bancada: $sizeparty/513 ($ranksizeparty dentre os $nparties maiores partidos)<br>
-            Taxa de Absenteismo  $shareabsent% ($rankshareabsent dentre os $nparties maiores partidos)<br>
-            Taxa de Governismo: $sharegovdiv% em votações contenciosas ($ranksharegovdiv dentre os $nparties maiores partidos) <br>
-            Índice de Coesão:  $cohesion ($rankcohesion dentro os $nparties maiores partidos)
+print("<td width='110'><img src=\"/images/partylogos/".$partyacronym.".jpg\"  width=100/></td>");
+print("<td width='400'><h3>$nameparty</h3></p>
+            Tamanho da Bancada: $sizeparty legisladores ($ranksizeparty&ordm)<br>
+            Taxa de Absenteismo  $shareabsent% ($rankshareabsent&ordm) <br>
+            Taxa de Governismo: $sharegovdiv% em votações contenciosas <br>
+            Índice de Coesão:  $cohesion ($rankcohesion&ordm) <br>
+            </td>
+            <td width ='400'>
+            <explain>Rankings consideram apenas os $nparties maiores partidos. Taxa de Absenteísmo é a porcentagem média dos membros do partido ausentes
+                das votações nominais. Taxa de Governismo é a porcentagem média dos membros do partido votando com o governo. Votaçoes contenciosas são 
+                aquelas em que pelo menos 10% dos presentes votou com a minoria. Índice de Coesão (Rice) varia de 0 a 1, com valores mais altos indicando
+                maior coesão do partido em votações.</explain>
 </td></tr></table>");
 
 
 echo '<table border="0">';
 echo '<tr>';
-print("<td> </tr><tr>
-<img src=\"/php/timthumb.php?src=/images/typical/".$partyacronym."typical.png&w=800&h=0\" width=800/>
- </tr></td></table>");
- 
+print("<br><h3>Comportamento Típico do $partyacronym</h3></tr>");
+print("<tr><img src=\"/images/typical/".$partyacronym."typical.png\" width=800/></tr></table>");
 
 echo '<table border="0">';
 echo '<tr>';
-print("<td> </tr><tr>
-<img src=\"/images/governism/".$partyacronym."governism.png\" width=800/>
- </tr></td></table>");
+print("<br><h3>Taxa de Governismo do $partyacronym</h3></tr>");
+print("<tr><img src=\"/images/governism/".$partyacronym."governism.png\" width=800/></tr></table>");
 
 </script>
