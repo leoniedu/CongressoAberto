@@ -19,13 +19,15 @@ connect.wp()
 
 
 
-
+ 
 post_title <- "PLIO"
-post_content <- "<h3>Pesquisa Legislativa IUPERJ-Oxford</h3>
-                 Realizada no primeiro semestre de 2009, a PLIO da continuidade aos surveys realizados originalmente por Timothy Power (University of Oxford),
-                 uma vez por legislatura, desde 1990. A base de dados completa, incluindo as seis edicoes ate hoje realizadas, estara disponivel ate o final do 
-                 ano. As paginas abaixo trazem apenas alguns exemplos dos dados que serao disponibilizados a todos os interessados.<br><br>
-                 <ul><?php global $post;$thePostID = $post->ID;wp_list_pages( 'child_of='.$thePostID.'&title_li='); ?></ul>"
+post_content <- descr::toUTF8("<h3>Pesquisa Legislativa IUPERJ-Oxford</h3>
+                 Realizada no primeiro semestre de 2009, a PLIO da continuidade aos surveys realizados originalmente por 
+                 <a href='http://www.politics.ox.ac.uk/about/staff/staff.asp?action=show&person=236&special'>Timothy Power</a> (University of Oxford),
+                 uma vez por legislatura, desde 1990. A base de dados completa, incluindo as seis edições já realizadas, estará disponivel até o final do 
+                 ano. As páginas abaixo trazem apenas alguns exemplos dos dados que serão disponibilizados a todos os interessados.<br><br>
+                 <ul><?php global $post;$thePostID = $post->ID;wp_list_pages( 'child_of='.$thePostID.'&title_li='); ?></ul>",from = "WINDOWS-1252") 
+
 pid <- wpAddByTitle(conwp,post_title=post_title,
                     post_content=post_content,
                     fulltext=paste("survey","opinião","ideologia"), ## put in the full text field terms that you'd like the search function to use to  find this post
@@ -33,24 +35,24 @@ pid <- wpAddByTitle(conwp,post_title=post_title,
                     tags=data.frame(slug=c("survey","opiniao","ideologia"),name=c("survey","opinião","ideologia")))
 
 post_title <- "A Direita Envergonhada"
-post_content <- "<table>
+post_content <- descr::toUTF8("<table>
                  <tr>
-                 <td><p><img src='/php/timthumb.php?src=/images/plio/fig-mosaicrep2009.png&w=300&zc=1' alt='Direita Envergonhada 1'/></p></td>
+                 <td><p><img src='/php/timthumb.php?src=/images/plio/fig-mosaicrep2009.png&w=400&zc=1' alt='Direita Envergonhada 1'/></p></td>
                  <td><explain>
-                 A imensa maioria dos legisladores se coloca a esquerda de onde os legisladores de outros
-                 partidos posicionam o seu partido. Este resultado indica que o fenomeno da 'Direita Envergonhada,' constatado por estudos anteriores,
+                 A imensa maioria dos legisladores se coloca à esquerda de onde os legisladores de outros
+                 partidos posicionam o seu partido. Este resultado indica que o fenômeno da 'Direita Envergonhada,' constatado por estudos anteriores,
                  continua existindo mesmo transcorridos mais de 20 anos desde of final do regime militar. 
                  </explain></td>
                  </tr>
                  </table>
                  <table>
                  <tr>
-                 <td><explain> Esta tendencia se manifesta tambem no grafico ao lado, que mostra que apenas 14% dos legisladores se 
-                 coloca a direita de onde eles mesmos posicionam o seu proprio partido. Como comparacao, 26% dos legisladores indicam estar a esquerda
-                 de se proprio partido. </explain></td>
-                 <td> <p><img src='/php/timthumb.php?src=/images/plio/fig-mosaicself2009.png&w=300&zc=1' alt='Direita Envergonhada 2'/></p> </td>
+                 <td><explain> Esta tendência se manifesta tambem no gráfico ao lado, que mostra que apenas 14% dos legisladores se 
+                 coloca a direita de onde eles mesmos posicionam o seu próprio partido. Como comparação, 26% dos legisladores indicam estar a esquerda
+                 de seu próprio partido. </explain></td>
+                 <td> <p><img src='/php/timthumb.php?src=/images/plio/fig-mosaicself2009.png&w=400&zc=1' alt='Direita Envergonhada 2'/></p> </td>
                  </tr>
-                 </table>"
+                 </table>",from = "WINDOWS-1252") 
 pid1 <- wpAddByTitle(conwp,post_title=post_title,
                     post_content=post_content,
                      post_parent=pid,
