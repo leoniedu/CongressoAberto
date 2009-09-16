@@ -1,9 +1,11 @@
+# !Mode:: "R:UTF-8"
+
 ### TENTANDO POSTAR AUTOMATICAMENTE
 
 a <- dbGetQuery(conwp, 'select * from wp_posts')
 
 pid <- dbGetQuery(conwp, 'select * from '%+%tname("posts")%+%' where post_title="Dados e AnÃ¡lises"')$ID[1] 
-the.content <- descr::toUTF8("<table>
+the.content <- "<table>
                 <tr>
                 <td><p><img width=400 src='/images/camara/2dhierarchical20072009.png' alt='Camara em Duas Dimensoes'/></p></td>
                 <td><explain>A posição dos legisladores em duas dimensões (em cinza claro) é estimada a partir das votações nominais realizadas na Câmara.
@@ -13,12 +15,12 @@ the.content <- descr::toUTF8("<table>
                         não esquerda de direita. A cor dos circulos representando a posição dos partidos vai de branco (sempre no gabinete) a preto 
                         (nunca no gabinete).</explain></td>
                 </tr>
-                </table>",from = "WINDOWS-1252") 
+                </table>"
 sub.content <- NULL
 
   the.content <- paste(the.content,sub.content)
 
-  postid <- wpAddByTitle(conwp,post_title=descr::toUTF8("A Câmara em Duas Dimensões",from = "WINDOWS-1252"), 
+  postid <- wpAddByTitle(conwp,post_title="A Câmara em Duas Dimensões", 
                         post_name="2dhierarchical20072009",
                         post_author=2,
                         post_type="page", ## can be page
