@@ -2,34 +2,29 @@
 
 ### TENTANDO POSTAR AUTOMATICAMENTE
 
-a <- dbGetQuery(conwp, 'select * from wp_posts')
-
 pid <- dbGetQuery(conwp, 'select * from '%+%tname("posts")%+%' where post_title="Dados e An√°lises"')$ID[1] 
 the.content <- "<table>
                 <tr>
-                <td><p><img width=400 src='/images/camara/2dhierarchical20072009.png' alt='Camara em Duas Dimensoes'/></p></td>
-                <td><explain>A posiÁ„o dos legisladores em duas dimensıes (em cinza claro) È estimada a partir das votaÁıes nominais realizadas na C‚mara.
-                        Utilizamos um modelo no qual a primeira dimens„o È identificada a partir de dados de survey, de modo a corresponder 
-                        ‡ clivagem direita-esquerda. A segunda dimens„o È deixada livre, e o resultado È que os partidos s„o ordenados pelo que parece
-                        ser seu grau de `governismo'. A maioria das votaÁıes na atual legislatura separam governo de oposiÁ„o e 
-                        n„o esquerda de direita. A cor dos circulos representando a posiÁ„o dos partidos vai de branco (sempre no gabinete) a preto 
+<td><p><img width=400 src='/php/timthumb.php?src=/images/camara/2dhierarchical20072009.png&w=400&h=0' alt='Camara em Duas Dimensoes'/></p></td>
+                <td><explain>A posi√ß√£o dos legisladores em duas dimensoes (em cinza claro) √© estimada a partir das vota√ß√µes nominais realizadas na Camara.
+                        Utilizamos um um modelo hier√°rquico no qual a primeira dimens√£o √© identificada a partir de dados de survey, de modo a corresponder 
+                        √† clivagem direita-esquerda. A segunda dimens√£o √© deixada livre, e o resultado √© que os partidos aparecem ordenados pelo que parece
+                        ser seu grau de `governismo'. A maioria das votacoes na atual legislatura (omitidas por simplicidade) separam governo de oposic√£o e 
+                        n√£o esquerda de direita. A cor dos circulos representando a posi√ß√£o dos partidos vai de branco (sempre no gabinete) a preto 
                         (nunca no gabinete).</explain></td>
                 </tr>
                 </table>"
 sub.content <- NULL
+the.content <- paste(the.content,sub.content)
 
-  the.content <- paste(the.content,sub.content)
 
-  postid <- wpAddByTitle(conwp,post_title="A C‚mara em Duas Dimensıes", 
-                        post_name="2dhierarchical20072009",
-                        post_author=2,
-                        post_type="page", ## can be page
-                        post_content=the.content,
-                        post_parent=pid,
-                        fulltext=paste("votaÁıes","posiÁıes","ideologia"), ## put in the full text field terms that you'd like the search function to use to  find this post
-                        post_excerpt=paste("Pontos ideais na C‚mara em duas dimensıes"), ## summary of the post. it is what is shown in the front page, or in the search results.
-                        tags=data.frame(slug=c("posicoes-ideais","ideologia"),name=c("PosiÁıes Ideais","Ideologia"))
-                        ) ## tag the post  format similar to categories and custom fields
-                      
-                    
-    
+postid <- wpAddByName(conwp,post_title="A C√¢mara em Duas Dimens√µes", 
+                      post_name="2dhierarchical20072009",
+                      post_author=2,
+                      post_type="page", ## can be page
+                      post_content=the.content,
+                      post_parent=pid,
+                      fulltext=paste("vota√ß√µes","posi√ß√µes","ideologia"), ## put in the full text field terms that you'd like the search function to use to  find this post
+                      post_excerpt=paste("Pontos ideais na C√¢mara em duas dimens√µes"), ## summary of the post. it is what is shown in the front page, or in the search results.
+                      tags=data.frame(slug=c("posicoes-ideais","ideologia"),name=c("Posi√ß√µes Ideais","Ideologia"))
+                      ) ## tag the post  format similar to categories and custom fields

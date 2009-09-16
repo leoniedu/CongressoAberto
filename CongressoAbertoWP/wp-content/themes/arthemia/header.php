@@ -32,9 +32,9 @@
 	<div id="tagline">             <?php bloginfo('description'); ?></div>
 	</div>
 
-	<div class="right">
+<!--	<div class="right">
 	<img src="<?php echo get_option('home'); ?>/wp-content/themes/arthemia/images/banners/wide.jpg" alt="" width="251px" height="78px"  />
-	</div>
+	</div>-->
 
 </div>
 

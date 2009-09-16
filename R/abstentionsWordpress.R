@@ -25,6 +25,8 @@ connect.db()
 connect.wp()
 
 init.date <- Sys.Date()-365
+
+init.date <- Sys.Date()-60
 final.date <- Sys.Date()
 date.range <- paste(format(c(init.date+1,final.date-1),"%d-%m-%Y"))
 sql <- paste("select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b, br_deputados_current as c where a.bioid=c.bioid and a.rcvoteid=b.rcvoteid and (rcdate>cast('",init.date,"' as date) ) and (rcdate<cast('",final.date,"' as date) ) ",sep='')
@@ -92,6 +94,11 @@ infodeps <- dbGetQueryU(connect,"select a.*, b.* from br_deputados_current as a,
 
 stats <- merge(stats,infodeps)
 
+stats$sex <- factor(stats$title,
+                    levels=c("Exmo. Senhor Deputado", "Exma. Senhora Deputada"),
+                    labels=c("Male", "Female"))
+
+
 getpics <- function(s) {
     statsnow <- stats
     statsnow <- statsnow[with(statsnow, order(get(s%+%"_count"),get(s%+%"_prop"), decreasing=TRUE))[1:10], ]
@@ -116,6 +123,30 @@ governistas <- getpics("cgov")
 
 partidarios <- getpics("cparty")
 
+with(stats[1,],{
+    art <- ifelse (sex=="Male", "o", "a")
+    tshort <- ifelse (sex=="Male", "deputado", "deputada")
+    paste(           
+          ##foto
+          toupper(art)," ",
+           title," ",
+           ## nome, partido estado
+           namelegis.1," (",party, "/", toupper(state),")", sep='',
+           ## ultimo dia em que compareceu.
+           ' compareceu a uma votação nominal  na Câmara pela última vez no dia ',
+           format.Date(lastseen, "%d/%m/%Y"),". ",
+          
+           ## naturalidade
+           "Natural de ", birthplace, ", ", namelegis.1, " tem ", diffyear(birthdate.1,Sys.Date()), " anos de idade."
+           , " Quando presente, ",art, " ", tshort,  " vota ", round(cgov_prop*100), "%"
+          , " das vezes com o governo, e ", round(cparty_prop*100), "% das vezes com seu partido."
+          )
+})
+
+
+
+
+           
 
 
 
@@ -152,21 +183,20 @@ wpAddByTitle(conwp,post_title="Os Fiéis"## %+%format(final.date,"%m/%Y")
 
 
 
-
-
-
-
-
-faltosos$npstate <- reorder(faltosos$npstate, faltosos$ausente_prop)
+statsnow <- faltosos[[1]]
+fn <- faltosos[[2]]
+statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"ausente_prop"])
 ## change final comma to "e" 
-excerpt <- paste(paste(faltosos$npstate, collapse=", "), " são os dez deputados que mais faltaram às votações nominais na Câmara dos Deputados no  período de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
+excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais faltaram às votações nominais na Câmara dos Deputados no  período de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
 ##FIX: insert date in the post?
-wpAddByTitle(conwp,post_title="Os 10 mais faltosos"## %+%format(final.date,"%m/%Y")
+wpAddByTitle(conwp
+             ,post_title="Os Ausentes"## %+%format(final.date,"%m/%Y")           
              ,post_content=""
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("absenteismo",slug="absenteismo")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
+
 
 
 
@@ -241,10 +271,26 @@ pt <- "Dados e Análises"
 pp <- dbGetQuery(conwp,paste("select * from ", tname("posts"), " where post_title=", shQuote(pt)))$ID[1]
 
 
+
+content <- '<table>
+<tr>
+<td><img width=400 src="/php/timthumb.php?src=/images/camara/abstentions.png&w=400&h=0" alt="Presença em plenário" /></td>
+<td>
+<explain> explain! </explain>
+</td>
+</tr>
+<tr>
+<td>
+<explain> explain! </explain>
+</td>
+<td><img width=400 src="/php/timthumb.php?src=/images/abstentions/byrc.png&w=400&h=0" alt="Presença em plenário" /></td>
+</tr>
+</table>
+'
+
 ## page under "desempenho"
 wpAddByTitle(conwp,post_title="Presença em plenário", post_category=data.frame(name="Headline",slug="headline"),
-             post_content='<p><img width=400 src="/images/camara/abstentions.png" alt="Presença em plenário" /></p>
-             <p><img width=400 src="/images/abstentions/byrc.png" alt="Presença em plenário" /></p>'
+             post_content=content
              ,
              post_type="page",post_parent=pp,
              custom_fields=data.frame(meta_key="Image",meta_value="/images/camara/abstentions.png"))

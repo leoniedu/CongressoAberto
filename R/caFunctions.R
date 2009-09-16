@@ -313,6 +313,14 @@ dbWriteTableSeq <- function(conn,name,value,n=NULL,...) {
   }
 }
 
+
+diffyear <- function(x,y) {
+    x.year <- as.POSIXlt(x)$year
+    y.year <- as.POSIXlt(y)$year
+    x.date <- as.Date(paste("2008-",substr(as.Date(x),6,10)))
+    y.date <- as.Date(paste("2008-",substr(as.Date(y),6,10)))
+    (y.year-x.year)-((x.date>y.date))    
+}
   
 readOne <- function(LVfile,post=FALSE) {
   ##FIX: really need the following line? does it crash other things?

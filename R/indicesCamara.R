@@ -110,6 +110,8 @@ print(p)
 dev.off()
 convert.png(file=rf("images/camara/rcbymonth.pdf"))
 
+
+
 dx <- function(x) with(x,{
   x$votes <- 1
   x <- x[order(x$legisday),]
@@ -131,9 +133,43 @@ dev.off()
 convert.png(file=rf("images/camara/cumulativerc.pdf"))
 
 
+
+
+
+
+## numero de votações por mês no casa dos representantes do congresso americano.
+us <- read.csv("http://adric.sscnet.ucla.edu/rollcall/static/H111desc.csv")
+nmonth <- with(us, as.numeric(max(as.Date(date))-min(as.Date(date)))/30)
+vpm.us <- floor(length(unique(us$date))/nmonth)
+
+## numero de votacoes no brasil legis atual
+sql3 <- paste("select  cast(b.rcdate as date) as rcdate  from br_votacoes as b where legis=53",sep='')
+br <- dbGetQueryU(connect,sql3)
+br$date <- as.Date(br$rcdate)
+nmonth <- with(br, as.numeric(max(as.Date(date))-min(as.Date(date)))/30)
+vpm.br <- floor(length(unique(br$date))/nmonth)
+
+
+
+
 ## add page
+content <- '<table>
+                <tr>
+                <td><img width=400 src="/php/timthumb.php?src=/images/camara/rcbyweek.png&w=400&h=0" alt="Número de votações por mês" /></td><td><explain><p>Os pontos no gráfico à esquerda mostram o número dias com votações por mês, que pode ser considerado como um bom indicador do nível de atividade na Câmara.  As linhas mostram a tendência dos dados,  e auxiliam na visualização. A legislatura atual está em vermelho. Observe que nas legislaturas mais recentes o nível de atividade é bastante reduzido no período eleitoral.</p>
+<p> Para fins comparativos, na Casa dos Representantes dos Estados Unidos na corrente legislatura há em média  '%+%vpm.us%+%' dias com votações nominais por mês. Na Câmara dos Deputados brasileira na legislatura atual, por outro lado,  em somente '%+%vpm.br%+%' dias por mês são realizadas votações nominais.
+     </explain></td>
+</tr>
+<tr><td><explain>O gráfico ao lado mostra o número total de votações nominais na Câmara para a legislatura atual e as três anteriores. Mais votações ocorreram nessa legislatura do que no mesmo momento nas legislaturas passadas. 
+</explain>
+</td><td><img width=400 src="/php/timthumb.php?src=/images/camara/cumulativerc.png&w=400&h=0" alt="Número de votações acumuladas" /> 
+</tr>
+</table>'
+
+
+    
 votid <- wpAddByTitle(conwp,post_title="Número de Votações", post_parent=pid,
-                      post_content='<p><img width=400 src="/images/camara/rcbymonth.png" alt="Número de votações por mês" /></p><img width=400 src="/images/camara/cumulativerc.png" alt="Número de votações acumuladas" /> ')
+                      post_content=content)
+
 
 
 

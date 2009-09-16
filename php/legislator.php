@@ -123,6 +123,6 @@ print("<a href=\"/php/query.php?form=contrib&bioid=$bioid&tqx=reqId:0;out:csv;cs
 <h3> Mapa eleitoral - 2006 </h3>
 <script language="php"> 
 print("<p><a href=\"/php/olmap.php?candno=$candno&state=$state\"> Explore o mapa eleitoral interativo do deputado. (google maps)</a></p>");
-//print("<img src=\"/images/elections/2006/deputadofederal$state$candno.png\"  alt=\"Electoral Map\"");
+print("<img src=\"/php/timthumb.php?src=/images/elections/2006/deputadofederal$state$candno.png&w=600&h=0\"  alt=\"Electoral Map\"");
 
 </script>

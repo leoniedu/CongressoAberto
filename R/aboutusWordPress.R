@@ -28,7 +28,7 @@ content <- "
 <h2> Missão </h2>
 <p> <a href=\"CongressoAberto.com.br\"> Congressoaberto.com.br </a> é uma organização sem fins lucrativos e sem vinculação partidária cujo objetivo é aumentar a transparência no legislativo brasileiro através da divulgação e análise de informações que já estão no domínio público de forma acessível e compreensível a todos os interessados. </p>
  <h2> Equipe </h2>
-<p> <a href=\"CongressoAberto.com.br\"> Congressoaberto.com.br </a>  é um projeto inteiramente voluntário desenvolvido por Eduardo Leoni e Cesar Zucco Jr., ambos cientistas políticos brasileiros com formação no exterior. Sugestões e críticas devem ser enviadas para <a href=\"mailto:admin@congressoaberto.com.br?subject=congressoaberto.com.br\">admin@congressoaberto.com.br</p>"
+<p> <a href=\"CongressoAberto.com.br\"> Congressoaberto.com.br </a>  é um projeto inteiramente voluntário desenvolvido pelos cientistas políticos <a href=\"http://eduardoleoni.com\"> Eduardo Leoni </a> e <a href=\"http://www.princeton.edu/~zucco\"> Cesar Zucco Jr.</a> Sugestões e críticas devem ser enviadas para <a href=\"mailto:admin@congressoaberto.com.br?subject=congressoaberto.com.br\">admin@congressoaberto.com.br</p>"
 
 
 
