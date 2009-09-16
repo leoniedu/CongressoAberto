@@ -12,7 +12,7 @@
 	<div id="stats">
 <span><?php the_time('j F Y') ?></span>
 <span><?php if(function_exists('the_views')) { the_views(); } ?></span>
-<span><?php comments_number('No Comment', 'One Comment', '% Comments' );?></span></div>
+<span><?php comments_number('Não há comentários', 'Um comentário', '% Comentários' );?></span></div>
 
 
 	<div class="entry clearfloat">
@@ -33,7 +33,7 @@
 	<div style="float:right;display:block;"><?php if(function_exists('the_ratings')) { the_ratings(); } ?></div>
 	</div>
 
-	<?php edit_post_link('Edit this entry.', '<p>', '</p>'); ?>
+	<?php edit_post_link('Edite este artigo.', '<p>', '</p>'); ?>
 
 	</div>
 

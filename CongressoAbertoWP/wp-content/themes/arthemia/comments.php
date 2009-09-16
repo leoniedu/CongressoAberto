@@ -19,7 +19,7 @@
 
 
 <?php if ($comments) : ?>
-	<h3 id="comments"><?php comments_number('No Comment', 'One Comment', '% Comments' );?> <a href="#respond" title="<?php _e("Leave a comment"); ?>">&raquo;</a></h3>
+	<h3 id="comments"><?php comments_number('Não há comentários', 'One Comment', '% Comments' );?> <a href="#respond" title="<?php _e("Leave a comment"); ?>">&raquo;</a></h3>
 <ul class="commentlist">
 
 	<?php foreach ($comments as $comment) : ?>
@@ -42,7 +42,7 @@ $isByAuthor = true;
 			<cite><strong><?php comment_author_link() ?> <?php if($isByAuthor ) { echo '(author)';} ?> </strong> said: </cite>
 
 			<?php if ($comment->comment_approved == '0') : ?>
-			<em>Your comment is awaiting moderation.</em>
+			<em>Seu comentário aguarda moderação.</em>
 			<?php endif; ?>
 			<?php comment_text() ?>
 			</div>	
@@ -65,7 +65,7 @@ $isByAuthor = true;
 
 	 <?php else : // comments are closed ?>
 		<!-- If comments are closed. -->
-		<p class="nocomments">Comments are closed.</p>
+		<p class="nocomments">Não é mais possível comentar este artigo.</p>
 
 	<?php endif; ?>
 <?php endif; ?>
@@ -77,18 +77,18 @@ $isByAuthor = true;
 <h3 id="respond">Comente este artigo!</h3>
 
 <?php if ( get_option('comment_registration') && !$user_ID ) : ?>
-<p>You must be <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php echo urlencode(get_permalink()); ?>">logged in</a> to post a comment.</p>
+<p>Você precisa estar <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php echo urlencode(get_permalink()); ?>">logado</a> para comentar este artigo.</p>
 <?php else : ?>
 
 <form action="<?php echo get_option('siteurl'); ?>/wp-comments-post.php" method="post" id="commentform">
 
 <?php if ( $user_ID ) : ?>
 
-<p>Logged in as <a href="<?php echo get_option('siteurl'); ?>/wp-admin/profile.php"><?php echo $user_identity; ?></a>. <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?action=logout" title="Log out of this account">Logout &raquo;</a></p>
+<p>Logado como <a href="<?php echo get_option('siteurl'); ?>/wp-admin/profile.php"><?php echo $user_identity; ?></a>. <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?action=logout" title="Log out of this account">Logout &raquo;</a></p>
 
 <?php else : ?>
 
-<p>Add your comment below, or <a href="<?php trackback_url(true); ?>" rel="trackback">trackback</a> from your own site. You can also <?php comments_rss_link('subscribe to these comments'); ?> via RSS.</p>
+<p>Comente no espaço abaixo, ou faça <a href="<?php trackback_url(true); ?>" rel="trackback">trackback</a> de seu próprio site. Você pode  <?php comments_rss_link('acompanhar os comentários'); ?> via RSS.</p>
 
 <p>Be nice. Keep it clean. Stay on topic. No spam.</p>
 
@@ -103,11 +103,11 @@ $isByAuthor = true;
 
 <?php endif; ?>
 
-<p><textarea name="comment" id="comment" cols="100%" rows="15" tabindex="4"></textarea></p>
-<p>You can use these tags:<br/><code><?php echo allowed_tags(); ?></code></p>
-<p>This is a Gravatar-enabled weblog. To get your own globally-recognized-avatar, please register at <a href="http://www.gravatar.com">Gravatar</a>.</p>
+<p><textarea name="comment" id="comment" cols="100%" rows="10" tabindex="4"></textarea></p>
+<p>Você pode usar os seguintes tags:<br/><code><?php echo allowed_tags(); ?></code></p>
+<p>Você pode utilizar seu gravatar nesse site. Consiga seu próprio gravatar no  <a href="http://www.gravatar.com">Gravatar</a>.</p>
 
-<p><input name="submit" class="searchbutton" type="submit" id="submit" tabindex="5" value="Submit Comment" />
+<p><input name="envio" class="searchbutton" type="submit" id="submit" tabindex="5" value="Envie seu comentário" />
 <input type="hidden" name="comment_post_ID" value="<?php echo $id; ?>" />
 </p>
 <?php do_action('comment_form', $post->ID); ?>

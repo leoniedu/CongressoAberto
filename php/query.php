@@ -27,6 +27,7 @@ if($_GET["form"]=="partylist")
   $sql = "SELECT      
   					  t2.name as Nome
   					, t3.postid
+  					, t2.party as Sigla
                     , t1.current_size as Cadeiras
                     , t1.share_absent as Absentismo
                     , t1.with_execDIV as 'Com Governo'

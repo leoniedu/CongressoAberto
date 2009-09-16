@@ -17,9 +17,14 @@
 
 		</div>
 		
-	<?php edit_post_link('Edit this entry.', '<p>', '</p>'); ?>
+	<?php edit_post_link('Edite este artigo.', '<p>', '</p>'); ?>
 
 	</div>
+
+	<div id="comments">
+	<?php comments_template(); ?>
+	</div>
+
 		
 	<?php endwhile; endif; ?>
 

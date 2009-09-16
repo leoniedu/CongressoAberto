@@ -152,21 +152,20 @@ wpAddByTitle(conwp,post_title="Os Fiéis"## %+%format(final.date,"%m/%Y")
 
 
 
-
-
-
-
-
-faltosos$npstate <- reorder(faltosos$npstate, faltosos$ausente_prop)
+statsnow <- faltosos[[1]]
+fn <- faltosos[[2]]
+statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"ausente_prop"])
 ## change final comma to "e" 
-excerpt <- paste(paste(faltosos$npstate, collapse=", "), " são os dez deputados que mais faltaram às votações nominais na Câmara dos Deputados no  período de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
+excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais faltaram às votações nominais na Câmara dos Deputados no  período de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
 ##FIX: insert date in the post?
-wpAddByTitle(conwp,post_title="Os 10 mais faltosos"## %+%format(final.date,"%m/%Y")
+wpAddByTitle(conwp
+             ,post_title="Os Ausentes"## %+%format(final.date,"%m/%Y")           
              ,post_content=""
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("absenteismo",slug="absenteismo")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
+
 
 
 
@@ -241,10 +240,26 @@ pt <- "Dados e Análises"
 pp <- dbGetQuery(conwp,paste("select * from ", tname("posts"), " where post_title=", shQuote(pt)))$ID[1]
 
 
+
+content <- '<table>
+<tr>
+<td><img width=400 src="/images/camara/abstentions.png" alt="Presença em plenário" /></td>
+<td>
+<explain> explain! </explain>
+</td>
+</tr>
+<tr>
+<td>
+<explain> explain! </explain>
+</td>
+<td><img width=400 src="/images/abstentions/byrc.png" alt="Presença em plenário" /></td>
+</tr>
+</table>
+'
+
 ## page under "desempenho"
 wpAddByTitle(conwp,post_title="Presença em plenário", post_category=data.frame(name="Headline",slug="headline"),
-             post_content='<p><img width=400 src="/images/camara/abstentions.png" alt="Presença em plenário" /></p>
-             <p><img width=400 src="/images/abstentions/byrc.png" alt="Presença em plenário" /></p>'
+             post_content=content
              ,
              post_type="page",post_parent=pp,
              custom_fields=data.frame(meta_key="Image",meta_value="/images/camara/abstentions.png"))

@@ -33,6 +33,7 @@ library(maptools)
 load(rf("data/maps/ibge2007.RData"))
 ## take out lagoa dos patos (missing state sigla) from map
 m1 <- m1[!is.na(m1@data$SIGLA),]
+
 ## get label x y positions, only largest polygon in each city is not NA
 m1$area <- sapply(m1@polygons,function(poly) poly@area)
 m1$x <- sapply(m1@polygons,function(poly) poly@labpt[1])
@@ -47,25 +48,24 @@ m1$y <- sapply(m1@polygons,function(poly) poly@labpt[2])
 
 
 ## select a state j
-snow <- "SP"
+snow <- "MG"
 
 
-for (snow in states[-c(1:12)]) {
+for (snow in states) {
 
-  convert.now <- FALSE
   ## number of seats
-  elected <- dbGetQueryU(connect,paste("select * from br_vote_candidates where  office='DEPUTADO FEDERAL' AND year='2006' AND state='",snow,"' AND sit in ('MÉDIA','ELEITO')",sep=''),convert=FALSE)
+  elected <- dbGetQuery(connect,paste("select * from br_vote_candidates where  office='DEPUTADO FEDERAL' AND year='2006' AND state='",snow,"' AND sit in ('MÉDIA','ELEITO')",sep=''))
   nseats <- nrow(elected)  
   ## let's try to plot one deputy
   ## get votes for all candidates in each municip
-  res0 <- dbGetQueryU(connect,paste("select municipality, state, sum(votes) as votes_total from br_vote_mun where  office='DEPUTADO FEDERAL' AND year='2006' AND state='",snow,"' AND elec_round=1 AND (candidate_code not in (95,96))  group by municipality",sep=''),convert=FALSE)
+  res0 <- dbGetQuery(connect,paste("select municipality, state, sum(votes) as votes_total from br_vote_mun where  office='DEPUTADO FEDERAL' AND year='2006' AND state='",snow,"' AND elec_round=1 AND (candidate_code not in (95,96))  group by municipality",sep=''))
   ## all deps in state
   ## with names
-  dep <- dbGetQueryU(connect,paste("select a.*, b.* from br_bioidtse as a, br_bio as b where a.bioid=b.bioid AND a.office='DEPUTADO FEDERAL' AND a.year='2006' AND a.state='",snow,"'",sep=''),convert=TRUE)  
+  dep <- dbGetQuery(connect,paste("select a.*, b.* from br_bioidtse as a, br_bio as b where a.bioid=b.bioid AND a.office='DEPUTADO FEDERAL' AND a.year='2006' AND a.state='",snow,"'",sep=''))  
   ## table with all deps in state
-  res <- dbGetQueryU(connect,paste("select * from br_vote_mun where office='DEPUTADO FEDERAL' AND year='2006' AND  state='",snow,"'",sep=''),convert=FALSE)
-  res.it <-  dbGetQueryU(connect,paste("select * from br_bioidtse where office='DEPUTADO FEDERAL' AND year='2006' AND  state='",snow,"'",sep=''),convert=TRUE)
-  res.mun <-  dbGetQueryU(connect,paste("select * from br_municipios where year='2006' AND  state_tse06='",snow,"'",sep=''),convert=FALSE)
+  res <- dbGetQuery(connect,paste("select * from br_vote_mun where office='DEPUTADO FEDERAL' AND year='2006' AND  state='",snow,"'",sep=''))
+  res.it <-  dbGetQuery(connect,paste("select * from br_bioidtse where office='DEPUTADO FEDERAL' AND year='2006' AND  state='",snow,"'",sep=''))
+  res.mun <-  dbGetQuery(connect,paste("select * from br_municipios where year='2006' AND  state_tse06='",snow,"'",sep=''))
   res.xy <- subset(m1@data,SIGLA==snow)
   res$municipality <- as.numeric(as.character(res$municipality))
   res.mun$municipalitytse <- as.numeric(as.character(res.mun$municipalitytse))
@@ -90,26 +90,25 @@ for (snow in states[-c(1:12)]) {
   ##plot all
   res.m$`Votos conquistados\nno município (%)` <- round(res.m$vote_prop*100)  
 
-
-
-  
-  p <- qplot(x,y,colour=`Votos conquistados\nno município (%)`,data=res.m,
-             label=municipality_tse06,alpha=I(2/3),
-             size=eq,facets=~Nome)+theme_bw()+coord_equal() +
-               scale_area(name="Votos",to = c(0.001, 20),limits=c(0,1),
-                          breaks=bs,
-                          labels=round(bs*eq1/100)*100)      
-  p <- p + theme_bw(base_size=10)+opts(axis.ticks = theme_blank(),axis.text=theme_blank(),panel.grid.minor=theme_blank(),panel.grid.major=theme_blank(),axis.title.x=theme_blank(),axis.title.y=theme_blank(),axis.text.x=theme_blank(),axis.text.y=theme_blank())+scale_x_continuous(name="")+scale_y_continuous(name="")  
-  ##png(file=rf(paste("data/images/elections/2006/","deputadofederal",snow,".png",sep="")),bg="transparent",heigh=600,width=800,pointsize=1)
-  ## FIX: memory segfault happening here (state=MG)
-  ## Saving the RData for now
-  ##fn <- rf(paste("data/images/elections/2006/","deputadofederal",snow,".pdf",sep=""))
-  ## pdf(file=paste(fn),bg="transparent")  
-  ##   print(p)
-  ##   dev.off()  
-  ##system(paste("convert -density 400x400 -resize 500x500 -quality 90 ", fn," ",gsub(".pdf",".png",fn)),wait=TRUE)
-  fn <- rf(paste("data/images/elections/2006/","deputadofederal",snow,".RData",sep=""))
-  save(p,file=fn)
+  if (FALSE) {
+      p <- qplot(x,y,colour=`Votos conquistados\nno município (%)`,data=res.m,
+                 label=municipality_tse06,alpha=I(2/3),
+                 size=eq,facets=~Nome)+theme_bw()+coord_equal() +
+                     scale_area(name="Votos",to = c(0.001, 20),limits=c(0,1),
+                                breaks=bs,
+                                labels=round(bs*eq1/100)*100)      
+      p <- p + theme_bw(base_size=10)+opts(axis.ticks = theme_blank(),axis.text=theme_blank(),panel.grid.minor=theme_blank(),panel.grid.major=theme_blank(),axis.title.x=theme_blank(),axis.title.y=theme_blank(),axis.text.x=theme_blank(),axis.text.y=theme_blank())+scale_x_continuous(name="")+scale_y_continuous(name="")
+      ##png(file=rf(paste("data/images/elections/2006/","deputadofederal",snow,".png",sep="")),bg="transparent",heigh=600,width=800,pointsize=1)
+      ## FIX: memory segfault happening here (state=MG)
+      ## Saving the RData for now
+      ##fn <- rf(paste("data/images/elections/2006/","deputadofederal",snow,".pdf",sep=""))
+      ## pdf(file=paste(fn),bg="transparent")  
+      ##   print(p)
+      ##   dev.off()  
+      ##system(paste("convert -density 400x400 -resize 500x500 -quality 90 ", fn," ",gsub(".pdf",".png",fn)),wait=TRUE)
+      fn <- webdir(paste("images/elections/2006/","deputadofederal",snow,".RData",sep=""))
+      save(p,file=fn)
+  }
   ## plot one
   m2 <- m1[m1$SIGLA==snow,]
   m <- get_borders(m2)  
@@ -123,40 +122,45 @@ for (snow in states[-c(1:12)]) {
   i <- 1
   
   for (i in 1:nrow(dep)) {    
-    print(i)
-    print(snow)
-    cand <- dep$candidate_code[i]
-    fn <- rf(paste("data/images/elections/2006/","deputadofederal",snow,cand,".pdf",sep=""))
 
-    pnew <- p+geom_point(aes(x=x,y=y,colour=`Votos conquistados\nno município (%)`,
-                             label=municipality_tse06,size=eq),
-                         ,alpha=I(2/3),
-                         data=subset(res.m,candidate_code==cand))+
-                           theme_bw(base=10)+
-                          scale_area(name="Votos",to = c(0.001, 20),limits=c(0,1),
-                                     breaks=bs,
-                                     labels=round(bs*eq1/100)*100)+
-                                       theme_bw(base_size=10)+opts(axis.ticks = theme_blank(),
-                                                  axis.text=theme_blank(),
-                                                  panel.grid.minor=theme_blank(),
-                                                  panel.grid.major=theme_blank(),
-                                                  axis.title.x=theme_blank(),
-                                                  axis.title.y=theme_blank(),
-                                                  axis.text.x=theme_blank(),
-                                                  axis.text.y=theme_blank())+
-                                                    scale_x_continuous(name="")+
-                                                      scale_y_continuous(name="")    
-    dnow <- subset(res.m,candidate_code==cand)
-    pnew <- pnew+scale_colour_continuous(limits=c(0,100))
-    pnew <- pnew+geom_text(mapping=aes(label=municipality_tse06),data=dnow[order(dnow$votes,decreasing=TRUE)[1:min(c(5,nrow(dnow)))],],size=3,vjust=2)
-    
-    pdf(file=fn,bg="transparent",width=8)      
-    print(pnew)    
-    dev.off()
-    
-    system(paste("convert -density 400x400 -resize 500x500 -quality 90 ", fn," ",gsub(".pdf",".png",fn)),wait=TRUE)
-    rm(pnew)
-    gc()
+      print(i)
+      print(snow)
+      cand <- dep$candidate_code[i]
+      pnew <- p+geom_point(aes(x=x,y=y,colour=`Votos conquistados\nno município (%)`,
+                               label=municipality_tse06,size=eq),
+                           ,alpha=I(2/3),
+                           data=subset(res.m,candidate_code==cand))+
+                               scale_area(name="Votos",to = c(0.001, 20),limits=c(0,1),
+                                          breaks=bs,
+                                          labels=round(bs*eq1/100)*100)+
+                                              theme_bw(base_size=18)+
+                                                  opts(axis.ticks = theme_blank(),
+                                                       axis.text=theme_blank(),
+                                                       panel.grid.minor=theme_blank(),
+                                                       panel.grid.major=theme_blank(),
+                                                       axis.title.x=theme_blank(),
+                                                       axis.title.y=theme_blank(),
+                                                       axis.text.x=theme_blank(),
+                                                       axis.text.y=theme_blank())+
+                                                           scale_x_continuous(name="")+
+                                                               scale_y_continuous(name="")    
+      dnow <- subset(res.m,candidate_code==cand)
+      pnew <- pnew+scale_colour_continuous(limits=c(0,100))
+      pnew <- pnew+geom_text(mapping=aes(label=municipality_tse06),data=dnow[order(dnow$votes,decreasing=TRUE)[1:min(c(5,nrow(dnow)))],],size=4,vjust=2)
+
+      fn <- webdir(paste("images/elections/2006/","deputadofederal",snow,cand,".png",sep=""))
+
+      
+      png(file=fn,height=600, width=800)
+      print(pnew)
+      dev.off()
+      
+      ##pdf(file=fn,bg="transparent",width=8)      
+      ##print(pnew)    
+      ##dev.off()      
+      ##system(paste("convert -density 400x400 -resize 500x500 -quality 90 ", fn," ",gsub(".pdf",".png",fn)),wait=TRUE)
+      ##rm(pnew)
+      gc()
   }
 }
 
@@ -177,7 +181,7 @@ for (snow in states[-c(1:12)]) {
 
 ## plots
 ## snow <- "RR"
-## tmp2 <- dbGetQueryU(connect,paste("select * from br_vote_mun_ag where state='",snow,"'",sep=""))
+## tmp2 <- dbGetQuery(connect,paste("select * from br_vote_mun_ag where state='",snow,"'",sep=""))
 
 ## cnow <- paste(25,sep=",")
 ## tmp1 <- dbGetQuery(connect,paste("select * from br_vote_mun where office=\"DEPUTADO FEDERAL\" and candidate_code in (",cnow,")  AND state='",snow,"'",sep=""))
