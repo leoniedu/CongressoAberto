@@ -3,22 +3,22 @@
 a <- dbGetQuery(conwp, 'select * from wp_posts')
 
 pid <- dbGetQuery(conwp, 'select * from '%+%tname("posts")%+%' where post_title="Dados e AnÃ¡lises"')$ID[1] 
-the.content <- "<table>
+the.content <- descr::toUTF8("<table>
                 <tr>
                 <td><p><img width=400 src='/images/camara/2dhierarchical20072009.png' alt='Camara em Duas Dimensoes'/></p></td>
-                <td><explain>A posicao dos legisladores em duas dimensoes (em cinza claro) e estimada a partir das votacoes nominais realizadas na Camara.
-                        Utilizamos um um modelo hierariquico no qual a primeira dimensao e identificada a partir de dados de survey, de modo a corresponder 
-                        a clivagem direita-esquerda. A segunda dimensao eh deixada livre, e o resultado eh que os partidos aparecem ordenados pelo que parece
-                        ser seu grau de `governismo'. A maioria das votacoes na atual legislatura (omitidas por simplicidade) separam governo de oposicao e 
-                        nao esquerda de direita. A cor dos circulos representando a posicao dos partidos vai de branco (sempre no gabinete) a preto 
+                <td><explain>A posição dos legisladores em duas dimensões (em cinza claro) é estimada a partir das votações nominais realizadas na Câmara.
+                        Utilizamos um modelo no qual a primeira dimensão é identificada a partir de dados de survey, de modo a corresponder 
+                        à clivagem direita-esquerda. A segunda dimensão é deixada livre, e o resultado é que os partidos são ordenados pelo que parece
+                        ser seu grau de `governismo'. A maioria das votações na atual legislatura separam governo de oposição e 
+                        não esquerda de direita. A cor dos circulos representando a posição dos partidos vai de branco (sempre no gabinete) a preto 
                         (nunca no gabinete).</explain></td>
                 </tr>
-                </table>"
+                </table>",from = "WINDOWS-1252") 
 sub.content <- NULL
 
   the.content <- paste(the.content,sub.content)
 
-  postid <- wpAddByTitle(conwp,post_title="A CÃ¢mara em Duas DimensÃµes", 
+  postid <- wpAddByTitle(conwp,post_title=descr::toUTF8("A Câmara em Duas Dimensões",from = "WINDOWS-1252"), 
                         post_name="2dhierarchical20072009",
                         post_author=2,
                         post_type="page", ## can be page
