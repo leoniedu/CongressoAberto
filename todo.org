@@ -1,0 +1,12 @@
+Congresso Aberto
+
+
+* Code
+** roll calls 
+** mark a roll call result as unanimous
+
+* advertising
+** email deputados federais
+Should wait for some of the (many) bugs to be ironed out.
+
+
