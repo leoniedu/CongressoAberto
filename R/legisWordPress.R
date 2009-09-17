@@ -47,6 +47,13 @@ for (i in unique(toupper(dnow$state))) {
                       post_content='<ul><?php global $post;$thePostID = $post->ID;wp_list_pages( "child_of=".$thePostID."&title_li="); ?></ul>',post_parent=pdeps)
 }
 
+
+
+
+map <- 
+
+
+
 postlegis <- function(bioid, skip=FALSE) {
     idname <- dbGetQueryU(connect,paste("SELECT a.bioid, b.namelegis, a.state, a.party, b.* FROM br_deputados_current as a, br_bio as b where a.bioid=b.bioid and a.bioid=",bioid))
     parentp <- dbGetQuery(conwp,paste("SELECT ID FROM ",tname("posts")," where post_name=",shQuote(idname$state)," and post_type='page'"))

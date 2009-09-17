@@ -15,7 +15,9 @@ capwords <- function(s, strict = TRUE) {
   cap <- function(s) paste(toupper(substring(s,1,1)),
                            {s <- substring(s,2); if(strict) tolower(s) else s},
                            sep = "", collapse = " " )
-  sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
+  res <- sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
+  res <- gsub("De\\b", "de", res)
+  res
 }
 
 tmptable <- function() paste("t",paste(sample(c(letters,0:9),10,replace=TRUE), collapse=""),sep='')
@@ -736,7 +738,8 @@ read.tramit <- function(file, encoding="latin1") {
                                         #FIX add to db, first checking that the results were updated.
 readbill <- function(file) {  
   if (length(grep("Prop_Erro|Prop_Lista",file))>0)  return(NULL)
-  tmp <- readLines(file,encoding="latin1")  
+  tmp <- readLines(file)
+  if (!any(grepl("Módulo", tmp))) tmp <- readLines(file,encoding="latin1")  
   if(length(grep("Nenhuma proposição encontrada",tmp))>0) return(NULL)
   tmp <-  gsub("\r|&nbsp","",tmp)
   tmp <-  gsub(";+"," ",tmp)

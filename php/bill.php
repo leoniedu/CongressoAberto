@@ -5,6 +5,9 @@ include_once("server.php");
 ///$database = 'congressoaberto';
 //mysql_select_db($database, $con);
 // sending query
+// $billid = $_GET['billid'];
+$billid = 422643;
+
 $result = mysql_query("SELECT billauthor, ementa, status  FROM br_bills where billid={$billid} limit 1");
 if (!$result) {
   die("Query to show fields from table failed");

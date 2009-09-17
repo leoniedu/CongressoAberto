@@ -35,7 +35,7 @@ if (update.all) {
 ##update.all conditional
 toup <- which(is.na(billsf$billid))
 if (update.all) {
-  toup <- 1:nrow(billsf)
+    toup <- 1:nrow(billsf)
 }
 
 for ( i in toup) {

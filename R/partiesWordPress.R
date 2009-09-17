@@ -28,7 +28,19 @@ dp$pagename <- paste(dp$partyname,dp$number,sep="_")
 
 ## add the parent page "Partidos"
 
-pid <- wpAddByTitle(conwp,post_title="Partidos",post_content='<?php include_once(\'php/partylist.php\'); ?> ')
+##add party page with table
+the.content <- "<?php include_once('php/partylist.php'); ?>"
+sub.content <- NULL
+the.content <- paste(the.content,sub.content)
+pid <- wpAddByTitle(conwp,post_title="Partidos",
+                    post_name="partidos",
+                    post_author=2,
+                    post_type="page", ## can be page
+                    post_content=the.content,
+                    post_parent=NULL,
+                    fulltext=paste("Partidos"), ## put in the full text field terms that you'd like the search function to use to  find this post
+                    post_excerpt=paste("Sumario de dados sobre partidos "), ## summary of the post. it is what is shown in the front page, or in the search results.
+                    tags=data.frame(slug=c("partidos"),name=c("Partidos"))) ## tag the post  format similar to categories and custom fields
 
 
 ## add pages
@@ -65,7 +77,7 @@ for (i in 1:nrow(dp)) {
                         ##,tags=data.frame(slug=c("Partidos",dp$partyname[i]),
                         ##name=c("Partidos",dp$partyname[i])) ## tag the post  format similar to categories and custom fields
                         )
-  partypostid <- rbind(partypostid, data.frame(postid, partynumber=dp$number[i]))
+  partypostid <- rbind(partypostid, data.frame(postid, name=dp$name[i], number=dp$number[i]))
 }
 
 dbRemoveTable(connect, "br_partypostid")

@@ -30,6 +30,9 @@ fx <-  function(i)  {
       if (length(grep("Apensado", tramit)>0)) stop()
       billst <- data.frame(billsf[i,],res)
       tramit <- data.frame(billid=billsf[i,"billid"],tramit)
+      dbGetQuery(connect, "delete from br_bills where billid="%+%billsf$billid[i])
+      ##FIX THIS. Should only add rows that are not in yet.
+      dbGetQuery(connect, "delete from br_tramit where billid="%+%billsf$billid[i])
       dbWriteTableU(connect, "br_bills", billst, append=TRUE)
       dbWriteTableU(connect, "br_tramit", tramit, append=TRUE)      
       gc()

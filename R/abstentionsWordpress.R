@@ -26,7 +26,7 @@ connect.wp()
 
 init.date <- Sys.Date()-365
 
-init.date <- Sys.Date()-60
+##init.date <- Sys.Date()-60
 final.date <- Sys.Date()
 date.range <- paste(format(c(init.date+1,final.date-1),"%d-%m-%Y"))
 sql <- paste("select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b, br_deputados_current as c where a.bioid=c.bioid and a.rcvoteid=b.rcvoteid and (rcdate>cast('",init.date,"' as date) ) and (rcdate<cast('",final.date,"' as date) ) ",sep='')
@@ -123,25 +123,35 @@ governistas <- getpics("cgov")
 
 partidarios <- getpics("cparty")
 
-with(stats[1,],{
-    art <- ifelse (sex=="Male", "o", "a")
-    tshort <- ifelse (sex=="Male", "deputado", "deputada")
-    paste(           
-          ##foto
-          toupper(art)," ",
-           title," ",
-           ## nome, partido estado
-           namelegis.1," (",party, "/", toupper(state),")", sep='',
-           ## ultimo dia em que compareceu.
-           ' compareceu a uma votação nominal  na Câmara pela última vez no dia ',
-           format.Date(lastseen, "%d/%m/%Y"),". ",
-          
-           ## naturalidade
-           "Natural de ", birthplace, ", ", namelegis.1, " tem ", diffyear(birthdate.1,Sys.Date()), " anos de idade."
-           , " Quando presente, ",art, " ", tshort,  " vota ", round(cgov_prop*100), "%"
-          , " das vezes com o governo, e ", round(cparty_prop*100), "% das vezes com seu partido."
-          )
-})
+
+
+
+statsnow <- governistas[[1]]
+
+
+
+content <- function(statsnow) {
+    with(statsnow,{
+        art <- ifelse (sex=="Male", "o", "a")
+        tshort <- ifelse (sex=="Male", "deputado", "deputada")
+        paste(           
+              ##foto
+              "<img width=100 src=\"/php/timthumb.php?src=/images/bio/polaroid/foto",bioid,".png&w=100\"/> ",
+              toupper(art)," ",
+              title," ",
+              ## nome, partido estado
+              capwords(namelegis.1)," (",party, "/", toupper(state),")", sep='',
+          ## ultimo dia em que compareceu.
+              ' compareceu a votações nominais  na Câmara pela última vez no dia ',
+              format.Date(lastseen, "%d/%m/%Y"),". ",          
+              ## naturalidade
+              "Natural de ", capwords(birthplace), ", ", capwords(namelegis.1), " tem ", diffyear(birthdate.1,Sys.Date()), " anos de idade."
+              , " ",toupper(art), " ", tshort,  " vota ", round(cgov_prop*100), "%"
+              , " das vezes com o governo, e ", round(cparty_prop*100), "% das vezes com seu partido."
+              , collapse="<br")
+    })
+}
+
 
 
 
@@ -161,7 +171,7 @@ statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"cgov_prop"])
 excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais seguiram a indicação do governo nas votações nominais na Câmara dos Deputados no  período de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
 ##FIX: insert date in the post?
 wpAddByTitle(conwp,post_title="Os Governistas"## %+%format(final.date,"%m/%Y")
-             ,post_content=""
+             ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("governismo",slug="governismo")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
@@ -175,7 +185,7 @@ statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"cparty_prop"])
 excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais seguiram a indicação dos seus partidos  nas votações nominais na Câmara dos Deputados no  período de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
 ##FIX: insert date in the post?
 wpAddByTitle(conwp,post_title="Os Fiéis"## %+%format(final.date,"%m/%Y")
-             ,post_content=""
+             ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("partidos",slug="partidos")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
@@ -191,7 +201,7 @@ excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados
 ##FIX: insert date in the post?
 wpAddByTitle(conwp
              ,post_title="Os Ausentes"## %+%format(final.date,"%m/%Y")           
-             ,post_content=""
+             ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("absenteismo",slug="absenteismo")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",

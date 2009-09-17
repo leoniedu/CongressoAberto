@@ -54,7 +54,7 @@ dbInsert <- function(con,df,table="tmp",update=FALSE,extra="",verbose=FALSE) {
 
 ##FIX join addbyname and addbytitle functions together
 wpAddByName <- function(con,post_name,new_post_name=NULL,...) {
-  pid <- dbGetQuery(conwp, paste("select * from ",tname("posts")," where post_name=",shQuote(post_name)))
+  pid <- dbGetQuery(conwp, paste("select * from ",tname("posts")," where post_type in ('page','post') and post_name=",shQuote(post_name)))
   if (nrow(pid)==0) {  
     ## let's create it
     pid <- NA
@@ -70,7 +70,8 @@ wpAddByName <- function(con,post_name,new_post_name=NULL,...) {
 }
 
 wpAddByTitle <- function(con,post_title,new_post_title=NULL,...) {
-  pid <- dbGetQuery(conwp, paste("select * from ",tname("posts")," where post_title=",shQuote(post_title)))
+    pid <- dbGetQuery(conwp, paste("select * from ",tname("posts")," where post_type in ('page','post') and post_title=",shQuote(post_title)))
+    ##pid <- dbGetQuery(conwp, paste("select * from ",tname("posts")," where post_title=",shQuote(post_title)))
   if (nrow(pid)==0) {  
     ## let's create it
     pid <- NA
