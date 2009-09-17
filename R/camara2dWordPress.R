@@ -1,3 +1,5 @@
+# !Mode:: "R:UTF-8"
+
 ### TENTANDO POSTAR AUTOMATICAMENTE
 
 pid <- dbGetQuery(conwp, 'select * from '%+%tname("posts")%+%' where post_title="Dados e Análises"')$ID[1] 
@@ -15,6 +17,7 @@ the.content <- "<table>
 sub.content <- NULL
 the.content <- paste(the.content,sub.content)
 
+
 postid <- wpAddByName(conwp,post_title="A Câmara em Duas Dimensões", 
                       post_name="2dhierarchical20072009",
                       post_author=2,
@@ -25,4 +28,3 @@ postid <- wpAddByName(conwp,post_title="A Câmara em Duas Dimensões",
                       post_excerpt=paste("Pontos ideais na Câmara em duas dimensões"), ## summary of the post. it is what is shown in the front page, or in the search results.
                       tags=data.frame(slug=c("posicoes-ideais","ideologia"),name=c("Posições Ideais","Ideologia"))
                       ) ## tag the post  format similar to categories and custom fields
-    

@@ -37,7 +37,7 @@ $nparties = $row[0];
 
 echo '<table border="0">';
 echo '<tr>';
-print("<td width='110'><img src=\"/	php/timthumb.php?src=/images/partylogos/".$partyacronym.".jpg&w=100&h=0\"  width=100/></td>");
+print("<td width='110'><img src=\"/ php/timthumb.php?src=/images/partylogos/".$partyacronym.".jpg&w=100&h=0\"  width=100/></td>");
 print("<td width='400'><h3>$nameparty</h3></p>
             Tamanho da Bancada: $sizeparty legisladores ($ranksizeparty&ordm)<br>
             Taxa de Absenteismo  $shareabsent% ($rankshareabsent&ordm) <br>
