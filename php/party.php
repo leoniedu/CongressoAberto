@@ -37,7 +37,7 @@ $nparties = $row[0];
 
 echo '<table border="0">';
 echo '<tr>';
-print("<td width='110'><img src=\"/ php/timthumb.php?src=/images/partylogos/".$partyacronym.".jpg&w=100&h=0\"  width=100/></td>");
+print("<td width='110'><img src=\"/php/timthumb.php?src=/images/partylogos/".$partyacronym.".jpg&w=100&h=0\"  width=100/></td>");
 print("<td width='400'><h3>$nameparty</h3></p>
             Tamanho da Bancada: $sizeparty legisladores ($ranksizeparty&ordm)<br>
             Taxa de Absenteismo  $shareabsent% ($rankshareabsent&ordm) <br>
@@ -55,11 +55,11 @@ print("<td width='400'><h3>$nameparty</h3></p>
 echo '<table border="0">';
 echo '<tr>';
 print("<br><h3>Comportamento Típico do $partyacronym</h3></tr>");
-print("<tr><img src=\"/images/typical/".$partyacronym."typical.png\" width=800/></tr></table>");
+print("<tr><img src=\"/php/timthumb.php?src=/images/typical/".$partyacronym."typical.png&w=600&h=0\" width=600/></tr></table>");
 
 echo '<table border="0">';
 echo '<tr>';
 print("<br><h3>Taxa de Governismo do $partyacronym</h3></tr>");
-print("<tr><img src=\"/images/governism/".$partyacronym."governism.png\" width=800/></tr></table>");
+print("<tr><img src=\"/php/timthumb.php?src=/images/governism/".$partyacronym."governism.png&w=600&h=0\" width=600/></tr></table>");
 
 </script>
