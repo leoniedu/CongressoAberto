@@ -6,6 +6,10 @@ Congresso Aberto
 *** mark a roll call result as unanimous
 ** 10 mais
 *** add  % absent
+** Presença em plenário
+*** add explanation
+*** possibly combine with numero de votacoes
+
 
 * advertising
 ** email deputados federais
