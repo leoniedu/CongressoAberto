@@ -6,7 +6,7 @@ include_once("server.php");
 //mysql_select_db($database, $con);
 // sending query
 // $billid = $_GET['billid'];
-$billid = 422643;
+//$billid = 422643;
 
 $result = mysql_query("SELECT billauthor, ementa, status  FROM br_bills where billid={$billid} limit 1");
 if (!$result) {

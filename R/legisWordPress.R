@@ -50,9 +50,6 @@ for (i in unique(toupper(dnow$state))) {
 
 
 
-map <- 
-
-
 
 postlegis <- function(bioid, skip=FALSE) {
     idname <- dbGetQueryU(connect,paste("SELECT a.bioid, b.namelegis, a.state, a.party, b.* FROM br_deputados_current as a, br_bio as b where a.bioid=b.bioid and a.bioid=",bioid))

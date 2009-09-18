@@ -3,7 +3,9 @@ Congresso Aberto
 
 * Code
 ** roll calls 
-** mark a roll call result as unanimous
+*** mark a roll call result as unanimous
+** 10 mais
+*** add  % absent
 
 * advertising
 ** email deputados federais

@@ -10,26 +10,49 @@ $table = 'br_bio';
 ##$bioid = $_GET["bioid"];
 
 // sending query
-$result = mysql_query("SELECT namelegis FROM br_bio where bioid={$bioid} limit 1");
+$result = mysql_query("SELECT 
+a.namelegis, 
+a.legisserved, 
+b.candidate_code,
+b.state,
+round(c.cgov_prop*100),
+d.party,
+round(c.ausente_prop*100),
+d.mailaddress
+	FROM br_bio as a, br_bioidtse as b, 
+	br_legis_stats as c, 
+	br_deputados_current as d
+	where a.bioid={$bioid} and 
+	a.bioid=b.bioid
+	and a.bioid=c.bioid  
+	and	a.bioid=d.bioid
+	and b.year=2006 
+	 ");
 if (!$result) {
   die("Query to show fields from table failed");
  }
 
 $row = mysql_fetch_row($result);
 $namelegis = $row[0];
-
-$result = mysql_query("SELECT candidate_code, state FROM  br_bioidtse where bioid={$bioid} and year=2006 limit 1");
-$row = mysql_fetch_row($result);
-$candno = $row[0];
-$state = $row[1];
+$legisserved = $row[1];
+$candno = $row[2];
+$state = $row[3];
+$percprogov = $row[4];
+$party = $row[5];
+$percausente = $row[6];
+$email = $row[7];
 
 // $statelegis = $row[2]; FIX: make it not depend on row order (Call by name)
 echo '<table border="0">';
 echo '<tr>';
 print("<td><img src=\"/php/timthumb.php?src=/images/bio/polaroid/foto".$bioid.".png&w=100&h=0&zc=0\" alt=\"$namelegis\" width=100/></td>");
 print("<td> 
-<p>$namelegis ($state)<br>
-Legislaturas: </p>
+<p>$namelegis ($party/$state)<br>
+Legislaturas: $legisserved <br>
+Vota com o governo: $percprogov% <br>
+Ausente: $percausente% <br>
+Email: <a href=\"mailto:$email\"> $email
+</p>
  </td></tr></table>");
 
 </script>
