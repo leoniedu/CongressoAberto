@@ -1,20 +1,19 @@
-# In construction
-#
-# New code does it all in LONG FORMAT
-# Check the U functions, whether they are necessary and working
+# Computes party statistics and plots party graphs
+# Outputs: Table of party stats
+#          Table of ranks in party stats
+#          Graphs
 #
 # Currently:
+# Does everything in LONG format 
 # Using all roll calls, independent of quorum, as long as not secrete votes
 # Withexec 
 #       Considers only votes that were actually taken. If legislator did not vote, he is counted as NA (could, conceivably, refine this)
 #       Relative voting with government is measured only over votes that the executive declared position
+# 09-28 Added number of women per party: computes directly from current composition of legislature and adds to output tables in the end
 #
-# Added number of women per party: computes directly from current composition of legislature and adds to output tables in the end
-#
-# Outputs: Table of party stats
-#          Table of ranks in party stats
-#
-##
+# TODO
+# Create map of parties
+# Check the U functions, whether they are necessary and working#
 library(ggplot2)
 
 ## FIX: WNOMINATE DOES NOT WORK ON THE SERVER (YET)
@@ -155,9 +154,10 @@ party.data <- data.frame(current.size=0,
                          with.execDIV = round(100*with.execDIV,1))
 party.data[current.size$party,"current.size"] <- current.size$nrow  #merge like this because parties might be missing in last vote
 party.data <- party.data[-which(rownames(party.data)=="S.Part."),]
+party.data$share.wom <- round(100*ifelse(is.na(wom[rownames(party.data)]),0,wom[rownames(party.data)]/party.data$current.size),2) #add number of women per party
 party.data <- party.data[which(party.data$ave.size>5),]  #report only parties greater than 5 legislators
 
-party.data.ranks <- data.frame(round(nrow(party.data)-apply(party.data,2,rank)+1))
+party.data.ranks <- data.frame(round(nrow(party.data)-apply(party.data,2,rank,ties.method="max")+1))
 
 party.data.ranks$partyname <-party.data$partyname <- rownames(party.data)      
 party.data.ranks$partyid <-  party.data$partyid <- car::recode(party.data$partyname,"
