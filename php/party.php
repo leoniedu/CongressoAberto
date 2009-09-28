@@ -10,7 +10,7 @@ $row = mysql_fetch_row($result);
 $partyacronym = $row[0];
 
 #Get some summary statistics
-$result = mysql_query("select t1.*, Convert(Convert((t2.name) using binary) using latin1), t2.number from br_partyindices as t1, br_parties_current as t2 where t1.partyid={$partyid} AND t2.number={$partyid}");
+$result = mysql_query("select t1.*, t2.name, t2.number from br_partyindices as t1, br_parties_current as t2 where t1.partyid={$partyid} AND t2.number={$partyid}");
 $row = mysql_fetch_row($result);
 $sizeparty = $row[0];
 $cohesion = $row[2];
