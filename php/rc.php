@@ -1,9 +1,5 @@
 <script language="php">
 include_once("server.php");
-//$host  = "mysql.cluelessresearch.com";
-//$con = mysql_connect($host,"monte","e123456");
-//$database = 'congressoaberto';
-//mysql_select_db($database, $con);
 
 // find the billid
 $result = mysql_query("SELECT 

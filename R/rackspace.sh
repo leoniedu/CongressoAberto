@@ -157,6 +157,7 @@ mkdir ~/reps/CongressoAberto/images/camara
  
 
 
+apt-get install libcurl4-gnutls-dev
 
 
 

@@ -24,7 +24,8 @@ connect.db()
 
 connect.wp()
 
-init.date <- Sys.Date()-365
+##init.date <- Sys.Date()-365
+init.date <- "2007-02-01"
 
 ##init.date <- Sys.Date()-60
 final.date <- Sys.Date()

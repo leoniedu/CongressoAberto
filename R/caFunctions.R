@@ -325,102 +325,102 @@ diffyear <- function(x,y) {
 }
   
 readOne <- function(LVfile,post=FALSE) {
-  ##FIX: really need the following line? does it crash other things?
-  options(encoding="ISO8859-1")
-  HEfile <- gsub("^LV","HE",LVfile)
-  ##Read data from VOTE LIST file for the vote
-  ##if(nchar(vote)==24){ #formato antigo: titulo tinha 24 characters, no novo so 21
-  ##Fixed the following line (I think)
-  if(nchar(LVfile)==24)  { #formato antigo: titulo tinha 24 characters, no novo so 21
-    LV <- read.fwf(LVfile, widths=c(9,-1,9,40,10,10,25,4),strip.white=TRUE)
-  }  else {
-    LV <- read.fwf(LVfile, widths=c(9,-1,6,40,10,10,25,4),strip.white=TRUE)
-  }
-  voteid <- LV$V2[1]  #store number of vote for future use
-  names(LV) <- c("session","rcvoteid","namelegis",paste("vote",voteid,sep="."),"party","state","id") #rename fields
-  ##FIX: ENABLE CLEAN NAME OR NOT?
-  ##LV$name<-clean.name(LV) #apply cleaning function for accents and other characters
-  LV$state <- toupper(state.l2a(LV$state))
-  LV$state <- factor(LV$state,levels=toupper(states))
-  LV <- LV[,c("id","namelegis","party","state",paste("vote",voteid,sep="."))] #rearrange fields
-  vt.date<-as.Date(as.character(read.table(HEfile, header = FALSE, nrows = 1,skip = 2, strip.white = TRUE, as.is = TRUE)[1,1]), "%d/%m/%Y")
-  vt.descrip<-read.table(HEfile, header = FALSE, nrows = 1,skip = 12, strip.white = TRUE, as.is = TRUE, sep=";",quote="")
-  vt.session<-read.table(HEfile, header = FALSE, nrows = 1,skip = 0, strip.white = TRUE, as.is = TRUE)[1,1]
-  vt.descrip<-gsub("\"","",vt.descrip)    #get rid of quotes in the description of the bill
-  HE <- data.frame(rcvoteid=voteid,rcdate=vt.date,session=vt.session,billtext=vt.descrip)  
-  data.votacoes <- get.votacoes(HE)
-  data.votacoes$legis <- get.legis(data.votacoes$legisyear)
-  data.votacoes$rcfile <- LVfile
-  data.votos <- LV
-  data.votos$rcfile <- LVfile
-  data.votos$rcvoteid <- voteid
-  names(data.votos)[5] <- "rc"
-  data.votos$rc <- gsub("^<.*","Ausente",as.character(data.votos$rc))
-  data.votos$rc <- gsub("^Art.*","Abstenção",as.character(data.votos$rc))
-  data.votos$legis <- data.votacoes$legis[1]
-  if (!post) {
-    return(list(data.votos=data.votos,data.votacoes=data.votacoes))
-  } else {
-    connect.db()
-    session.now <- as.character(data.votacoes$legis[1])
-    ##bioids
-    idname <- dbGetQueryU(connect,paste("select * from br_bioidname where legis='",session.now,"'",sep=''))
-    ## merge using the br_ids db (a mapping of all ids)
-    createtab <- !dbExistsTable(connect,"br_idbioid")
-    ids <- dbReadTable(connect,"br_idbioid")
-    if (nrow(ids)>0) {
-      ##merge with camara ids first
-      tomatch <- merge(data.votos,ids,by=c("id","legis"),all.x=TRUE)
-      tomatch <- subset(tomatch,is.na(bioid),select=-bioid)
+    ##FIX: really need the following line? does it crash other things?
+    options(encoding="ISO8859-1")
+    HEfile <- gsub("^LV","HE",LVfile)
+    ##Read data from VOTE LIST file for the vote
+    ##if(nchar(vote)==24){ #formato antigo: titulo tinha 24 characters, no novo so 21
+    ##Fixed the following line (I think)
+    if(nchar(LVfile)==24)  { #formato antigo: titulo tinha 24 characters, no novo so 21
+        LV <- read.fwf(LVfile, widths=c(9,-1,9,40,10,10,25,4),strip.white=TRUE)
+    }  else {
+        LV <- read.fwf(LVfile, widths=c(9,-1,6,40,10,10,25,4),strip.white=TRUE)
+    }
+    voteid <- LV$V2[1]  #store number of vote for future use
+    names(LV) <- c("session","rcvoteid","namelegis",paste("vote",voteid,sep="."),"party","state","id") #rename fields
+    ##FIX: ENABLE CLEAN NAME OR NOT?
+    ##LV$name<-clean.name(LV) #apply cleaning function for accents and other characters
+    LV$state <- toupper(state.l2a(LV$state))
+    LV$state <- factor(LV$state,levels=toupper(states))
+    LV <- LV[,c("id","namelegis","party","state",paste("vote",voteid,sep="."))] #rearrange fields
+    vt.date<-as.Date(as.character(read.table(HEfile, header = FALSE, nrows = 1,skip = 2, strip.white = TRUE, as.is = TRUE)[1,1]), "%d/%m/%Y")
+    vt.descrip<-read.table(HEfile, header = FALSE, nrows = 1,skip = 12, strip.white = TRUE, as.is = TRUE, sep=";",quote="")
+    vt.session<-read.table(HEfile, header = FALSE, nrows = 1,skip = 0, strip.white = TRUE, as.is = TRUE)[1,1]
+    vt.descrip<-gsub("\"","",vt.descrip)    #get rid of quotes in the description of the bill
+    HE <- data.frame(rcvoteid=voteid,rcdate=vt.date,session=vt.session,billtext=vt.descrip)  
+    data.votacoes <- get.votacoes(HE)
+    data.votacoes$legis <- get.legis(data.votacoes$legisyear)
+    data.votacoes$rcfile <- LVfile
+    data.votos <- LV
+    data.votos$rcfile <- LVfile
+    data.votos$rcvoteid <- voteid
+    names(data.votos)[5] <- "rc"
+    data.votos$rc <- gsub("^<.*","Ausente",as.character(data.votos$rc))
+    data.votos$rc <- gsub("^Art.*","Abstenção",as.character(data.votos$rc))
+    data.votos$legis <- data.votacoes$legis[1]
+    if (!post) {
+        return(list(data.votos=data.votos,data.votacoes=data.votacoes))
     } else {
-      tomatch <- data.votos
-    }
-    ## Remove deputies without state
-    tomatch.nostate <- subset(tomatch,is.na(state))
-    tomatch <- subset(tomatch,!is.na(state))
-    ##try to find the bioid for new deps
-    idname$namelegis <- idname$name
-    res <- res.nostate <- NULL
-    check <- function(res,tomatch) {
-      ##might have multiple matches. We discard if the 
-      ##tripple (id,bioid, session) is still unique
-      res <- unique(with(res,data.frame(bioid,id,legis)))
-      ##fix: check explicitly for multiple ids.
-      if(min(tomatch$id%in%res$id)==0) {
-        print(tomatch[!tomatch$id%in%res$id,])
+        connect.db()
+        session.now <- as.character(data.votacoes$legis[1])
+        ##bioids
+        idname <- dbGetQueryU(connect,paste("select * from br_bioidname where legis='",session.now,"'",sep=''))
+        ## merge using the br_ids db (a mapping of all ids)
+        createtab <- !dbExistsTable(connect,"br_idbioid")
+        ids <- dbReadTable(connect,"br_idbioid")
+        if (nrow(ids)>0) {
+            ##merge with camara ids first
+            tomatch <- merge(data.votos,ids,by=c("id","legis"),all.x=TRUE)
+            tomatch <- subset(tomatch,is.na(bioid),select=-bioid)
+        } else {
+            tomatch <- data.votos
+        }
+        ## Remove deputies without state
+        tomatch.nostate <- subset(tomatch,is.na(state))
+        tomatch <- subset(tomatch,!is.na(state))
+        ##try to find the bioid for new deps
+        idname$namelegis <- idname$name
+        res <- res.nostate <- NULL
+        check <- function(res,tomatch) {
+            ##might have multiple matches. We discard if the 
+            ##tripple (id,bioid, session) is still unique
+            res <- unique(with(res,data.frame(bioid,id,legis)))
+            ##fix: check explicitly for multiple ids.
+            if(min(tomatch$id%in%res$id)==0) {
+                print(tomatch[!tomatch$id%in%res$id,])
         stop("Some legislators not yet in db")
-      } else if (sum(duplicated(res$bioid))) {
-        print(res[with(res,bioid%in%bioid[which(duplicated(bioid))]),])
-        stop("Some ids are duplicated ")
-      }
+            } else if (sum(duplicated(res$bioid))) {
+                print(res[with(res,bioid%in%bioid[which(duplicated(bioid))]),])
+                stop("Some ids are duplicated ")
+            }
       res
+        }
+        if (nrow(tomatch)>0) {
+            ##browser()
+            res <- merge.approx(states,idname,
+                                tomatch,"state","namelegis")
+            res <- check(res,tomatch)
+        }
+        ## does this actually happen?
+        if (nrow(tomatch.nostate)>0) {
+            res.nostate <- merge.one(idname,tomatch.nostate,"namelegis",maxd=0.2)
+            res.nostate <- check(res.nostate,tomatch.nostate)
+        }
+        res <- unique(rbind(res,res.nostate))
+        ##write new matches to db
+        if (!is.null(nrow(res))) dbWriteTableU(connect, "br_idbioid",res,append=TRUE)
     }
-    if (nrow(tomatch)>0) {
-      ##browser()
-      res <- merge.approx(states,idname,
-                          tomatch,"state","namelegis")
-      res <- check(res,tomatch)
-    }
-    ## does this actually happen?
-    if (nrow(tomatch.nostate)>0) {
-      res.nostate <- merge.one(idname,tomatch.nostate,"namelegis",maxd=0.2)
-      res.nostate <- check(res.nostate,tomatch.nostate)
-    }
-    res <- unique(rbind(res,res.nostate))
-    ##write new matches to db
-    if (!is.null(nrow(res))) dbWriteTableU(connect, "br_idbioid",res,append=TRUE)
-  }
-  ## read table again
-  ids <- dbReadTableU(connect,"br_idbioid")
-  data.votos <- merge(data.votos,ids,by=c("id","legis"),all.x=TRUE)
-  if (sum(is.na(data.votos$bioid))>0) stop("there are missing ids")
-  dbWriteTableU(connect, "br_votos",data.votos, append=TRUE)
-  dbWriteTableU(connect, "br_votacoes",data.votacoes, append=TRUE)
-  ## update leaders table
-  getLeaders(voteid)  
+    ## read table again
+    ids <- dbReadTableU(connect,"br_idbioid")
+    data.votos <- merge(data.votos,ids,by=c("id","legis"),all.x=TRUE)
+    if (sum(is.na(data.votos$bioid))>0) stop("there are missing ids")
+    dbWriteTableU(connect, "br_votos",data.votos, append=TRUE)
+    dbWriteTableU(connect, "br_votacoes",data.votacoes, append=TRUE)
+    ## update leaders table
+    getLeaders(voteid)  
 }
 ##readOne(LVfile,post=TRUE)
-  
+
 ## write.csv(LV,file=paste(gsub("txt$","csv",LVfile,ignore.case=TRUE)),row.names = FALSE) #save fil 
 ## write.csv(HE,file=paste(gsub("txt$","csv",HEfile,ignore.case=TRUE)),row.names = FALSE)
 ## data.votacoes <- do.call(rbind,lapply(file.table[,2],gd,encoding=FALSE))
@@ -690,7 +690,6 @@ getbill <- function(sigla="MPV",numero=447,ano=2008,overwrite=TRUE, deletefirst=
   } else {
     opts <- "-nc"
   }  
-  ## FIX: download the file to disk (allows faster recovery)
   ## FIX: code as NA if value is missing
   ## -N for overwriting, -nc for not overwriting
   ##tmp <- system(paste("wget -r -l1 -t 15  ",opts," 'http://www.camara.gov.br/sileg/Prop_Lista.asp?Sigla=",sigla,"&Numero=",numero,"&Ano=",ano,"' -P ~/reps/CongressoAberto/data/www.camara.gov.br/sileg  2>&1",sep=''),intern=TRUE)
@@ -826,19 +825,6 @@ manfix <- function(id,newstate) {
   dbSendQuery(connect,paste("update br_idname set state='",newstate,"' where bioid='",id,"'",sep=''))
   dbSendQuery(connect,paste("update br_bio set state='",newstate,"' where bioid='",id,"'",sep=''))
 }
-## These are no longer needed (fixed using index file)
-## manfix("96883","AP")
-## manfix("97304","RO")
-## manfix("100597","MT")
-## manfix("98460","MG")
-## bio.all[bio.all$bioid=="96883","state"] <- "AP"
-## bio.all[bio.all$bioid=="97304","state"] <- "RO" ## Expedito Junior (born in SP)
-## bio.all[bio.all$bioid=="100597","state"] <- "MT" ## Osvaldo Sobrinho
-
-
-## VARIABLES
-
-states <- c("AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG", "PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO")
 
 
 
@@ -1428,3 +1414,10 @@ state.a2L <- function(object) {
 lsos <- function(..., n=10) {
     .ls.objects(..., order.by="Size", decreasing=TRUE, head=TRUE, n=n)
 }
+
+
+
+## constants
+
+states <- c("AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG", "PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO")
+

@@ -6,13 +6,22 @@ Congresso Aberto
 *** mark a roll call result as unanimous
 ** 10 mais
 *** add  % absent
+*** add links
 ** Presença em plenário
 *** add explanation
 *** possibly combine with numero de votacoes
-
+** Deputados
+*** explain the denominator. Perhaps add the percentages.
+*** interactive maps
+**** add link back to the page
+** Partidos
+*** include all in the table, but individual pages for the size>5
 
 * advertising
 ** email deputados federais
 Should wait for some of the (many) bugs to be ironed out.
 
 
+
+* Design
+** check for font and font size in the tables
