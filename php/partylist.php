@@ -32,5 +32,6 @@ google.setOnLoadCallback(drawVisualization);
 
 </script>
 <h3>  Atual Legislatura (2007-2010) </h3>
+<explain> Somente partidos com mais de cinco legisladores </explain>
 <div id="table1">
 </div>

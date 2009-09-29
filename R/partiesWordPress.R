@@ -1,3 +1,6 @@
+#This code posts the parties main page to WordPress
+#Check ou partylist.php for formating details of the page
+
 rf <- function(x=NULL) {
   if (.Platform$OS.type!="unix") {
     run.from <- "C:/reps/CongressoAberto"
@@ -82,4 +85,3 @@ for (i in 1:nrow(dp)) {
 
 dbRemoveTable(connect, "br_partypostid")
 dbWriteTable(connect, "br_partypostid", partypostid)
-
