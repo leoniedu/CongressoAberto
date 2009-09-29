@@ -1421,3 +1421,36 @@ lsos <- function(..., n=10) {
 
 states <- c("AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG", "PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO")
 
+
+plots pdf and png maps of party's electoral strengh in each state
+map.elec <- function(the.data, filenow='',title='', large=TRUE, percent=FALSE) { 
+  if (percent) {
+    pct <- 100
+    legend.title <- "Votos para Deputado Federal (%)"    
+  } else {
+    pct <- 1
+    legend.title <- "Votos para Deputado Federal"    
+  }
+  the.data$UF <- the.data$state
+  m2 <- merge.sp(m1,the.data,by="UF")
+  par(bg="grey90")
+  n1 <- 4
+  seqx <- c(0,0.01,0.05,.1,.2,1)*pct
+  tmp.col <- brewer.pal((length(seqx)-2),"Blues")
+  col.vec <- c("white",tmp.col) 
+  #idea here is to include white as first color
+    if (large) {
+        pdf(file=paste(pty,"map.pdf",sep=""), bg="transparent", width=6, height=6) 
+        par(mai=c(0,0,0.6,0))
+        plot.heat(m2,NULL,"vs",title=legend.title,breaks=seqx,reverse=FALSE,cex.legend=1,bw=1,col.vec=col.vec,main=filenow)
+        with(m2@data,text(x,y,UF,cex=0.8),col="grey30")
+        mtext(title,3, cex=.9)
+          dev.off()
+        convert.png(file=paste(pty,"map.pdf",sep=""))#
+      } else {
+        pdf(file=paste(pty,"mapsmall.pdf",sep=""), bg="transparent", width=6, height=6) 
+        par(mai=c(0,0,0,0))
+        plot.heat(m2,NULL,"vs",breaks=seqx,reverse=FALSE,cex.legend=1,bw=1,col.vec=col.vec,main=filenow,plot.legend=FALSE)
+          dev.off()
+        convert.png(file=paste(pty,"mapsmall.pdf",sep=""))
+      }

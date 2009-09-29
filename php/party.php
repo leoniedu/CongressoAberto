@@ -65,4 +65,10 @@ echo '<tr>';
 print("<br><h3>Taxa de Governismo do $partyacronym</h3></tr>");
 print("<tr><img src=\"/php/timthumb.php?src=/images/governism/".$partyacronym."governism.png&w=600&h=0\" width=600/></tr></table>");
 
+
+echo '<table border="0">';
+echo '<tr>';
+print("<br><h3>Força Eleitoral do $partyacronym</h3></tr>");
+print("<tr><img src=\"/php/timthumb.php?src=/images/partymaps/".$partyacronym."map.png&w=600&h=0\" width=600/></tr></table>");
+
 </script>
