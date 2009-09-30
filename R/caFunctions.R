@@ -1,8 +1,14 @@
+options(stringsAsFactors=FALSE)
+options(encoding="utf8")
 ##FIX: dbWriteTable , append=TRUE does NOT update the table
 ## possible solutions
 ## delete table before hand
 ##UPDATE summary AS t, (query) AS q SET t.C=q.E, t.D=q.F WHERE t.X=q.X
 ## use dbInsert (in wordpress.R)
+
+is.windows <- function() {
+  (.Platform$OS.type!="unix")
+}
 
 theme_mini <- function() {
   structure(list(axis.ticks.margin = unit(c(-1), "lines"), plot.margin = unit(c(0, 0, 0, 0), "lines"), panel.margin = unit(0, "lines"), axis.title.y = theme_blank(), axis.text.x=theme_blank(), axis.text.y=theme_blank(), axis.ticks=theme_blank()), class="options") 
@@ -22,9 +28,14 @@ capwords <- function(s, strict = TRUE) {
 
 tmptable <- function() paste("t",paste(sample(c(letters,0:9),10,replace=TRUE), collapse=""),sep='')
 
-usource <- function(...) source(...,encoding="utf8")
+usource <- function(...) {
+    if (is.windows()) {
+        source(..., encoding="utf8")
+    } else {
+        source(...)
+    }
+}
 
-options(stringsAsFactors=FALSE)
 
 ## save the files directly to web path on server
 webdir <- function(x=NULL) {
