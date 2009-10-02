@@ -10,7 +10,7 @@ rf <- function(x=NULL) {
     run.from <- "~/reps/CongressoAberto"
   }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+  source(paste(run.from,"/R/caFunctions.R",sep=""))
   if (is.null(x)) {
     run.from
   } else {
@@ -110,3 +110,4 @@ if (length(votes)>0) {
 
 ##print(ns)
 warnings()
+print(Sys.time())

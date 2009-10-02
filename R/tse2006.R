@@ -1,6 +1,6 @@
 ##http://www.tse.gov.br/sadEleicao2006DivCand/procCandidatoListar.jsp?tribunal=SP&cargo=3&docsPerPage=10000
-source("~/reps/CongressoAberto/R/caFunctions.R",encoding="UTF8")
-source("~/reps/CongressoAberto/R/matchFunctions.R",encoding="UTF8")
+source("~/reps/CongressoAberto/R/caFunctions.R")
+source("~/reps/CongressoAberto/R/matchFunctions.R")
 
 connect.db()
 

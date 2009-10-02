@@ -36,7 +36,7 @@ alt="<?php the_title(); ?>" class="left"  border=0  /></a>
 	if (isset($values[0])) { ?>
       <a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">
 	<img src="/php/timthumb.php?src=/<?php
-$values = get_post_custom_values("Image"); echo $values[0]; ?>&w=100&zc=0&q=100"
+$values = get_post_custom_values("Image"); echo $values[0]; ?>&w=120&zc=0&q=100"
 alt="<?php the_title(); ?>" class="left" width="100px" height="100px"  /></a>
       <?php } ?>
 	<div class="info"><a href="<?php the_permalink() ?>" rel="bookmark" class="title"><?php the_title(); ?></a>
@@ -96,8 +96,8 @@ alt="<?php the_title(); ?>" class="left" width="100px" height="100px"  /></a>
 	if (isset($values[0])) { ?>
       <a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">
 	<img src="/php/timthumb.php?src=/<?php
-$values = get_post_custom_values("Image"); echo $values[0]; ?>&w=100&h=0&zc=0&q=100"
-alt="<?php the_title(); ?>" class="left" width="100px"   /></a>
+$values = get_post_custom_values("Image"); echo $values[0]; ?>&w=120&h=0&zc=0&q=100"
+alt="<?php the_title(); ?>" class="left" width="120px"   /></a>
       <?php } ?>
 	<?php the_excerpt(); ?>
 	</div>

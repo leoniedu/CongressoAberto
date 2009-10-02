@@ -59,6 +59,9 @@ echo 'export LC_CTYPE="en_US.UTF-8"' > ~/.bash_profile
 apt-get  install -y apache2
 ## check from local machine if the web server works
 
+
+apt-get install man
+
 ## set up mysql
 apt-get install libmysqlclient15-dev mysql-server-5.1
 

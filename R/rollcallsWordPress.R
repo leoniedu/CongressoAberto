@@ -11,7 +11,7 @@ rf <- function(x=NULL) {
     run.from <- "~/reps/CongressoAberto"
   }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+  source(paste(run.from,"/R/caFunctions.R",sep=""))
   if (is.null(x)) {
     run.from
   } else {
@@ -97,18 +97,22 @@ sumroll <- function(rcnow, margin, rcgov) {
   tx[is.na(tx)] <- 0
   ntx <- c("Sim", "Não", "Obstrução", "Abstenção",  "Ausentes")
   names(tx) <- ntx
-  res <- c(res,paste(names(tx)%+%": ",tx,collapse="; "))  
-  if (!is.na(margin)) {
-    res <- c(res, paste("Posição do governo:",rcgov$rc, ". ", sep=''))
-    if (quorum) {
-      if (margin>0) {
-        res <- c(res, "O governo venceu a votação.")
-      } else {
-        res <- c(res, "O governo foi derrotado.")
-      }
-    }
+  res <- c(res,paste(names(tx)%+%": ",tx,collapse="; "))
+  if (tx["Sim"]==0 | tx["Não"]==0 ) {
+      res <- c(res, "A votação foi unânime. ")
   } else {
-    res <- c(res, "Não houve indicação do governo.")
+      if (!is.na(margin)) {
+          res <- c(res, paste("Posição do governo:",rcgov$rc, ". ", sep=''))
+          if (quorum) {
+              if (margin>0) {
+                  res <- c(res, "O governo venceu a votação.")
+              } else {
+                  res <- c(res, "O governo foi derrotado.")
+              }
+          }
+      } else {
+          res <- c(res, "Não houve indicação do governo.")
+      }
   }
   paste(paste("<p>", res, collapse="</p>"), "</p>", collapse=" ")
 }

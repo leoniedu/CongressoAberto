@@ -19,7 +19,7 @@ options(encoding="ISO8859-1")
 ##source(paste(run.from,"~/R/_cleanname.fnct.R",sep=""))
 run.from<-"~/reps/CongressoAberto/data/NECON/"
 source("~/reps/CongressoAberto/R/_cleanname.fnct.R",encoding="latin1")
-source("~/reps/CongressoAberto/R/caFunctions.R",encoding="UTF8")
+source("~/reps/CongressoAberto/R/caFunctions.R")
 ## set as iso
 
 
@@ -28,5 +28,5 @@ current.year <- format(Sys.time(), "%Y")
 
 
 for (current.year in 1999:2009) {
-  source("~/reps/CongressoAberto/R/readCurrentYear.R",encoding="UTF8",echo=TRUE)  
+  source("~/reps/CongressoAberto/R/readCurrentYear.R",echo=TRUE)  
 }

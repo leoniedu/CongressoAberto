@@ -86,14 +86,14 @@ function handleQueryResponse(response) {
   // Reformat our data.
   var rc = new google.visualization.TablePatternFormat('<a href="/?p={1}"> {0} </a>');
   formatter.format(data, 1);
-  rc.format(data, [4,3]);
+  rc.format(data, [6,5]);
   options['page'] = 'enable';
   options['pageSize'] = 10;
   //options['pagingSymbols'] = {prev: 'P', next: 'N'};
   options['pagingButtonsConfiguration'] = 'auto';
   options['allowHtml'] = true;
   var view = new google.visualization.DataView(data);
-  view.hideColumns([3]);
+  view.hideColumns([5]);
   visualization = new google.visualization.Table(document.getElementById('table2'));
   visualization.draw(view, options);
 }

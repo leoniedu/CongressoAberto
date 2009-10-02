@@ -1,5 +1,4 @@
-
-## paths (put on the beg of R scripts)
+## paths (put on the beg of R scripts)!
 rf <- function(x=NULL) {
   if (.Platform$OS.type!="unix") {
       run.from <- "C:/reps/CongressoAberto"
@@ -7,7 +6,7 @@ rf <- function(x=NULL) {
       run.from <- "~/reps/CongressoAberto"
     }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+  source(paste(run.from,"/R/caFunctions.R",sep=""))
   if (is.null(x)) {
     run.from
   } else {

@@ -4,7 +4,7 @@
 	
 	<?php if (have_posts()) : ?>
 	
-		<span class="breadcrumbs"><a href="<?php echo get_option('home'); ?>/">Home</a> &raquo; Archive</span>
+		<span class="breadcrumbs"><a href="<?php echo get_option('home'); ?>/">Home</a> &raquo; Artigos</span>
 	
  	<?php $post = $posts[0]; // Hack. Set $post so that the_date() works. ?>
 

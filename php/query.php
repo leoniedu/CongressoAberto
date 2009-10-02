@@ -27,6 +27,7 @@ if($_GET["form"]=="partylist")
   $sql = "SELECT      
   					  t2.name as Nome
   					, t3.postid
+  					, t2.party as 'Mapa eleitoral'
   					, t2.party as Sigla
                     , t1.current_size as Cadeiras
                     , t1.share_absent as Absentismo
@@ -93,11 +94,13 @@ if($_GET["form"]=="allbills") {
 
 if($_GET["form"]=="votes") {
  ## given a bioid, return roll call votes
-$sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, a.rc  as Voto, c.postid, b.billproc as `Votacao`    from 
-	br_votos as a, 
-	br_votacoes as b,
-	br_rcvoteidpostid as c  
-    where a.bioid=".$_GET["bioid"]." AND a.rcfile=b.rcfile AND b.rcvoteid=c.rcvoteid AND a.legis=53 order by Data DESC" ; 
+$sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, a.rc as Voto, d.rc as 'Partido', e.rc as Governo, c.postid, b.billproc as `Votacao`  from br_votos as a
+left join br_leaders as d on (a.rcvoteid=d.rcvoteid and a.party=d.party)
+left join br_leaders as e on (a.rcvoteid=e.rcvoteid)
+, br_votacoes as b, br_rcvoteidpostid as c  where a.bioid=".$_GET["bioid"]." 
+AND e.party='GOV'
+AND a.rcfile=b.rcfile AND b.rcvoteid=c.rcvoteid AND a.legis=53 order by Data DESC
+" ; 
     #$sql = "select * from br_votos limit 1";
 	#echo $sql;
  }
@@ -143,6 +146,7 @@ if($_GET["form"]=="legislist")
 	  				, c.cgov_total `Segue o governo`
 	  				, c.cparty_count `Segue o partido`
 	  				, c.cparty_total `Segue o partido`
+	  				, c.nparty `Numero de partidos`
 FROM
 br_deputados_current as a,
 br_bio as b,

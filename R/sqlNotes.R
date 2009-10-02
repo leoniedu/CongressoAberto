@@ -2,7 +2,7 @@
 #dbGetQuery(connect,"update  wp_hufib7_posts set post_title=Convert(Convert((select name from  br_bioidname where bioid=100006 limit 1) using binary) using latin1)  where ID=827")
 
 
-source("~/reps/CongressoAberto/R/caFunctions.R",encoding="UTF8")
+source("~/reps/CongressoAberto/R/caFunctions.R")
 connect.db()
 
 

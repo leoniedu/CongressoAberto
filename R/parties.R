@@ -5,7 +5,7 @@ rf <- function(x=NULL) {
     run.from <- "~/reps/CongressoAberto"
   }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+  source(paste(run.from,"/R/caFunctions.R",sep=""))
   if (is.null(x)) {
     run.from
   } else {
@@ -13,9 +13,11 @@ rf <- function(x=NULL) {
   }
 }
 setwd(rf("data"))
-system("wget -Nx http://www.tse.gov.br/internet/partidos/index.htm")
+system("wget -x -N http://www.tse.gov.br/internet/partidos/index.htm")
 old.parties0 <- read.csv("http://spreadsheets.google.com/pub?key=t5NG3eCVSoS02TtuAcjKaGQ&single=true&gid=0&output=csv")[,1:5]
 
+
+dnow <- readLines(rf("data/www.tse.gov.br/internet/partidos/index.htm"))
 
 dnow <- readLines(rf("data/www.tse.gov.br/internet/partidos/index.htm"),encoding="latin1")
 loc <- grep("partidos_politicos",dnow)

@@ -1,4 +1,2 @@
-source /home/ca/.bash_profile
-rm /home/ca/reps/CongressoAberto/data/camara/rollcalls/*.zip
-rm /home/ca/reps/CongressoAberto/data/camara/rollcalls/extracted/*
-R --vanilla < ~/reps/CongressoAberto/R/daily.R
+export LC_CTYPE="en_US.UTF-8"
+cat /home/ca/reps/CongressoAberto/R/daily.R | R --no-save > /home/ca/lognow2.txt

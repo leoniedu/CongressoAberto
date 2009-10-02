@@ -5,7 +5,7 @@ rf <- function(x=NULL) {
     run.from <- "~/reps/CongressoAberto"
   }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+  source(paste(run.from,"/R/caFunctions.R",sep=""))
   if (is.null(x)) {
     run.from
   } else {
@@ -18,23 +18,7 @@ connect.db()
 connect.wp()
 
 
-
-## parent page
-##prop <- dbGetQuery(connect,paste("select * from wp_hufib7_terms where slug ='proposicoes'"))
-##prop <- dbGetQuery(connect,paste("select * from wp_hufib7_terms where name ='Projetos de lei'"))
-
-
-
-##posts <- dbGetQuery(conwp, paste("select * from ",tname("posts")))
-
-## create parent pages if they do not exist
-## Proposicoes
-## check that it does not exist
-
-##propid <- dbGetQuery(conwp, "select ID from wp_posts where post_type='page' and post_title='Proposições'")[[1]]
-
-propid <- wpAddByTitle(conwp,post_title="Proposições",post_name="proposicoes",post_content='<?php include("php/bill_list.php"); ?>')
-
+propid <- wpAddByName(conwp,post_title="Proposições",post_name="proposicoes",post_content='<?php include("php/bill_list.php"); ?>')
 
 
 bills <- dbGetQueryU(connect, "select * from br_bills")

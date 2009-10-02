@@ -1,27 +1,48 @@
 Congresso Aberto
 
-
+* Data
+** table with common names "e.g. reforma politica; or pec dos cartorios"
+http://spreadsheets.google.com/ccc?key=0AmbpsKXCxWvFdHN5aThFQmx4WHNvaFhOTkY5bVA5X0E&hl=en
 * Code
+** Donations
+*** tables summarizing by donor
 ** roll calls 
-*** mark a roll call result as unanimous
+*** DONE mark a roll call result as unanimous
+*** DONE unanimous roll calls are also creating problems for graphs
 ** 10 mais
-*** add  % absent
-*** add links
+*** DONE add  % absent
+*** DONE add links
 ** Presença em plenário
-*** add explanation
+*** DONE add explanation
 *** possibly combine with numero de votacoes
 ** Deputados
-*** explain the denominator. Perhaps add the percentages.
-*** interactive maps
+*** TODO explain the denominator. Perhaps add the percentages.
+*** TODO interactive maps
+*** TODO Party affiliations in dep page
 **** add link back to the page
 ** Partidos
 *** include all in the table, but individual pages for the size>5
-
 * advertising
 ** email deputados federais
 Should wait for some of the (many) bugs to be ironed out.
-
-
-
+** Debora
 * Design
 ** check for font and font size in the tables
+** data download page
+* Server admin
+** Move large files to data.congressoaberto.com
+Note: this is only useful if we notice many people downloading data. I doubt it. Let's for now host them in rackspace.
+** TODO check up if updates are working
+** TODO updateVot should move the downloaded files to another directory (instead of erasing them)
+* Funding 
+** OSI 
+*** OSI Latin America http://www.soros.org/initiatives/regions/latinamerica
+** Ford Foundation
+** Christian Aid
+** Fastenopfer
+** Fundação Avina
+** Instituto Heinrich Böl
+** INESC: http://www.inesc.org.br
+*** DONE Email Márcio Pontual
+** Fundação Avina
+** Other mentioned on inesc http://www.inesc.org.br/institucional/apoio-institucional

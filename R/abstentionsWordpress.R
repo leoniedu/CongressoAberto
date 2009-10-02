@@ -9,7 +9,7 @@ rf <- function(x=NULL) {
       run.from <- "~/reps/CongressoAberto"
     }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+  source(paste(run.from,"/R/caFunctions.R",sep=""))
   if (is.null(x)) {
     run.from
   } else {
@@ -24,12 +24,13 @@ connect.db()
 
 connect.wp()
 
-##init.date <- Sys.Date()-365
-init.date <- "2007-02-01"
+##init.date <- Sys.Date()-30
+init.date <- as.Date("2007-02-01")
 
 ##init.date <- Sys.Date()-60
 final.date <- Sys.Date()
 date.range <- paste(format(c(init.date+1,final.date-1),"%d-%m-%Y"))
+
 sql <- paste("select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b, br_deputados_current as c where a.bioid=c.bioid and a.rcvoteid=b.rcvoteid and (rcdate>cast('",init.date,"' as date) ) and (rcdate<cast('",final.date,"' as date) ) ",sep='')
 res <- dbGetQueryU(connect,sql)
 res$ausente <- res$rc=="Ausente"
@@ -64,15 +65,13 @@ cgov <- recast(tmp, bioid~variable, measure.var="cgov", id.var=c("bioid")
 
 ##follow party
 tmp <- subset(res, rc.party%in%c("Sim", "Não"))
-## only keep those members of the same party throughout the period
 ## FIX: take care of party renames
 nparty <- recast(tmp, bioid ~ variable, fun.aggregate=function(x) length(unique(x)), measure.var="party")
-nparty <- subset(nparty, party==1)
-tmp <- tmp[tmp$bioid%in%nparty$bioid,]
+nparty <- reshape::rename(nparty, c(party="nparty"))
 tmp$cparty <- as.numeric(tmp$rc==tmp$rc.party)
 cparty <- recast(tmp, bioid~variable, measure.var="cparty", id.var=c("bioid")
                  , fun.aggregate=fsum)
-
+cparty <- merge(cparty,nparty)
 stats <- merge(ausente, lastseen, all=TRUE, by="bioid")
 stats <- merge(stats, cparty, all=TRUE)
 stats <- merge(stats, cgov, all=TRUE)
@@ -94,6 +93,11 @@ infodeps <- dbGetQueryU(connect,"select a.*, b.* from br_deputados_current as a,
 
 
 stats <- merge(stats,infodeps)
+pid <- dbGetQuery(connect, "select * from br_bioidpostid")
+dim(stats)
+stats <- merge(stats, pid)
+dim(stats)
+
 
 stats$sex <- factor(stats$title,
                     levels=c("Exmo. Senhor Deputado", "Exma. Senhora Deputada"),
@@ -141,14 +145,14 @@ content <- function(statsnow) {
               toupper(art)," ",
               title," ",
               ## nome, partido estado
-              capwords(namelegis.1)," (",party, "/", toupper(state),")", sep='',
+              "<a href=\"/?p=",postid,"\">",capwords(namelegis.1),"</a> (",party, "/", toupper(state),")", sep='',
           ## ultimo dia em que compareceu.
               ' compareceu a votações nominais  na Câmara pela última vez no dia ',
               format.Date(lastseen, "%d/%m/%Y"),". ",          
               ## naturalidade
               "Natural de ", capwords(birthplace), ", ", capwords(namelegis.1), " tem ", diffyear(birthdate.1,Sys.Date()), " anos de idade."
               , " ",toupper(art), " ", tshort,  " vota ", round(cgov_prop*100), "%"
-              , " das vezes com o governo, e ", round(cparty_prop*100), "% das vezes com seu partido."
+              , " das vezes com o governo, ", round(cparty_prop*100), "% das vezes com seu partido e  esteve ausente em ", round(ausente_prop*100), "% das votações." 
               , collapse="<br")
     })
 }
@@ -285,16 +289,16 @@ pp <- dbGetQuery(conwp,paste("select * from ", tname("posts"), " where post_titl
 
 content <- '<table>
 <tr>
-<td><img width=400 src="/php/timthumb.php?src=/images/camara/abstentions.png&w=400&h=0" alt="Presença em plenário" /></td>
+<td><a href="/images/camara/abstentions.png"><img width=400 src="/php/timthumb.php?src=/images/camara/abstentions.png&w=400&h=0" alt="Presença em plenário" /></a></td>
 <td>
-<explain> explain! </explain>
+<explain> O histograma ao lado mostra a média de presença dos deputados na legislatura 2007-2011. Observe que deputados dos partidos da oposição (e.g. PSDB, DEM) se concentram na região  abaixo da média, enquanto os do governo (e.g. PMDB, PT) estão mais presentes nas votações nominais.   </explain>
 </td>
 </tr>
 <tr>
 <td>
-<explain> explain! </explain>
+<explain>O gráfico ao lado compara a presença em plenário da legislatura corrente (em vermelho) com as anteriores. A presença em plenário sob o governo Lula da Silva (2003- ) é inferior à presença em plenário sob o governo Fernando Henrique Cardoso (1995-2002). </explain>
 </td>
-<td><img width=400 src="/php/timthumb.php?src=/images/abstentions/byrc.png&w=400&h=0" alt="Presença em plenário" /></td>
+<td><a href="/images/abstentions/byrc.png"><img width=400 src="/php/timthumb.php?src=/images/abstentions/byrc.png&w=400&h=0" alt="Presença em plenário" /></a></td>
 </tr>
 </table>
 '

@@ -8,7 +8,7 @@ rf <- function(x=NULL) {
     run.from <- "~/reps/CongressoAberto"
   }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
+  source(paste(run.from,"/R/caFunctions.R",sep=""))
   if (is.null(x)) {
     run.from
   } else {
@@ -17,26 +17,31 @@ rf <- function(x=NULL) {
 }
 rf()
 
-usource(rf("R/deputados.R"),echo=FALSE)
-usource(rf("R/updateVot.R"),echo=FALSE)
-usource(rf("R/downloadbills.R"),echo=FALSE)
-usource(rf("R/processbills.R"),echo=FALSE)
-##usource(rf("R/getLeaders.R"),echo=FALSE) ## not needed, it runs inside readOne
-usource(rf("R/parties.R"),echo=FALSE)
+connect.db()
+connect.wp()
+
+unlink(path.expand(rf("data/camara/rollcalls/*.zip")))
+unlink(path.expand(rf("data/camara/rollcalls/extracted/*")))
+
+
+usource(rf("R/deputados.R"),echo=TRUE)
+usource(rf("R/updateVot.R"),echo=TRUE)
+usource(rf("R/downloadbills.R"),echo=TRUE)
+usource(rf("R/processbills.R"),echo=TRUE)
+usource(rf("R/parties.R"),echo=TRUE)
 
 ## update wordpress
 ## update this first, roll calls are needed for the legislator php
-usource(rf("R/billsWordPress.R"),echo=FALSE)
-
-usource(rf("R/legisWordPress.R"),echo=FALSE)
-
-usource(rf("R/rollcallsWordPress.R"),echo=FALSE)
+usource(rf("R/billsWordPress.R"),echo=TRUE)
+usource(rf("R/legisWordPress.R"),echo=TRUE)
+usource(rf("R/rollcallsWordPress.R"),echo=TRUE)
 
 
 ## less than daily
-##usource(rf("R/indicesCamara.R"),echo=FALSE)
-##usource(rf("R/abstentionsWordpress.R"),echo=FALSE)
-##usource(rf("R/partiesWordpress.R"),echo=FALSE)
+##usource(rf("R/indicesCamara.R"),echo=TRUE)
+##usource(rf("R/abstentionsWordpress.R"),echo=TRUE)
+##usource(rf("R/partiesWordpress.R"),echo=TRUE)
 ## indices
-##usource(rf("R/indicesParties.R"),echo=FALSE)
+##usource(rf("R/indicesParties.R"),echo=TRUE)
 
+print(Sys.time())

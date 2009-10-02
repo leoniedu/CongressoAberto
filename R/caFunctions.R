@@ -1,5 +1,5 @@
 options(stringsAsFactors=FALSE)
-options(encoding="utf8")
+##options(encoding="utf8")
 ##FIX: dbWriteTable , append=TRUE does NOT update the table
 ## possible solutions
 ## delete table before hand
@@ -47,26 +47,6 @@ webdir <- function(x=NULL) {
 imagesync <- function() {
     system("rsync  --stats --recursive -u --chmod=o+r  ~/reps/CongressoAberto/images/  /var/www/images/.")
 }
-
-run <- FALSE
-if (run) {
-  ## paths (put on the beg of R scripts)
-    rf <- function(x=NULL) {
-        if (.Platform$OS.type!="unix") {
-            run.from <- "C:/reps/CongressoAberto"
-        } else {
-            run.from <- "~/reps/CongressoAberto"
-        }
-        ## side effect: load functions
-        source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
-    if (is.null(x)) {
-        run.from
-    } else {
-        paste(run.from,"/",x,sep='')
-    }
-    }
-}
-
 
 
 
@@ -334,18 +314,27 @@ diffyear <- function(x,y) {
     y.date <- as.Date(paste("2008-",substr(as.Date(y),6,10)))
     (y.year-x.year)-((x.date>y.date))    
 }
-  
+
+read.fix <- function(file, encoding="latin1", ...) {
+    ff <- file(file)
+    tmp <- readLines(ff, encoding=encoding)
+    writeLines(tmp, "tmp")
+    LV <- read.fwf("tmp" , ...)
+    unlink("tmp")
+    closeAllConnections()
+    LV
+}
+
 readOne <- function(LVfile,post=FALSE) {
-    ##FIX: really need the following line? does it crash other things?
-    options(encoding="ISO8859-1")
+    ## options(encoding="ISO8859-1")
     HEfile <- gsub("^LV","HE",LVfile)
     ##Read data from VOTE LIST file for the vote
     ##if(nchar(vote)==24){ #formato antigo: titulo tinha 24 characters, no novo so 21
     ##Fixed the following line (I think)
     if(nchar(LVfile)==24)  { #formato antigo: titulo tinha 24 characters, no novo so 21
-        LV <- read.fwf(LVfile, widths=c(9,-1,9,40,10,10,25,4),strip.white=TRUE)
+        LV <- read.fix(LVfile, widths=c(9,-1,9,40,10,10,25,4),strip.white=TRUE)
     }  else {
-        LV <- read.fwf(LVfile, widths=c(9,-1,6,40,10,10,25,4),strip.white=TRUE)
+        LV <- read.fix(LVfile, widths=c(9,-1,6,40,10,10,25,4),strip.white=TRUE,encoding="latin1")
     }
     voteid <- LV$V2[1]  #store number of vote for future use
     names(LV) <- c("session","rcvoteid","namelegis",paste("vote",voteid,sep="."),"party","state","id") #rename fields
@@ -354,9 +343,9 @@ readOne <- function(LVfile,post=FALSE) {
     LV$state <- toupper(state.l2a(LV$state))
     LV$state <- factor(LV$state,levels=toupper(states))
     LV <- LV[,c("id","namelegis","party","state",paste("vote",voteid,sep="."))] #rearrange fields
-    vt.date<-as.Date(as.character(read.table(HEfile, header = FALSE, nrows = 1,skip = 2, strip.white = TRUE, as.is = TRUE)[1,1]), "%d/%m/%Y")
-    vt.descrip<-read.table(HEfile, header = FALSE, nrows = 1,skip = 12, strip.white = TRUE, as.is = TRUE, sep=";",quote="")
-    vt.session<-read.table(HEfile, header = FALSE, nrows = 1,skip = 0, strip.white = TRUE, as.is = TRUE)[1,1]
+    vt.date<-as.Date(as.character(read.table(HEfile, header = FALSE, nrows = 1,skip = 2, strip.white = TRUE, as.is = TRUE, encoding="latin1")[1,1]), "%d/%m/%Y")
+    vt.descrip<-read.table(HEfile, header = FALSE, nrows = 1,skip = 12, strip.white = TRUE, as.is = TRUE, sep=";",quote="",encoding="latin1")
+    vt.session<-read.table(HEfile, header = FALSE, nrows = 1,skip = 0, strip.white = TRUE, as.is = TRUE, encoding="latin1")[1,1]
     vt.descrip<-gsub("\"","",vt.descrip)    #get rid of quotes in the description of the bill
     HE <- data.frame(rcvoteid=voteid,rcdate=vt.date,session=vt.session,billtext=vt.descrip)  
     data.votacoes <- get.votacoes(HE)
@@ -491,7 +480,7 @@ connect.mysql <- function(connection,group) {
   if (.Platform$OS.type!="unix") {
     defaultfile <- "C:/my.cnf"
 } else {
-    defaultfile <- "~/.my.cnf"
+    defaultfile <- path.expand("~/.my.cnf")
   }
   new <- TRUE
   library(RMySQL)  
@@ -881,7 +870,7 @@ barplot.rc.simple <- function(rc, gov=NA, title="", threshold=NULL) {
     require(RColorBrewer)
     require(ggplot2)
     rc <- subset(rc, rc%in%c("Sim", "Não"))
-    rc$rc <- factor(rc$rc)
+    rc$rc <- factor(rc$rc, levels=c("Não","Sim"))
     if (is.na(gov)) {
         colvec <- rep("transparent",2)
     } else {
@@ -1433,7 +1422,7 @@ lsos <- function(..., n=10) {
 states <- c("AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG", "PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO")
 
 
-plots pdf and png maps of party's electoral strengh in each state
+## plots pdf and png maps of party's electoral strengh in each state
 map.elec <- function(the.data, filenow='',title='', large=TRUE, percent=FALSE) { 
   if (percent) {
     pct <- 100
@@ -1465,3 +1454,4 @@ map.elec <- function(the.data, filenow='',title='', large=TRUE, percent=FALSE) {
           dev.off()
         convert.png(file=paste(pty,"mapsmall.pdf",sep=""))
       }
+}

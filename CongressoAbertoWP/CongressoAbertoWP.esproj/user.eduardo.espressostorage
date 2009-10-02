@@ -78,6 +78,24 @@
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/themes/arthemia/sidebar.php</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-includes/default-widgets.php</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/plugins/wp-useronline/useronline-options.php</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
 		</array>
 	</dict>
 </dict>

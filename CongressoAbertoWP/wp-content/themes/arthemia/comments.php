@@ -19,7 +19,7 @@
 
 
 <?php if ($comments) : ?>
-	<h3 id="comments"><?php comments_number('Não há comentários', 'One Comment', '% Comments' );?> <a href="#respond" title="<?php _e("Leave a comment"); ?>">&raquo;</a></h3>
+	<h3 id="comments"><?php comments_number('Não há comentários', 'Um comentário', '% Comentários' );?> <a href="#respond" title="<?php _e("Deixe um comentário"); ?>">&raquo;</a></h3>
 <ul class="commentlist">
 
 	<?php foreach ($comments as $comment) : ?>
@@ -39,7 +39,7 @@ $isByAuthor = true;
 	
 
 			<div class="commenttext">
-			<cite><strong><?php comment_author_link() ?> <?php if($isByAuthor ) { echo '(author)';} ?> </strong> said: </cite>
+			<cite><strong><?php comment_author_link() ?>  </strong> : </cite>
 
 			<?php if ($comment->comment_approved == '0') : ?>
 			<em>Seu comentário aguarda moderação.</em>
@@ -50,7 +50,7 @@ $isByAuthor = true;
 	
 		</div>
 		
-		<div class="commentmetadata"># <?php comment_date('j F Y') ?> at <?php comment_time() ?> </div>
+		<div class="commentmetadata"># <?php comment_date('j/n/Y') ?> às <?php comment_time() ?> </div>
 		</li>
 
 
