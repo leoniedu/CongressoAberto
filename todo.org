@@ -6,9 +6,13 @@ http://spreadsheets.google.com/ccc?key=0AmbpsKXCxWvFdHN5aThFQmx4WHNvaFhOTkY5bVA5
 * Code
 ** Donations
 *** tables summarizing by donor
+*** total, $ per vote and rank in the state
+** Elections
+*** upload round 2 to db
 ** roll calls 
 *** DONE mark a roll call result as unanimous
 *** DONE unanimous roll calls are also creating problems for graphs
+*** in roll call tables (by proposition) put a column with results (aprovado, rejeitado, nao houve quorum.)
 ** 10 mais
 *** DONE add  % absent
 *** DONE add links
@@ -19,6 +23,7 @@ http://spreadsheets.google.com/ccc?key=0AmbpsKXCxWvFdHN5aThFQmx4WHNvaFhOTkY5bVA5
 *** TODO explain the denominator. Perhaps add the percentages.
 *** TODO interactive maps
 *** TODO Party affiliations in dep page
+*** TODO verify if follow party and follow gov takes into account "liberado", ect
 **** add link back to the page
 ** Partidos
 *** include all in the table, but individual pages for the size>5
@@ -31,7 +36,7 @@ Should wait for some of the (many) bugs to be ironed out.
 ** data download page
 * Server admin
 ** Move large files to data.congressoaberto.com
-Note: this is only useful if we notice many people downloading data. I doubt it. Let's for now host them in rackspace.
+   Note: this is only useful if we notice many people downloading data. I doubt it. Let's for now host them in rackspace.
 ** TODO check up if updates are working
 ** TODO updateVot should move the downloaded files to another directory (instead of erasing them)
 * Funding 
@@ -46,3 +51,6 @@ Note: this is only useful if we notice many people downloading data. I doubt it.
 *** DONE Email Márcio Pontual
 ** Fundação Avina
 ** Other mentioned on inesc http://www.inesc.org.br/institucional/apoio-institucional
+* Ideas
+** Herois: votaram contra PEC dos Vereadores; PEC dos Cartorios
+   

@@ -10,6 +10,7 @@ if (!exists("tname")) {
 encode <- function(x) {
   newx <- gsub("-+","-",tolower(clean(gsub(" +|/","-",tolower(x)),cleanmore=FALSE)))
   newx <- gsub("º","",newx)
+  newx <- gsub("'","",newx)  
   newx <- URLencode(newx)
 }
 

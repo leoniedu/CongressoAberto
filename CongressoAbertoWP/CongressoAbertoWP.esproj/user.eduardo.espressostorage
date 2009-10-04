@@ -96,6 +96,12 @@
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/plugins/wp-list-files/wp-list-files.php</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
 		</array>
 	</dict>
 </dict>

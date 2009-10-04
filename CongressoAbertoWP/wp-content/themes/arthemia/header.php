@@ -22,7 +22,7 @@
 <?php wp_head(); ?>
 
 </head>
-<body>
+<body onload="wplfCollapseAll()">
 
 <div id="head" class="clearfloat">
 

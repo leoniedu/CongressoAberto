@@ -60,6 +60,16 @@ readShape.cent <- function(shape.file="~/test.shp",IDvar="NOMEMESO") {
   tmp
 }
 
+## use labels locations located inside the spatial object
+readShape <- function(shape.file="~/test.shp") {
+    map <- readShapePoly(shape.file)
+    labelpos <- data.frame(do.call(rbind, lapply(map@polygons, function(x) x@labpt)))
+    names(labelpos) <- c("x","y")                        
+    map@data <- data.frame(map@data, labelpos)
+    map
+}
+
+
 
 dissolve <- function(tmp,id="uf") {
   require(maptools)

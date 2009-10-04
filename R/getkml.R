@@ -47,8 +47,10 @@ m1$y <- sapply(m1@polygons,function(poly) poly@labpt[2])
 
 
 
+
+
 ## select a state j
-snow <- "MG"
+snow <- "AC"
 
 
 for (snow in states) {
@@ -126,43 +128,71 @@ for (snow in states) {
       print(i)
       print(snow)
       cand <- dep$candidate_code[i]
-      pnew <- p+geom_point(aes(x=x,y=y,colour=`Votos conquistados\nno município (%)`,
+      pnew <- p+geom_point(aes(x=x,y=y,
+                               ##colour=`Votos conquistados\nno município (%)`,
                                label=municipality_tse06,size=eq),
                            ,alpha=I(2/3),
-                           data=subset(res.m,candidate_code==cand))+
-                               scale_area(name="Votos",to = c(0.001, 20),limits=c(0,1),
-                                          breaks=bs,
-                                          labels=round(bs*eq1/100)*100)+
-                                              theme_bw(base_size=18)+
-                                                  opts(axis.ticks = theme_blank(),
-                                                       axis.text=theme_blank(),
-                                                       panel.grid.minor=theme_blank(),
-                                                       panel.grid.major=theme_blank(),
-                                                       axis.title.x=theme_blank(),
-                                                       axis.title.y=theme_blank(),
-                                                       axis.text.x=theme_blank(),
-                                                       axis.text.y=theme_blank())+
-                                                           scale_x_continuous(name="")+
-                                                               scale_y_continuous(name="")    
+                           data=subset(res.m,candidate_code==cand))
+      pnew <- pnew+scale_area(name="Votos",to = c(0.001, 20),limits=c(0,1),
+                              breaks=bs,
+                              labels=round(bs*eq1/100)*100)
+      pnew <- pnew+theme_bw()
+      pnew <- pnew + opts(axis.ticks = theme_blank(),
+                          axis.text=theme_blank(),
+                          panel.grid.minor=theme_blank(),
+                          panel.grid.major=theme_blank(),
+                          axis.title.x=theme_blank(),
+                          axis.title.y=theme_blank(),
+                          axis.text.x=theme_blank(),
+                          legend.key.size = unit(1.2, 
+                          "lines"),
+                          axis.text.y=theme_blank())+
+                              scale_x_continuous(name="")+
+                                  scale_y_continuous(name="")
+      legend_size <- pnew + opts(keep="legend_box")      
+      pnew <- pnew+geom_point(aes(x=x,y=y, colour=`Votos conquistados\nno município (%)`, label=municipality_tse06,size=eq), ,alpha=I(2/3), data=subset(res.m,candidate_code==cand))      
       dnow <- subset(res.m,candidate_code==cand)
       pnew <- pnew+scale_colour_continuous(limits=c(0,100))
-      pnew <- pnew+geom_text(mapping=aes(label=municipality_tse06),data=dnow[order(dnow$votes,decreasing=TRUE)[1:min(c(5,nrow(dnow)))],],size=4,vjust=2)
-
+      pnew <- pnew+geom_text(mapping=aes(label=municipality_tse06),data=dnow[order(dnow$votes,decreasing=TRUE)[1:min(c(5,nrow(dnow)))],],size=4,vjust=2)    
       fn <- webdir(paste("images/elections/2006/","deputadofederal",snow,cand,".png",sep=""))
+      
+      
+      legend_color<- qplot(x=rnorm(100),fill=rnorm(100)) +scale_fill_continuous(name="Votos (%)\nno município", limits=c(0,100))
+      legend_color <- legend_color+ opts(keep = "legend_box",
+                                         legend.key.size = unit(2, "lines"),
+                                         legend.text = theme_text(size = 12),
+                                         legend.title = theme_text(size = 17,
+                                         face = "bold", hjust = 0))
+      legend_size <- legend_size+ opts(keep = "legend_box",
+                                       legend.key.size = unit(2, "lines"),
+                                       legend.text = theme_text(size = 12),
+                                       legend.title = theme_text(size = 17,
+                                       face = "bold", hjust = 0))
+      
 
-      
+      ## Plotting
+      ## Plot Layout Setup
+      Layout <- grid.layout( nrow = 1, ncol = 3,
+                            widths = unit (c(2,.7,.7), c("null", "null")),
+                            heights = unit (c(2,2,2), c("null", "null")) 
+                            )
+      vplayout <- function (...) {
+          grid.newpage()
+          pushViewport(viewport(layout= Layout))
+      }
+      subplot <- function(x, y) viewport(layout.pos.row=x, layout.pos.col=y)
       png(file=fn,height=600, width=800)
-      print(pnew)
+      vplayout()
+      print(pnew + opts(legend.position="none"), vp=subplot(1,1))
+      print(legend_size, vp=subplot(1,2))
+      print(legend_color, vp=subplot(1,3))
       dev.off()
-      
-      ##pdf(file=fn,bg="transparent",width=8)      
-      ##print(pnew)    
-      ##dev.off()      
-      ##system(paste("convert -density 400x400 -resize 500x500 -quality 90 ", fn," ",gsub(".pdf",".png",fn)),wait=TRUE)
-      ##rm(pnew)
       gc()
+      
   }
 }
+
+
 
 
 
@@ -357,42 +387,3 @@ for (snow in states) {
 
 
 
-
-## dir.now <- "~/Desktop/"
-
-## ## add Brazil states layer?
-## sw <- m2
-## tokml(sw,"BR",compress=1)
-
-## for (state.now in states) {  
-##   sw <- m2[which(m2@data$state==state.now),]
-##   tokml(sw,state.now)
-## }
-
-  
-
-
-
-
-## ## bioids
-## res <- dbGetQuery(connect,"select * from br_bioidtse where year=2006")
-
-## res <- dbGetQuery(connect,"select * from br_vote_mun limit 10")
-
-
-## v1 <- dbGetQuery(connect,"select a.bioid, b.*    from
-##  (select * from br_bioidtse where year=2006 limit 1) as a,
-##  (select * from br_vote_mun where  year=2006 and office='Deputado Federal') as b 
-##  where a.candidate_code=b.candidate_code and
-##  a.state=b.state")
-
-
-## ## votes by municipality
-## v <- dbGetQuery(connect,"select a.bioid, b.*    from
-##  (select * from br_bioidtse where year=2006) as a,
-##  (select * from br_vote_mun where  year=2006 and office='Deputado Federal') as b 
-##  where a.candidate_code=b.candidate_code and
-##  a.state=b.state")
-
-
-        
