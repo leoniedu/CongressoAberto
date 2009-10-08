@@ -1,3 +1,6 @@
+# Code generates the several "TOP TEN" scenarios
+# Cesar added contributions TOP TEN on October 08
+
 ##library(lme4)
 library(ggplot2)
 
@@ -73,9 +76,30 @@ tmp$cparty <- as.numeric(tmp$rc==tmp$rc.party)
 cparty <- recast(tmp, bioid~variable, measure.var="cparty", id.var=c("bioid")
                  , fun.aggregate=fsum)
 
+
+##contributions
+    #Redo query: make a single query to avoid having to do all the mergers later.....
+contrib<- dbGetQuery(connect, "select * from br_contrib")  #set of contributions to federal deputeis 
+elected<- dbGetQuery(connect, "select * from br_bioidtse")[,c("state","candidate_code","bioid")] #set of those eventually elected 
+inoffice<- dbGetQuery(connect, "select * from br_deputados_current")[,c("namelegisclean","bioid")] #set of those currenlty in office
+
+funding_total <- function(d) {sum(d$total,na.rm=TRUE)}
+funding_party <- function(d) {sum(subset(d,donortype=="PF")$total,na.rm=TRUE)}
+contrib.cand <- ddply(contrib, .(candno,partyno,state), "funding_total") #candidate observations (all contributions)
+contrib.candPP <- ddply(contrib, .(candno,partyno,state), "funding_party") #candidate observations (party contributions)
+contrib.cand <- merge(contrib.cand,contrib.candPP,by=c("candno","partyno","state")) #merge the two
+contrib.cand$funding_private <- contrib.cand$funding_total - contrib.cand$funding_party #create third category (private contributions)
+contrib.elec <- merge(elected,contrib.cand,by.x=c("candidate_code","state"),by.y=c("candno","state"),all.x=TRUE) #get bioid -> this could be avoided with query
+contrib.elec <- contrib.elec[,-which(is.element(names(contrib.elec),c("candidate_code","state","partyno")))] #keep only candidates actually electe -> this could be avoided with query
+
+
+
+
+
 stats <- merge(ausente, lastseen, all=TRUE, by="bioid")
 stats <- merge(stats, cparty, all=TRUE)
 stats <- merge(stats, cgov, all=TRUE)
+stats <- merge(stats, contrib.elec, all=TRUE, by="bioid")
 ## missing info on cparty (due to party change)
 mp <- is.na(stats$cparty_prop)
 ## code missing as zero
@@ -88,8 +112,6 @@ stats$cparty_prop[mp] <- stats$cparty_count[mp] <- stats$cparty_total[mp] <- 0
 dbRemoveTable(connect, "br_legis_stats")
 dbWriteTableU(connect, "br_legis_stats", data.frame(stats))
 
-
-
 infodeps <- dbGetQueryU(connect,"select a.*, b.* from br_deputados_current as a, br_bio as b where a.bioid=b.bioid")
 
 
@@ -99,10 +121,13 @@ stats$sex <- factor(stats$title,
                     levels=c("Exmo. Senhor Deputado", "Exma. Senhora Deputada"),
                     labels=c("Male", "Female"))
 
-
 getpics <- function(s) {
     statsnow <- stats
+    if(length(grep("funding",s))==1){  
+    statsnow <- statsnow[with(statsnow, order(statsnow[,s], decreasing=TRUE))[1:10], ]
+    }else{
     statsnow <- statsnow[with(statsnow, order(get(s%+%"_count"),get(s%+%"_prop"), decreasing=TRUE))[1:10], ]
+    }
     ## their pics
     statsnow.pics <- webdir(paste("images/bio/polaroid/foto",statsnow$bioid,".png", sep=""))
     ## create one pic
@@ -124,11 +149,11 @@ governistas <- getpics("cgov")
 
 partidarios <- getpics("cparty")
 
+capitalizados <- getpics("funding_total")
 
+capitalizados.2 <- getpics("funding_party")
 
-
-statsnow <- governistas[[1]]
-
+capitalizados.3 <- getpics("funding_private")
 
 
 content <- function(statsnow) {
@@ -148,19 +173,12 @@ content <- function(statsnow) {
               ## naturalidade
               "Natural de ", capwords(birthplace), ", ", capwords(namelegis.1), " tem ", diffyear(birthdate.1,Sys.Date()), " anos de idade."
               , " ",toupper(art), " ", tshort,  " vota ", round(cgov_prop*100), "%"
-              , " das vezes com o governo, e ", round(cparty_prop*100), "% das vezes com seu partido."
+              , " das vezes com o governo, e ", round(cparty_prop*100), 
+              "% das vezes com seu partido. Em 2006, declarou ter recebido R$ ", round(funding_private/1000000),
+              " milh�es de doadores privados e ",round(funding_party/1000000)," milh�es de seu partido."
               , collapse="<br")
     })
 }
-
-
-
-
-
-           
-
-
-
 
 
 
@@ -208,6 +226,20 @@ wpAddByTitle(conwp
              post_type="post",
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
+
+statsnow <- capitalizados[[1]]
+fn <- capitalizados[[2]]
+statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"funding_total"])
+## change final comma to "e" 
+excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais receberam doações de campanha nas eleições de 2006 para a Câmara dos Deputados.", sep='')
+##FIX: insert date in the post?
+wpAddByTitle(conwp
+             ,post_title="As Campanhas Mais Caras"## %+%format(final.date,"%m/%Y")           
+             ,post_content=content(statsnow)
+             ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("campanhas",slug="campanhas")),
+             ##post_excerpt='Saiba quem são os deputados federais em exercicio que mais receberam doações de campanha.',
+             post_type="post",
+             custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
 
 
