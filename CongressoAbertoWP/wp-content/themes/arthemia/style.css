@@ -292,6 +292,14 @@ h3.authors {
 	padding-bottom:15px;
 	}
 
+#featured  div.title {
+	font-weight:bold;
+	font:2.4em Georgia;
+	letter-spacing:-0.05em;
+	display:block;
+	padding-bottom:5px;
+	}
+	
 #featured {
 	width:300px;
 	background:#fff;

@@ -22,13 +22,16 @@ run.from <- rf("data/camara/")
 usource(rf("R/mergeApprox.R"))
 setwd(run.from)
 
+connect.db()
+
 library(gdata)
 the.url <- "http://www.camara.gov.br/internet/deputado/deputado.xls"
 
 fp <- file.info("deputado.xls")
-tmp <- system(paste("wget -Nc -P . ",the.url))
+tmp <- system(paste("wget -N ",the.url))
 fn <- file.info("deputado.xls")
 new <- fn$mtime>fp$mtime
+
 if (is.na(new)|update.all) new <- TRUE
 
 get.deps <- function() {
@@ -62,11 +65,13 @@ get.deps <- function() {
   deps.rn$loaddate <- Sys.Date()
   deps.rn
 }
+
 find.deps <- function(tomatch,session.now=53) {
   ##try to find the bioid for new deps
   if (nrow(tomatch)==0) {
     return(NULL)
   }
+  tomatch$id <- 1:nrow(tomatch)
   idname <- dbGetQueryU(connect,paste("select * from br_bioidname where legis='",session.now,"'",sep=''))
   idname$namelegis <- idname$name
   res <- merge.approx(states,tomatch,
@@ -94,6 +99,7 @@ if (new) {
   session.now <- 53
   usource(rf("R/bioprocess.R"), echo=TRUE)
   deps.bioid <- find.deps(deps,session.now)
+  deps.bioid$id <- NULL
   ## delete rows in deputados current table
   dbGetQuery(connect,"truncate br_deputados_current")
   ##dbGetQuery(connect,"truncate br_deputados")

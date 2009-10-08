@@ -75,5 +75,7 @@ tmp <- lapply(toup, fx)
 
 
 
+print(Sys.time())
+
 
 

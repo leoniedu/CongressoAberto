@@ -4,7 +4,7 @@
 Plugin Name: All in One SEO Pack
 Plugin URI: http://semperfiwebdesign.com
 Description: Out-of-the-box SEO for your Wordpress blog. <a href="options-general.php?page=all-in-one-seo-pack/aioseop.class.php">Options configuration panel</a> | <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mrtorbert%40gmail%2ecom&item_name=All%20In%20One%20SEO%20Pack&item_number=Support%20Open%20Source&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=US&bn=PP%2dDonationsBF&charset=UTF%2d8">Donate</a> | <a href="http://semperfiwebdesign.com/forum/" >Support</a> |  <a href="https://www.amazon.com/wishlist/1NFQ133FNCOOA/ref=wl_web" target="_blank" title="Amazon Wish List">Amazon Wishlist</a>
-Version: 1.6.4.1
+Version: 1.6.6.2
 Author: Michael Torbert
 Author URI: http://michaeltorbert.com
 */
@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /*******************************************************************************************************/
-register_activation_hook(__FILE__,'aioseop_activate_pl');
+// register_activation_hook(__FILE__,'aioseop_activate_pl');
 
 $UTF8_TABLES['strtolower'] = array(
 	"Ｚ" => "ｚ",	"Ｙ" => "ｙ",	"Ｘ" => "ｘ",
@@ -484,7 +484,7 @@ if ( ! defined( 'WP_PLUGIN_URL' ) )
 if ( ! defined( 'WP_PLUGIN_DIR' ) )
     define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
 
-require_once('aioseop.class.php');
+require_once( WP_PLUGIN_DIR . '/all-in-one-seo-pack/aioseop.class.php');
 
 global $aioseop_options;
 $aioseop_options = get_option('aioseop_options');
@@ -554,7 +554,7 @@ echo "<div class='updated fade' style='background-color:green;border-color:green
 }
 
 function aioseop_get_version(){
-	return '1.6.4.1';
+	return '1.6.6.2';
 }
 
 
@@ -613,8 +613,11 @@ echo "<div class='updated fade' style='background-color:green;border-color:green
 
 function aioseop_activation_notice(){
 	global $aioseop_options;
+				if(function_exists('admin_url')){
 				echo '<div class="error fade" style="background-color:red;"><p><strong>All in One SEO Pack must be configured. Go to <a href="' . admin_url( 'options-general.php?page=all-in-one-seo-pack/aioseop.class.php' ) . '">the admin page</a> to enable and configure the plugin.</strong></p></div>';
-
+}else{
+		echo '<div class="error fade" style="background-color:red;"><p><strong>All in One SEO Pack must be configured. Go to <a href="' . get_option('siteurl') . 'options-general.php?page=all-in-one-seo-pack/aioseop.class.php' . '">the admin page</a> to enable and configure the plugin.</strong></p></div>';
+}
 }
 
 //add_action('after_plugin_row_all-in-one-seo-pack/all_in_one_seo_pack.php', 'add_plugin_row', 10, 2);
@@ -711,7 +714,7 @@ function aiosp_meta() {
     $title = htmlspecialchars(stripcslashes(get_post_meta($post_id, '_aioseop_title', true)));
 	$description = htmlspecialchars(stripcslashes(get_post_meta($post_id, '_aioseop_description', true)));
     $aiosp_meta = htmlspecialchars(stripcslashes(get_post_meta($post_id, '_aiosp_meta', true)));
-    $aiosp_disable = htmlspecialchars(stripcslashes(get_post_meta($post_id, '_aiosp_disable', true)));
+    $aiosp_disable = htmlspecialchars(stripcslashes(get_post_meta($post_id, '_aioseop_disable', true)));
     $aiosp_titleatr = htmlspecialchars(stripcslashes(get_post_meta($post_id, '_aioseop_titleatr', true)));
     $aiosp_menulabel = htmlspecialchars(stripcslashes(get_post_meta($post_id, '_aioseop_menulabel', true)));	
 	?>
@@ -724,7 +727,7 @@ function aiosp_meta() {
 		</script>
 		<input value="aiosp_edit" type="hidden" name="aiosp_edit" />
 		
-		<a target="__blank" href="http://semperfiwebdesign.com/portfolio/wordpress/wordpress-plugins/all-in-one-seo-pack/"><?php _e('Click here for Support', 'all_in_one_seo_pack') ?></a>
+		<a target="__blank" href="http://semperfiwebdesign.com/forum/"><?php _e('Click here for Support', 'all_in_one_seo_pack') ?></a>
 		<table style="margin-bottom:40px">
 		<tr>
 		<th style="text-align:left;" colspan="2">

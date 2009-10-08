@@ -393,7 +393,7 @@ readOne <- function(LVfile,post=FALSE) {
                 print(res[with(res,bioid%in%bioid[which(duplicated(bioid))]),])
                 stop("Some ids are duplicated ")
             }
-      res
+            res
         }
         if (nrow(tomatch)>0) {
             ##browser()
@@ -1029,6 +1029,7 @@ plot.heat <- function(tmp,state.map,z,title=NULL,breaks=NULL,reverse=FALSE,cex.l
 }
 
 
+##FIX: these functions are here and in spatial.R choose 1.
 ##read file and get centroids
 readShape.cent <- function(shape.file="~/test.shp",IDvar="NOMEMESO") {
   require(maptools)
@@ -1043,6 +1044,18 @@ readShape.cent <- function(shape.file="~/test.shp",IDvar="NOMEMESO") {
   tmp@data$y <- tmp.c[tm,2]
   tmp
 }
+
+## use labels locations located inside the spatial object
+readShape <- function(shape.file="~/test.shp") {
+    require(maptools)
+    map <- readShapePoly(shape.file)
+    labelpos <- data.frame(do.call(rbind, lapply(map@polygons, function(x) x@labpt)))
+    names(labelpos) <- c("x","y")                        
+    map@data <- data.frame(map@data, labelpos)
+    map
+}
+
+
 
 
 ##merge sp objects with data
@@ -1149,28 +1162,32 @@ getLeaders <- function(x) {    #x is a string with the name of the vote.file (.t
   ## readLines directly chokes when the page is missing an end of file code
   down <- try(download.file(the.url,tfile))
   raw.data <-try(readLines(tfile,500),silent=TRUE)
-  if(any(grepl("Ã£o",raw.data))) {
+  if(!any(grepl("ORDINÁRIA",raw.data))) {
       ## fix encoding
       raw.data <-try(readLines(tfile,500,encoding="latin1"),silent=TRUE)
   }
+  if(!any(grepl("ORDINÁRIA",raw.data))) {
+      stop("encoding problems")
+  }
   if(class(raw.data)=="try-error") {
-    print(the.url)
-    cat("Connection problems",vote.name,"Will try again soon\n")
-    Sys.sleep(10)
-    cat("\t Attempting to connect...\n")
-    flush.console()
-    down <- try(download.file(the.url,tfile))
+      print(the.url)
+      cat("Connection problems",vote.name,"Will try again soon\n")
+      Sys.sleep(10)
+      cat("\t Attempting to connect...\n")
+      flush.console()
+      down <- try(download.file(the.url,tfile))
     raw.data <-try(readLines(tfile,500),silent=TRUE)
-    if(class(raw.data)=="try-error") {
-        warning("\t No data for",vote.name,"\n")
-        return(NULL)
-    }
-}
+      if(class(raw.data)=="try-error") {
+          warning("\t No data for",vote.name,"\n")
+          return(NULL)
+      }
+  }
   orientation.line <- grep("Orientação",raw.data)
   ##Check for encoding problems here  
   if(length(orientation.line)==0){
-      browser()
+      cat("############################\n")
       cat("No data for",vote.name,"\n")
+      cat("############################\n")
       flush.console()
       return(NULL)
   } #No leadership votes

@@ -1,23 +1,21 @@
 <script language="php">
 include_once("server.php");
-//$host  = "mysql.cluelessresearch.com";
-//$con = mysql_connect($host,"monte","e123456");
-///$database = 'congressoaberto';
-//mysql_select_db($database, $con);
 // sending query
 // $billid = $_GET['billid'];
 //$billid = 422643;
 
-$result = mysql_query("SELECT billauthor, ementa, status  FROM br_bills where billid={$billid} limit 1");
+$result = mysql_query("SELECT billauthor, ementa, status, propno  FROM br_bills where billid={$billid} limit 1");
 if (!$result) {
   die("Query to show fields from table failed");
  }
 $row = mysql_fetch_row($result);
 
 // $statelegis = $row[2]; FIX: make it not depend on row order (Call by name)
-echo '<p>Autoria: '.$row[0].'</p>';
-echo '<p>Ementa: '.$row[1].'</p>';
-echo '<p>Status: '.$row[2].'</p>';
+echo '<p><a href="http://www.camara.gov.br/sileg/Prop_Detalhe.asp?id='.$billid.'" > Página da proposição no site da Câmara </a> <br>';
+echo '<a href="http://www.camara.gov.br/sileg/MostrarIntegra.asp?CodTeor='.$row[3].'"> Íntegra da proposição (pdf) no site da Câmara</a><br>';
+echo 'Autoria: '.$row[0].'<br>';
+echo 'Ementa: '.$row[1].'<br>';
+echo 'Status: '.$row[2].'<br></p>';
 //echo '<p>Billid: '.$billid.'</p>';
 
 // what are the roll calls related to this bill

@@ -55,11 +55,11 @@ if(length(SFfiles)>0){file.remove(SFfiles)} #Get rid of SENADO files, if they ex
 old.LVfiles <- grep("LV",dir("extracted"),value=TRUE)  #get already coded votes
 ##Download current months's zip
 for (i in zip.files) {
-  the.url <- paste("http://www.camara.gov.br/internet/plenario/result/votacao/",i,".zip",sep="")
-  ## this only downloads if file was updated
-  if(download.now) {
-    tmp <- system(paste("wget -Nc -P . ",the.url))
-  }
+    the.url <- paste("http://www.camara.gov.br/internet/plenario/result/votacao/",i,".zip",sep="")
+    ## this only downloads if file was updated
+    if(download.now) {
+        tmp <- system(paste("wget -Nc -P . ",the.url))
+    }
 }
 
 ##Unzip zip files

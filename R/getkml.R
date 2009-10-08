@@ -1,3 +1,7 @@
+##FIX: rewrite so that you can call one legislator and get the maps
+##FIX: is it writing out the code for the google maps?
+
+
 ## produces the kml file for google maps for each candidate
 ## to start we get those with bioids
 library(ggplot2)
@@ -54,6 +58,7 @@ snow <- "AC"
 
 
 for (snow in states) {
+##for (snow in c("PI","MA")) {    
 
   ## number of seats
   elected <- dbGetQuery(connect,paste("select * from br_vote_candidates where  office='DEPUTADO FEDERAL' AND year='2006' AND state='",snow,"' AND sit in ('MÉDIA','ELEITO')",sep=''))

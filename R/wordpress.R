@@ -11,6 +11,8 @@ encode <- function(x) {
   newx <- gsub("-+","-",tolower(clean(gsub(" +|/","-",tolower(x)),cleanmore=FALSE)))
   newx <- gsub("º","",newx)
   newx <- gsub("'","",newx)  
+  newx <- gsub("\\.","",newx)
+  ## FIX: accept only a-zA-Z-
   newx <- URLencode(newx)
 }
 
@@ -24,14 +26,15 @@ getvalues <- function(x) paste("(",paste(shQuote(x),collapse=","),")")
 
 ## time in ISO format
 wptime <- function(x=Sys.time()) {
-  if (is.na(x)|x=="NA") return(list(gmt=NULL,brasilia=NULL))
-  x <- as.Date(x)
-  ## FIX: this does not take into account the dailight saving time
-  gmt <- as.POSIXlt(x, "GMT")+60*60*3
-  brasilia <- as.POSIXlt(x)+.001
-  res <- list(gmt=gmt,brasilia=brasilia)
-  res <- lapply(res,function(x) gsub(" GMT","",x))
-  res
+    x <- as.character(x)
+    if (is.na(x)|x=="NA") return(list(gmt=NULL,brasilia=NULL))
+    x <- as.Date(x)
+    ## FIX: this does not take into account the dailight saving time
+    gmt <- as.POSIXlt(x, "GMT")+60*60*3
+    brasilia <- as.POSIXlt(x)+.001
+    res <- list(gmt=gmt,brasilia=brasilia)
+    res <- lapply(res,function(x) gsub(" GMT","",x))
+    res
 }
 
 dbInsert <- function(con,df,table="tmp",update=FALSE,extra="",verbose=FALSE) {

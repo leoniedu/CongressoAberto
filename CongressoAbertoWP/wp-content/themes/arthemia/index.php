@@ -28,8 +28,7 @@ alt="<?php the_title(); ?>" class="left"  border=0  /></a>
 <!--	<img src="<?php echo get_option('home'); ?>/wp-content/themes/arthemia/images/featured.png" width="72px" height="17px" alt="" /> -->
 
 	<?php query_posts("showposts=3&category_name=Featured"); $i = 1; ?>
-
-		
+		<div class="title"> O Governo perdeu </div>
       	<?php while (have_posts()) : the_post(); ?>
 	<div class="clearfloat">
 	<?php $values = get_post_custom_values("Image");

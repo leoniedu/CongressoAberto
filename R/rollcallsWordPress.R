@@ -1,5 +1,3 @@
-## FIX: A linha de limite (laranja) neste gráfico está errada. http://www.congressoaberto.com.br/2008/10/14/mpv-436-2008-3454/
-
 if (!exists("update.all", 1)) {  
   update.all <- FALSE
 }

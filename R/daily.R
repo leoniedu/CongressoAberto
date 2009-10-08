@@ -32,16 +32,23 @@ usource(rf("R/parties.R"),echo=TRUE)
 
 ## update wordpress
 ## update this first, roll calls are needed for the legislator php
+usource(rf("R/abstentionsWordpress.R"),echo=TRUE)
 usource(rf("R/billsWordPress.R"),echo=TRUE)
 usource(rf("R/legisWordPress.R"),echo=TRUE)
 usource(rf("R/rollcallsWordPress.R"),echo=TRUE)
 
 
+## get bioid for TSE file (when new deps assume office) 
+usource(rf("R/biotse.R"),echo=TRUE)
+
+
 ## less than daily
-##usource(rf("R/indicesCamara.R"),echo=TRUE)
-##usource(rf("R/abstentionsWordpress.R"),echo=TRUE)
-##usource(rf("R/partiesWordpress.R"),echo=TRUE)
+## usource(rf("R/indicesCamara.R"),echo=TRUE)
+## usource(rf("R/partiesWordpress.R"),echo=TRUE)
+
 ## indices
 ##usource(rf("R/indicesParties.R"),echo=TRUE)
 
 print(Sys.time())
+
+

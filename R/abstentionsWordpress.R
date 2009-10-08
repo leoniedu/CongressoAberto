@@ -26,13 +26,20 @@ connect.wp()
 
 ##init.date <- Sys.Date()-30
 init.date <- as.Date("2007-02-01")
-
-##init.date <- Sys.Date()-60
+## ##init.date <- Sys.Date()-60
 final.date <- Sys.Date()
-date.range <- paste(format(c(init.date+1,final.date-1),"%d-%m-%Y"))
+## date.range <- paste(format(c(init.date+1,final.date-1),"%d-%m-%Y"))
+## sql <- paste("explain select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b, br_deputados_current as c where a.bioid=c.bioid and a.rcvoteid=b.rcvoteid and (rcdate>cast('",init.date,"' as date) ) and (rcdate<cast('",final.date,"' as date) ) ",sep='')
 
-sql <- paste("select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b, br_deputados_current as c where a.bioid=c.bioid and a.rcvoteid=b.rcvoteid and (rcdate>cast('",init.date,"' as date) ) and (rcdate<cast('",final.date,"' as date) ) ",sep='')
-res <- dbGetQueryU(connect,sql)
+sql <- paste("select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b, br_deputados_current as c where a.bioid=c.bioid and a.rcvoteid=b.rcvoteid and a.legis=53 and b.legis=53",sep='')
+system.time(res <- dbGetQueryU(connect,sql))
+
+
+##sql <- paste("select  a.*  from br_votos as a where a.legis=53",sep='')
+sql <- paste("select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b where  a.rcvoteid=b.rcvoteid and a.legis=53 and b.legis=53",sep='')
+system.time(res <- dbGetQueryU(connect,sql))
+
+
 res$ausente <- res$rc=="Ausente"
 res$party <- recode.party(res$party)
 ##res0 <- res
@@ -131,12 +138,10 @@ partidarios <- getpics("cparty")
 
 
 
-statsnow <- governistas[[1]]
-
 
 
 content <- function(statsnow) {
-    with(statsnow,{
+    res <- with(statsnow,{
         art <- ifelse (sex=="Male", "o", "a")
         tshort <- ifelse (sex=="Male", "deputado", "deputada")
         paste(           
@@ -152,9 +157,10 @@ content <- function(statsnow) {
               ## naturalidade
               "Natural de ", capwords(birthplace), ", ", capwords(namelegis.1), " tem ", diffyear(birthdate.1,Sys.Date()), " anos de idade."
               , " ",toupper(art), " ", tshort,  " vota ", round(cgov_prop*100), "%"
-              , " das vezes com o governo, ", round(cparty_prop*100), "% das vezes com seu partido e  esteve ausente em ", round(ausente_prop*100), "% das votações." 
+              , " das vezes com o governo, ", round(cparty_prop*100), "% das vezes com seu partido e  esteve ausente em ", round(ausente_prop*100), "% das votações."
               , collapse="<br")
     })
+    paste("Observação: Não levamos em consideração ausencias justificadas ou licensas médicas.<br> ", res)
 }
 
 
@@ -180,6 +186,7 @@ wpAddByTitle(conwp,post_title="Os Governistas"## %+%format(final.date,"%m/%Y")
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("governismo",slug="governismo")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
+             post_date=wptime(Sys.Date())$brasilia,
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
 
@@ -194,6 +201,7 @@ wpAddByTitle(conwp,post_title="Os Fiéis"## %+%format(final.date,"%m/%Y")
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("partidos",slug="partidos")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
+             post_date=wptime(Sys.Date())$brasilia,
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
 
@@ -210,6 +218,7 @@ wpAddByTitle(conwp
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("absenteismo",slug="absenteismo")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
+             post_date=wptime(Sys.Date())$brasilia,
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
 

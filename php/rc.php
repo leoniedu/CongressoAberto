@@ -22,8 +22,6 @@ echo '<p>Ementa: "'.$row[3].'"</p>' ;
 
 the_excerpt();
 
-print("<a href=\"/php/query.php?form=rcvotes&rcvoteid=$rcvoteid&tqx=reqId:0;out:csv;csvFile:votacoes_rc$rcvoteid\"> Download das votações em formato csv</a>");
-
 echo '<h3> Resultado da Votação </h3>';
 echo '<a href="/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png">   <img src="/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png&h=300&w=300&zc=0&q=100"> </a>' ;
 // echo '<img src="/images/rollcalls/bar'.$rcvoteid.'large.png"  width=400 >'  ;
@@ -35,8 +33,6 @@ echo '<img src="/php/timthumb.php?src=/images/rollcalls/mosaic'.$rcvoteid.'large
 echo '<h3> Votação por estado </h3>';
 echo '<img src="/php/timthumb.php?src=/images/rollcalls/map'.$rcvoteid.'large.png&w=350&zc=0&q=100">' ;
 
+print("<p><a href=\"/php/query.php?form=rcvotes&rcvoteid=$rcvoteid&tqx=reqId:0;out:csv;csvFile:votacao_rc$rcvoteid\"> Download da votação em formato csv</a></p>");
 
-
-// echo '<p>Ementa: '.$row[1].'</p>';
-// echo '<p>Status: '.$row[2].'</p>';
 </script>

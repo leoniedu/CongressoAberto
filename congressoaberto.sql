@@ -186,6 +186,8 @@ CREATE TABLE  `br_votacoes` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ;
 alter table br_votacoes add key legis_index(legis);
+alter table br_votacoes add key date_index(rcdate);
+alter table br_votacoes add key rcvoteid_index(rcvoteid);
 
 
 DROP TABLE IF EXISTS `br_billid`;

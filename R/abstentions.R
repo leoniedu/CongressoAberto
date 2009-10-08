@@ -10,7 +10,7 @@ rf <- function(x=NULL) {
     run.from
   } else {
     paste(run.from,"/",x,sep='')
-s  }
+  }
 }
 usource(rf("R/mergeApprox.R"))
 run.from <- rf()

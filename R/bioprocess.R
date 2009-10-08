@@ -217,7 +217,6 @@ dbWriteTableU(connect, "br_bio", bio.all, append=TRUE)
 ##source("~/reps/CongressoAberto/R/caFunctions.R")
 ##connect.db()
 
-
 ## PHILEMON RODRIGUES was a deputy both in MG and in PB
 dbSendQuery(connect,"update br_bioidname set state='PB' where (bioid='98291')")
 dbSendQuery(connect,"update br_bioidname set state='MG' where (bioid='98291') AND (legis!=52)")
@@ -230,7 +229,7 @@ dbSendQuery(connect,"update br_bioidname set state='GO' where (bioid='108697') A
 dbGetQuery(connect,"select * from  br_bioidname where bioid='108697'")
 
 ## ze indio: 100486
-tmp <- iconv.df(dbGetQuery(connect,"select * from  br_bioidname where bioid='100486'"))
+tmp <- dbGetQuery(connect,"select * from  br_bioidname where bioid='100486'")
 tmp$name <- 'JOSÉ ÍNDIO'
 tmp <- unique(tmp)
 dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
@@ -240,7 +239,7 @@ dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
 
 
 ## Mainha is José de Andrade Maia Filho 182632
-tmp <- iconv.df(dbGetQuery(connect,"select * from  br_bioidname where bioid='182632'"))
+tmp <- dbGetQuery(connect,"select * from  br_bioidname where bioid='182632'")
 tmp$name <- 'MAINHA'
 tmp <- unique(tmp)
 dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
@@ -249,7 +248,7 @@ dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
 
 
 ##Pastor Jorge is Jorge dos Reis Pinheiro 100606
-tmp <- iconv.df(dbGetQuery(connect,"select * from  br_bioidname where bioid='100606'"))
+tmp <- dbGetQuery(connect,"select * from  br_bioidname where bioid='100606'")
 tmp$name <- 'PASTOR JORGE'
 tmp <- unique(tmp)
 dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
@@ -258,14 +257,15 @@ dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
 
 
 ## approx merge is failing to get these guys right
-tmp <- iconv.df(dbGetQuery(connect,"select * from  br_bioidname where bioid='109223'"))
+tmp <- dbGetQuery(connect,"select * from  br_bioidname where bioid='109223'")
 tmp$name <- 'PAULO PIMENTA'
 tmp <- unique(tmp)
 dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
              row.names = F, eol = "\r\n" )
 
-tmp <- iconv.df(dbGetQuery(connect,"select * from  br_bioidname where bioid='160419'"))
+tmp <- dbGetQuery(connect,"select * from  br_bioidname where bioid='160419'")
 tmp$name <- 'PAULO ROBERTO'
 tmp <- unique(tmp)
 dbWriteTable(connect, "br_bioidname", tmp, overwrite=FALSE,append=TRUE,
              row.names = F, eol = "\r\n" )
+
