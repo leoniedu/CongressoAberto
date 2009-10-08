@@ -37,3 +37,5 @@ google.setOnLoadCallback(drawVisualization);
 <explain> Somente partidos com mais de cinco legisladores </explain>
 <div id="table1">
 </div>
+<p> Observação: Não levamos em consideração ausencias justificadas ou licensas médicas. </p>
+
