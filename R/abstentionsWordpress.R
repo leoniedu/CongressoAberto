@@ -249,7 +249,6 @@ wpAddByTitle(conwp
              ,post_title="As Campanhas Mais Caras"## %+%format(final.date,"%m/%Y")           
              ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("campanhas",slug="campanhas")),
-             ##post_excerpt='Saiba quem são os deputados federais em exercicio que mais receberam doações de campanha.',
              post_type="post",
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
