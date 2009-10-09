@@ -165,7 +165,7 @@ capitalizados.2 <- getpics("funding_party")
 
 capitalizados.3 <- getpics("funding_private")
 
-content <- function(statsnow) {
+content <- function(statsnow) {1
     statsnow$title <- gsub("^.*\\s(.*$)","\\1",statsnow$title,perl=TRUE)  #tirar o excelentïssimo senhor
     res <- with(statsnow,{
         art <- ifelse (sex=="Male", "o", "a")
@@ -251,12 +251,12 @@ statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"funding_total"])
 ## change final comma to "e" 
 excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais receberam doações de campanha nas eleições de 2006 para a Câmara dos Deputados.", sep='')
 ##FIX: insert date in the post?
-wpAddByTitle(conwp
-             ,post_title="As Campanhas Mais Caras"## %+%format(final.date,"%m/%Y")           
-             ,post_content=content(statsnow)
-             ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("campanhas",slug="campanhas")),
-             post_type="post",
-             custom_fields=data.frame(meta_key="Image",meta_value=fn))
+## wpAddByTitle(conwp
+##              ,post_title="As Campanhas Mais Caras"## %+%format(final.date,"%m/%Y")           
+##              ,post_content=content(statsnow)
+##              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("campanhas",slug="campanhas")),
+##              post_type="post",
+##              custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
 
 
