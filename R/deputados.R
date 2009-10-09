@@ -110,6 +110,6 @@ if (new) {
   ##TODO: update wordpress
   source(rf("R/twitter.R"))           
   load(rf("R/up.RData"))
-  tw <- paste("List of deputies updated!")
+  tw <- paste("Lista de deputados atualizada!")
   ns <- tweet(tw, userpwd=usrpwd, wait=0)
 }

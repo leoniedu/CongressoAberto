@@ -102,7 +102,7 @@ if (length(votes)>0) {
         ## load twitter user passwd
         source(rf("R/twitter.R"))
         load(rf("R/up.RData"))
-        tw <- paste(nvotes,"new rollcalls uploaded!")
+        tw <- paste(nvotes,"novas votações!")
         ns <- tweet(tw, userpwd=usrpwd, wait=0)
     }
     print(paste(nvotes, "effectively updated"))

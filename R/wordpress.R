@@ -188,9 +188,10 @@ wpClean <- function() {
 
 postbill <- function(bill=37642, propid=NULL) {
     if (is.null(propid)) {
-        propid <- dbGetQueryU(conwp, " select ID from "%+%tname("posts")%+%" where post_title='Proposições'")[1]
+        propid <- unlist(dbGetQueryU(conwp, " select ID from "%+%tname("posts")%+%" where post_title='Proposições'"))
     }
-    dnow <- subset(bills,billid==bill)
+    dnow <- dbGetQueryU(connect, "select * from br_bills where billid="%+%shQuote(bill))
+    ##dnow <- subset(bills,billid==bill)
     ementashort <- dnow$ementashort
     if (is.na(ementashort)) ementashort <- dnow$ementa
     excerpt <- paste(dnow$billauthor, ementashort, dnow$status, sep="<br>")

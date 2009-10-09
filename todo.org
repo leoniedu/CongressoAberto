@@ -66,3 +66,7 @@ Should wait for some of the (many) bugs to be ironed out.
 ** check the number of legislators in lstats. should be ~ 512
 
 http://berlininoctober.e-demokratie.org/index.php?title=Main_Page
+
+
+check voteid 3914
+/home/ca/reps/CongressoAberto/data/www.camara.gov.br/sileg/Prop_Detalhe.asp?id=269767

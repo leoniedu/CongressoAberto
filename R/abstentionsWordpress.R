@@ -12,7 +12,7 @@ rf <- function(x=NULL) {
       run.from <- "~/reps/CongressoAberto"
     }
   ## side effect: load functions
-  source(paste(run.from,"/R/caFunctions.R",sep=""))
+  source(paste(run.from,"/R/caFunctions.R",sep=""),encoding="utf8")
   if (is.null(x)) {
     run.from
   } else {
@@ -67,14 +67,14 @@ lastseen <- recast(subset(res,rc!="Ausente"),bioid~variable,measure.var="rcdate"
 lastseen<- with(lastseen, data.frame(bioid, lastseen=as.Date(rcdate)))
 
 ##follow government
-tmp <- subset(res, rc.gov%in%c("Sim", "N„o"))
+tmp <- subset(res, rc.gov%in%c("Sim", "N√£o"))
 tmp$cgov <- as.numeric(tmp$rc==tmp$rc.gov)
 cgov <- recast(tmp, bioid~variable, measure.var="cgov", id.var=c("bioid")
                , fun.aggregate=fsum)
 
 
 ##follow party
-tmp <- subset(res, rc.party%in%c("Sim", "N„o"))
+tmp <- subset(res, rc.party%in%c("Sim", "N√£o"))
 ## FIX: take care of party renames
 nparty <- recast(tmp, bioid ~ variable, fun.aggregate=function(x) length(unique(x)), measure.var="party")
 nparty <- reshape::rename(nparty, c(party="nparty"))
@@ -166,6 +166,7 @@ capitalizados.2 <- getpics("funding_party")
 capitalizados.3 <- getpics("funding_private")
 
 content <- function(statsnow) {
+    statsnow$title <- gsub("^.*\\s(.*$)","\\1",statsnow$title,perl=TRUE)  #tirar o excelent√Øssimo senhor
     res <- with(statsnow,{
         art <- ifelse (sex=="Male", "o", "a")
         tshort <- ifelse (sex=="Male", "deputado", "deputada")
@@ -177,15 +178,20 @@ content <- function(statsnow) {
               ## nome, partido estado
               "<a href=\"/?p=",postid,"\">",capwords(namelegis.1),"</a> (",party, "/", toupper(state),")", sep='',
           ## ultimo dia em que compareceu.
-              ' compareceu a votaÁıes nominais  na C‚mara pela ˙ltima vez no dia ',
+              ' compareceu a vota√ß√µes nominais  na C√¢mara pela √∫ltima vez no dia ',
               format.Date(lastseen, "%d/%m/%Y"),". ",          
               ## naturalidade
               "Natural de ", capwords(birthplace), ", ", capwords(namelegis.1), " tem ", diffyear(birthdate.1,Sys.Date()), " anos de idade."
               , " ",toupper(art), " ", tshort,  " vota ", round(cgov_prop*100), "%"
-              , " das vezes com o governo, ", round(cparty_prop*100), "% das vezes com seu partido e  esteve ausente em ", round(ausente_prop*100), "% das votaÁıes."
+              , " das vezes com o governo, ", round(cparty_prop*100), "% das vezes com seu partido e  esteve ausente em ", round(ausente_prop*100), "% das vota√ß√µes."
+              ## , " Em 2006, declarou ter recebido R$ ", 
+              ## ifelse(funding_private>1000000,round(funding_private/1000000),round(funding_private/1000)),
+              ## ifelse(funding_private>1000000," milhoes"," mil")," de doadores privados e ",
+              ## ifelse(funding_private>1000000,round(funding_party/1000000),round(funding_party/1000)),
+              ## ifelse(funding_party>1000000," milhoes"," mil")," de seu partido."
               , collapse="<br")
     })
-    paste("ObservaÁ„o: N„o levamos em consideraÁ„o ausencias justificadas ou licensas mÈdicas.<br> ", res)
+    paste("Observa√ß√£o: N√£o levamos em considera√ß√£o ausencias justificadas ou licensas m√©dicas.<br> ", res)
 }
 
 
@@ -195,12 +201,12 @@ statsnow <- governistas[[1]]
 fn <- governistas[[2]]
 statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"cgov_prop"])
 ## change final comma to "e" 
-excerpt <- paste(paste(statsnow$npstate, collapse=", "), " s„o os dez deputados que mais seguiram a indicaÁ„o do governo nas votaÁıes nominais na C‚mara dos Deputados no  perÌodo de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
+excerpt <- paste(paste(statsnow$npstate, collapse=", "), " s√£o os dez deputados que mais seguiram a indica√ß√£o do governo nas vota√ß√µes nominais na C√¢mara dos Deputados na legislatura 2007-2010. √öltima atualiza√ß√£o: ", format(final.date,"%d/%m/%Y"),".", sep='')
 ##FIX: insert date in the post?
 wpAddByTitle(conwp,post_title="Os Governistas"## %+%format(final.date,"%m/%Y")
              ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("governismo",slug="governismo")),
-             ##post_excerpt='Saiba quem s„o os deputados federais que mais faltam ‡s votaÁıes nominais.',
+             ##post_excerpt='Saiba quem s√£o os deputados federais que mais faltam √†s vota√ß√µes nominais.',
              post_type="post",
              post_date=wptime(Sys.Date())$brasilia,
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
@@ -210,12 +216,12 @@ statsnow <- partidarios[[1]]
 fn <- partidarios[[2]]
 statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"cparty_prop"])
 ## change final comma to "e" 
-excerpt <- paste(paste(statsnow$npstate, collapse=", "), " s„o os dez deputados que mais seguiram a indicaÁ„o dos seus partidos  nas votaÁıes nominais na C‚mara dos Deputados no  perÌodo de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
+excerpt <- paste(paste(statsnow$npstate, collapse=", "), " s√£o os dez deputados que mais seguiram a indica√ß√£o dos seus partidos  nas vota√ß√µes nominais na C√¢mara dos Deputados na legislatura 2007-2010. √öltima atualiza√ß√£o: ", format(final.date,"%d/%m/%Y"),".", sep='')
 ##FIX: insert date in the post?
-wpAddByTitle(conwp,post_title="Os FiÈis"## %+%format(final.date,"%m/%Y")
+wpAddByTitle(conwp,post_title="Os Fi√©is"## %+%format(final.date,"%m/%Y")
              ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("partidos",slug="partidos")),
-             ##post_excerpt='Saiba quem s„o os deputados federais que mais faltam ‡s votaÁıes nominais.',
+             ##post_excerpt='Saiba quem s√£o os deputados federais que mais faltam √†s vota√ß√µes nominais.',
              post_type="post",
              post_date=wptime(Sys.Date())$brasilia,
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
@@ -226,13 +232,13 @@ statsnow <- faltosos[[1]]
 fn <- faltosos[[2]]
 statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"ausente_prop"])
 ## change final comma to "e" 
-excerpt <- paste(paste(statsnow$npstate, collapse=", "), " s„o os dez deputados que mais faltaram ‡s votaÁıes nominais na C‚mara dos Deputados no  perÌodo de ", format(init.date,"%d/%m/%Y"), " a ", format(final.date,"%d/%m/%Y"),".", sep='')
+excerpt <- paste(paste(statsnow$npstate, collapse=", "), " s√£o os dez deputados que mais faltaram √†s vota√ß√µes nominais na C√¢mara dos Deputados na legislatura 2007-2010. √öltima atualiza√ß√£o: ", format(final.date,"%d/%m/%Y"),".", sep='')
 ##FIX: insert date in the post?
 wpAddByTitle(conwp
              ,post_title="Os Ausentes"## %+%format(final.date,"%m/%Y")           
              ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("absenteismo",slug="absenteismo")),
-             ##post_excerpt='Saiba quem s„o os deputados federais que mais faltam ‡s votaÁıes nominais.',
+             ##post_excerpt='Saiba quem s√£o os deputados federais que mais faltam √†s vota√ß√µes nominais.',
              post_type="post",
              post_date=wptime(Sys.Date())$brasilia,
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
@@ -243,7 +249,7 @@ statsnow <- capitalizados[[1]]
 fn <- capitalizados[[2]]
 statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"funding_total"])
 ## change final comma to "e" 
-excerpt <- paste(paste(statsnow$npstate, collapse=", "), " s„o os dez deputados que mais receberam doaÁıes de campanha nas eleiÁıes de 2006 para a C‚mara dos Deputados.", sep='')
+excerpt <- paste(paste(statsnow$npstate, collapse=", "), " s√£o os dez deputados que mais receberam doa√ß√µes de campanha nas elei√ß√µes de 2006 para a C√¢mara dos Deputados.", sep='')
 ##FIX: insert date in the post?
 wpAddByTitle(conwp
              ,post_title="As Campanhas Mais Caras"## %+%format(final.date,"%m/%Y")           
@@ -283,8 +289,8 @@ pe <- function(p,year=2008,label="") {
   p
 }
 p <- ggplot(data=tmp,aes(x=legisday,y=votes,group=Legislatura))
-p <- pe(p,year=2008,label="EleiÁıes\nlocais")
-p <- pe(p,year=2010,label="EleiÁıes\nnacionais")
+p <- pe(p,year=2008,label="Elei√ß√µes\nlocais")
+p <- pe(p,year=2010,label="Elei√ß√µes\nnacionais")
 p <- p+geom_point(aes(colour=Legislatura), size=0.7)
 ##p <- p+stat_smooth(se=FALSE,size=2)
 alphan <- .2
@@ -295,7 +301,7 @@ p <- p ## +scale_colour_manual(values = c(alpha("darkgreen",alphan),alpha("darkb
 fx <- function(x=1,year=2006) paste("Dez ",x+year,"\n(",x,'o. ano)',sep='')
 p <- p+scale_x_continuous(name="",breaks=as.numeric(getlegisdays(paste(2008:2010,"-02-01",sep=''))),labels=fx(1:3),expand=c(0,0))
 p <- p+coord_cartesian(ylim=c(0,1))
-p <- p+scale_y_continuous(name="PresenÁa nas votaÁıes nominais", breaks=seq(0,1,.2), formatter="percent")
+p <- p+scale_y_continuous(name="Presen√ßa nas vota√ß√µes nominais", breaks=seq(0,1,.2), formatter="percent")
 p <- p+scale_colour_manual(values = c(alpha("darkgreen",alphan),alpha("darkblue",alphan), alpha("darkred",alphan),"red"))
 p <- p+theme_bw()
 
@@ -309,29 +315,29 @@ dev.off()
 convert.png(rf(fn))
 
 
-pt <- "Dados e An·lises"
+pt <- "Dados e An√°lises"
 pp <- dbGetQuery(conwp,paste("select * from ", tname("posts"), " where post_title=", shQuote(pt)))$ID[1]
 
 
 
 content <- '<table>
 <tr>
-<td><a href="/images/camara/abstentions.png"><img width=400 src="/php/timthumb.php?src=/images/camara/abstentions.png&w=400&h=0" alt="PresenÁa em plen·rio" /></a></td>
+<td><a href="/images/camara/abstentions.png"><img width=400 src="/php/timthumb.php?src=/images/camara/abstentions.png&w=400&h=0" alt="Presen√ßa em plen√°rio" /></a></td>
 <td>
-<explain> O histograma ao lado mostra a mÈdia de presenÁa dos deputados na legislatura 2007-2011. Observe que deputados dos partidos da oposiÁ„o (e.g. PSDB, DEM) se concentram na regi„o  abaixo da mÈdia, enquanto os do governo (e.g. PMDB, PT) est„o mais presentes nas votaÁıes nominais.   </explain>
+<explain> O histograma ao lado mostra a m√©dia de presen√ßa dos deputados na legislatura 2007-2011. Observe que deputados dos partidos da oposi√ß√£o (e.g. PSDB, DEM) se concentram na regi√£o  abaixo da m√©dia, enquanto os do governo (e.g. PMDB, PT) est√£o mais presentes nas vota√ß√µes nominais.   </explain>
 </td>
 </tr>
 <tr>
 <td>
-<explain>O gr·fico ao lado compara a presenÁa em plen·rio da legislatura corrente (em vermelho) com as anteriores. A presenÁa em plen·rio sob o governo Lula da Silva (2003- ) È inferior ‡ presenÁa em plen·rio sob o governo Fernando Henrique Cardoso (1995-2002). </explain>
+<explain>O gr√°fico ao lado compara a presen√ßa em plen√°rio da legislatura corrente (em vermelho) com as anteriores. A presen√ßa em plen√°rio sob o governo Lula da Silva (2003- ) √© inferior √† presen√ßa em plen√°rio sob o governo Fernando Henrique Cardoso (1995-2002). </explain>
 </td>
-<td><a href="/images/abstentions/byrc.png"><img width=400 src="/php/timthumb.php?src=/images/abstentions/byrc.png&w=400&h=0" alt="PresenÁa em plen·rio" /></a></td>
+<td><a href="/images/abstentions/byrc.png"><img width=400 src="/php/timthumb.php?src=/images/abstentions/byrc.png&w=400&h=0" alt="Presen√ßa em plen√°rio" /></a></td>
 </tr>
 </table>
 '
 
 ## page under "desempenho"
-wpAddByTitle(conwp,post_title="PresenÁa em plen·rio", post_category=data.frame(name="Headline",slug="headline"),
+wpAddByTitle(conwp,post_title="Presen√ßa em plen√°rio", post_category=data.frame(name="Headline",slug="headline"),
              post_content=content
              ,
              post_type="page",post_parent=pp,

@@ -13,18 +13,19 @@ tweet.now <- function(status,userpwd="username:password") {
 }
  
 tweet <- function(status, ..., wait=1) {
-  require(tcltk)
-  ## only one tweet permitted
-  if (exists(".id")&&(!is.null(.id))) stop("another tweet is in the queue!")
-  ##wait is in minutes
-  ## convert to ms
-  waitS <- wait*60*1000
-  z <- function() {
-    tweet.now(status, ...)
-    tweet.cancel()
-  }
-  .id <<- tcl("after", waitS, z)
-  attr(.id,"status") <- status
+    if (nchar(status)>140) stop("tweet is too long")
+    require(tcltk)
+    ## only one tweet permitted
+    if (exists(".id")&&(!is.null(.id))) stop("another tweet is in the queue!")
+    ##wait is in minutes
+    ## convert to ms
+    waitS <- wait*60*1000
+    z <- function() {
+        tweet.now(status, ...)
+        tweet.cancel()
+    }
+    .id <<- tcl("after", waitS, z)
+    attr(.id,"status") <- status
 }
  
  
