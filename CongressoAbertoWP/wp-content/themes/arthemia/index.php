@@ -12,7 +12,7 @@
 		<?php query_posts("showposts=1&category_name=Headline&orderby=rand"); ?>
 		<?php while (have_posts()) : the_post(); ?>	
 	
-	<div class="title"><a href="<?php the_permalink() ?>" rel="bookmark"><?php the_title(); ?></a></div>
+	<h3><div class="title"><a href="<?php the_permalink() ?>" rel="bookmark"><?php the_title(); ?></a></div></h3>
 	<div class="meta">[<?php the_time('j M Y') ?> | <?php comments_popup_link('Não há Comentários', 'Um Comentário', '% Comentários');?><?php if(function_exists('the_views')) { echo " |"; the_views(); } ?>]</div>	
 	<?php $values = get_post_custom_values("Headline");?>
 	<a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">
@@ -28,7 +28,7 @@ alt="<?php the_title(); ?>" class="left"  border=0  /></a>
 <!--	<img src="<?php echo get_option('home'); ?>/wp-content/themes/arthemia/images/featured.png" width="72px" height="17px" alt="" /> -->
 
 	<?php query_posts("showposts=3&category_name=Featured"); $i = 1; ?>
-		<div class="title"> O Governo perdeu </div>
+		<h3><div class="title"> Votações Relevantes </div></h3>
       	<?php while (have_posts()) : the_post(); ?>
 	<div class="clearfloat">
 	<?php $values = get_post_custom_values("Image");

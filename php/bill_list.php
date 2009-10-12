@@ -30,7 +30,6 @@ function handleQueryResponse(response) {
 }
 
 google.setOnLoadCallback(drawVisualization);
-
 </script>
 <h3> Proposições que chegaram ao plenário (votações nominais) </h3>
 <div id="table1">

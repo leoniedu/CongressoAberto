@@ -104,11 +104,11 @@ if (new) {
   dbGetQuery(connect,"truncate br_deputados_current")
   ##dbGetQuery(connect,"truncate br_deputados")
   ## insert new values
-  dbWriteTableU(connect,"br_deputados_current",deps.bioid,append=TRUE)
+  dbWriteTableU(connect,"br_deputados_current", subset(deps.bioid,select=-occupation),append=TRUE)
   ## insert into all deputados deps, appending
   ## Fix: use insert from the current deputies table
   ##TODO: update wordpress
-  source(rf("R/twitter.R"))           
+  source(rf("R/twitter.R"))
   load(rf("R/up.RData"))
   tw <- paste("Lista de deputados atualizada!")
   ns <- tweet(tw, userpwd=usrpwd, wait=0)

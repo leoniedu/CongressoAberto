@@ -47,7 +47,6 @@ Should wait for some of the (many) bugs to be ironed out.
 ** Ford Foundation
 ** Christian Aid
 ** Fastenopfer
-** Fundação Avina
 ** Instituto Heinrich Böl
 ** INESC: http://www.inesc.org.br
 *** DONE Email Márcio Pontual
@@ -59,6 +58,8 @@ Should wait for some of the (many) bugs to be ironed out.
 ** @camilotelles: idéia. site que apresente os projetos de lei do ano. vc vota ele indica qual deputado vota mais próximo
 ** paulo palito <palitojf@yahoo.com.br> Sugiro que este Blog reserve um espaço para um placar de votação de temas polêmicos, dos Deputados e Senadores de cada Estado, separadamente, para facilitar a visualização. 
 ** sortear diferente os deputados a cada view.
+** Deputados no twitter
+** Ali junto da barra azul e preta, poderíamos colocar um placar, algo como: das XXX votacoes realizadas nesta legislatura, XXX foram unânimes ou quase unânimes (acho que poderíamos expandir o critério); Das restantes, o governo venceu XXX, perdeu XXX e nao declarou posicao em XXX.
 * Locais de votacao
 ** http://noticias.terra.com.br/eleicoes2004/locaisdevotacao/index.html
 ** http://www.tre-sp.gov.br/eleicoes/2004/local/default.htm

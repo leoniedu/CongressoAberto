@@ -30,13 +30,12 @@ function handleQueryResponse(response) {
   visualization = new google.visualization.Table(document.getElementById('table1'));
   visualization.draw(view, options);
 }
-
+ 
 google.setOnLoadCallback(drawVisualization);
-
+ 
 </script>
 <h3> em Exercício </h3>
 <p>Dados da legislatura 2007-2010 atualizados diariamente</p>
 <div id="table1">
 </div>
 <p> Observação: Não levamos em consideração ausencias justificadas ou licensas médicas. </p>
-

@@ -90,8 +90,8 @@ contrib<- dbGetQuery(connect, "select * from br_contrib")  #set of contributions
 elected<- dbGetQuery(connect, "select * from br_bioidtse")[,c("state","candidate_code","bioid")] #set of those eventually elected 
 inoffice<- dbGetQuery(connect, "select * from br_deputados_current")[,c("namelegisclean","bioid")] #set of those currenlty in office
 
-funding_total <- function(d) {sum(d$total,na.rm=TRUE)}
-funding_party <- function(d) {sum(subset(d,donortype=="PF")$total,na.rm=TRUE)}
+funding_total <- function(d) {sum(d$contribsum,na.rm=TRUE)}
+funding_party <- function(d) {sum(subset(d,donortype=="PF")$contribsum,na.rm=TRUE)}
 contrib.cand <- ddply(contrib, .(candno,partyno,state), "funding_total") #candidate observations (all contributions)
 contrib.candPP <- ddply(contrib, .(candno,partyno,state), "funding_party") #candidate observations (party contributions)
 contrib.cand <- merge(contrib.cand,contrib.candPP,by=c("candno","partyno","state")) #merge the two
@@ -184,11 +184,11 @@ content <- function(statsnow) {1
               "Natural de ", capwords(birthplace), ", ", capwords(namelegis.1), " tem ", diffyear(birthdate.1,Sys.Date()), " anos de idade."
               , " ",toupper(art), " ", tshort,  " vota ", round(cgov_prop*100), "%"
               , " das vezes com o governo, ", round(cparty_prop*100), "% das vezes com seu partido e  esteve ausente em ", round(ausente_prop*100), "% das votações."
-              ## , " Em 2006, declarou ter recebido R$ ", 
-              ## ifelse(funding_private>1000000,round(funding_private/1000000),round(funding_private/1000)),
-              ## ifelse(funding_private>1000000," milhoes"," mil")," de doadores privados e ",
-              ## ifelse(funding_private>1000000,round(funding_party/1000000),round(funding_party/1000)),
-              ## ifelse(funding_party>1000000," milhoes"," mil")," de seu partido."
+               , " Em 2006, declarou ter recebido R$ ", 
+               ifelse(funding_private>1000000,round(funding_private/1000000),round(funding_private/1000)),
+               ifelse(funding_private>1000000," milhões"," mil")," de doadores privados e ",
+               ifelse(funding_party>1000000,round(funding_party/1000000),round(funding_party/1000)),
+               ifelse(funding_party>1000000," milhões"," mil")," de seu partido."
               , collapse="<br")
     })
     paste("Observação: Não levamos em consideração ausencias justificadas ou licensas médicas.<br> ", res)
@@ -245,18 +245,17 @@ wpAddByTitle(conwp
 
 
 statsnow <- capitalizados[[1]]
-
 fn <- capitalizados[[2]]
 statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"funding_total"])
 ## change final comma to "e" 
 excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais receberam doações de campanha nas eleições de 2006 para a Câmara dos Deputados.", sep='')
 ##FIX: insert date in the post?
-## wpAddByTitle(conwp
-##              ,post_title="As Campanhas Mais Caras"## %+%format(final.date,"%m/%Y")           
-##              ,post_content=content(statsnow)
-##              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("campanhas",slug="campanhas")),
-##              post_type="post",
-##              custom_fields=data.frame(meta_key="Image",meta_value=fn))
+wpAddByTitle(conwp
+             ,post_title="As Campanhas Mais Caras"## %+%format(final.date,"%m/%Y")           
+             ,post_content=content(statsnow)
+             ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("campanhas",slug="campanhas")),
+             post_type="post",
+             custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
 
 
