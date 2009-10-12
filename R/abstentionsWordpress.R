@@ -1,5 +1,7 @@
 # Code generates the several "TOP TEN" scenarios
 # Cesar added contributions TOP TEN on October 08
+# Corrected the summation of campaign contributions on October 09
+# Improved the query for contributions, making it faster on Octoever 09
 
 ##library(lme4)
 library(ggplot2)
@@ -86,20 +88,13 @@ cparty <- merge(cparty,nparty)
 
 ##contributions
 ##Redo query: make a single query to avoid having to do all the mergers later.....
-contrib<- dbGetQuery(connect, "select * from br_contrib")  #set of contributions to federal deputeis 
-elected<- dbGetQuery(connect, "select * from br_bioidtse")[,c("state","candidate_code","bioid")] #set of those eventually elected 
-inoffice<- dbGetQuery(connect, "select * from br_deputados_current")[,c("namelegisclean","bioid")] #set of those currenlty in office
-
-funding_total <- function(d) {sum(d$contribsum,na.rm=TRUE)}
-funding_party <- function(d) {sum(subset(d,donortype=="PF")$contribsum,na.rm=TRUE)}
-contrib.cand <- ddply(contrib, .(candno,partyno,state), "funding_total") #candidate observations (all contributions)
-contrib.candPP <- ddply(contrib, .(candno,partyno,state), "funding_party") #candidate observations (party contributions)
-contrib.cand <- merge(contrib.cand,contrib.candPP,by=c("candno","partyno","state")) #merge the two
+contrib.cand <- dbGetQuery(connect, "select candno, state, SUM(contribsum) as funding_total from br_contrib GROUP BY candno, state")  
+contrib.candPP <- dbGetQuery(connect, "select candno, state, SUM(contribsum) as funding_party from br_contrib  WHERE donortype='PP' GROUP BY candno, state")  
+contrib.cand <- merge(contrib.cand,contrib.candPP,by=c("candno","state"),all=TRUE)
+contrib.cand$funding_party <- ifelse(is.na(contrib.cand$funding_party),0,contrib.cand$funding_party)
 contrib.cand$funding_private <- contrib.cand$funding_total - contrib.cand$funding_party #create third category (private contributions)
-contrib.elec <- merge(elected,contrib.cand,by.x=c("candidate_code","state"),by.y=c("candno","state"),all.x=TRUE) #get bioid -> this could be avoided with query
-contrib.elec <- contrib.elec[,-which(is.element(names(contrib.elec),c("candidate_code","state","partyno")))] #keep only candidates actually electe -> this could be avoided with query
-
-
+elected<- dbGetQuery(connect, "select * from br_bioidtse")[,c("state","candidate_code","bioid")] #set of those eventually elected 
+contrib.elec <- merge(elected,contrib.cand,by.x=c("candidate_code","state"),by.y=c("candno","state"),all.x=TRUE)[,-c(1,2)] 
 
 stats <- merge(ausente, lastseen, all=TRUE, by="bioid")
 stats <- merge(stats, cparty, all=TRUE)
