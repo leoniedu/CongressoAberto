@@ -38,4 +38,4 @@ google.setOnLoadCallback(drawVisualization);
 <p>Dados da legislatura 2007-2010 atualizados diariamente</p>
 <div id="table1">
 </div>
-<p> Observação: Não levamos em consideração ausencias justificadas ou licensas médicas. </p>
+<p> Observação: Não levamos em consideração ausências justificadas ou licenças médicas. </p>
