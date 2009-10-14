@@ -36,8 +36,8 @@ final.date <- Sys.Date()
 ## date.range <- paste(format(c(init.date+1,final.date-1),"%d-%m-%Y"))
 ## sql <- paste("explain select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b, br_deputados_current as c where a.bioid=c.bioid and a.rcvoteid=b.rcvoteid and (rcdate>cast('",init.date,"' as date) ) and (rcdate<cast('",final.date,"' as date) ) ",sep='')
 
-sql <- paste("select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b, br_deputados_current as c where a.bioid=c.bioid and a.rcvoteid=b.rcvoteid and a.legis=53 and b.legis=53",sep='')
-system.time(res <- dbGetQueryU(connect,sql))
+## sql <- paste("select  a.*, cast(b.rcdate as date) as rcdate  from br_votos as a, br_votacoes as b, br_deputados_current as c where a.bioid=c.bioid and a.rcvoteid=b.rcvoteid and a.legis=53 and b.legis=53",sep='')
+## system.time(res <- dbGetQueryU(connect,sql))
 
 
 ##sql <- paste("select  a.*  from br_votos as a where a.legis=53",sep='')
@@ -160,6 +160,7 @@ capitalizados.2 <- getpics("funding_party")
 
 capitalizados.3 <- getpics("funding_private")
 
+toreal <- function(x,digits=0) gsub("\\.", ",", round(x,digits))
 content <- function(statsnow) {1
     statsnow$title <- gsub("^.*\\s(.*$)","\\1",statsnow$title,perl=TRUE)  #tirar o excelentïssimo senhor
     res <- with(statsnow,{
@@ -177,17 +178,18 @@ content <- function(statsnow) {1
               format.Date(lastseen, "%d/%m/%Y"),". ",          
               ## naturalidade
               "Natural de ", capwords(birthplace), ", ", capwords(namelegis.1), " tem ", diffyear(birthdate.1,Sys.Date()), " anos de idade."
-              , " ",toupper(art), " ", tshort,  " vota ", round(cgov_prop*100), "%"
-              , " das vezes com o governo, ", round(cparty_prop*100), "% das vezes com seu partido e  esteve ausente em ", round(ausente_prop*100), "% das votações."
+              , " ",toupper(art), " ", tshort,  " vota ", toreal(cgov_prop*100), "%"
+              , " das vezes com o governo, ", toreal(cparty_prop*100), "% das vezes com seu partido e  esteve ausente em ", toreal(ausente_prop*100), "% das votações."
                , " Em 2006, declarou ter recebido R$ ", 
-               ifelse(funding_private>1000000,round(funding_private/1000000),round(funding_private/1000)),
-               ifelse(funding_private>1000000," milhões"," mil")," de doadores privados e ",
-               ifelse(funding_party>1000000,round(funding_party/1000000),round(funding_party/1000)),
-               ifelse(funding_party>1000000," milhões"," mil")," de seu partido."
+              ifelse(funding_private>1000000,toreal(funding_private/1000000,1),toreal(funding_private/1000)),
+              ifelse(funding_private>1000000," milhões"," mil")," de doadores privados e ",
+              ifelse(funding_party>1000000,toreal(funding_party/1000000,1),toreal(funding_party/1000)),
+              ifelse(funding_party>1000000," milhões"," mil")," de seu partido."
               , collapse="<br")
     })
-    paste("Observação: Não levamos em consideração ausencias justificadas ou licensas médicas.<br> ", res)
+    paste("Observação: Não levamos em consideração ausências justificadas ou licenças médicas.<br> ", res)
 }
+
 
 
 
