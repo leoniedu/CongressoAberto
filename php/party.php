@@ -17,8 +17,9 @@ $cohesion = $row[2];
 $shareabsent = $row[3];
 $sharegovall = $row[4];
 $sharegovdiv = $row[5];
-$sharewomen = $row[6];
-$nameparty = $row[9];
+$sharewomen = $row[8];
+$withmajoritydiv = $row[7];
+$nameparty = $row[11];
 
 ##Get Ranks
 $result = mysql_query("select t1.*, t2.name, t2.number from br_partyindices_rank as t1, br_parties_current as t2 where t1.partyid={$partyid} AND t2.number={$partyid}");
@@ -28,7 +29,8 @@ $rankcohesion = $row[2];
 $rankshareabsent = $row[3];
 $ranksharegovall = $row[4];
 $ranksharegovdiv = $row[5];
-$ranksharewomen = $row[6];
+$rankswithmajoritydiv = $row[7];
+$ranksharewomen = $row[8];
 
 ##Get number of ranked parties
 $result = mysql_query("select count(*) as row_ct from br_partyindices");
@@ -45,7 +47,8 @@ print("<td width='400'><h3>$nameparty</h3></p>
             Taxa de Absenteismo  $shareabsent% ($rankshareabsent&ordm) <br>
             Taxa de Governismo: $sharegovdiv% em votações contenciosas  ($ranksharegovdiv&ordm)<br>
             Índice de Coesão:  $cohesion ($rankcohesion&ordm) <br>
-            Mulheres:  $sharewomen% ($ranksharewomen&ordm)
+            Mulheres:  $sharewomen% ($ranksharewomen&ordm) <br>
+            Vota com a maioria em $withmajoritydiv% das votações contenciosas ($rankswithmajoritydiv&ordm)
             </td>
             <td width ='400'>
             <explain>Rankings consideram apenas os $nparties maiores partidos. Taxa de Absenteísmo é a porcentagem média dos membros do partido ausentes

@@ -2,6 +2,7 @@
 # Cesar added contributions TOP TEN on October 08
 # Corrected the summation of campaign contributions on October 09
 # Improved the query for contributions, making it faster on Octoever 09
+# Leoni fixed bugs in assembling post, and Cesar added small changes on October 13
 
 ##library(lme4)
 library(ggplot2)
@@ -161,7 +162,7 @@ capitalizados.2 <- getpics("funding_party")
 capitalizados.3 <- getpics("funding_private")
 
 toreal <- function(x,digits=0) gsub("\\.", ",", round(x,digits))
-content <- function(statsnow) {1
+content <- function(statsnow) {
     statsnow$title <- gsub("^.*\\s(.*$)","\\1",statsnow$title,perl=TRUE)  #tirar o excelentïssimo senhor
     res <- with(statsnow,{
         art <- ifelse (sex=="Male", "o", "a")
@@ -173,25 +174,24 @@ content <- function(statsnow) {1
               title," ",
               ## nome, partido estado
               "<a href=\"/?p=",postid,"\">",capwords(namelegis.1),"</a> (",party, "/", toupper(state),")", sep='',
-          ## ultimo dia em que compareceu.
+              ## ultimo dia em que compareceu.
               ' compareceu a votações nominais  na Câmara pela última vez no dia ',
               format.Date(lastseen, "%d/%m/%Y"),". ",          
               ## naturalidade
               "Natural de ", capwords(birthplace), ", ", capwords(namelegis.1), " tem ", diffyear(birthdate.1,Sys.Date()), " anos de idade."
               , " ",toupper(art), " ", tshort,  " vota ", toreal(cgov_prop*100), "%"
               , " das vezes com o governo, ", toreal(cparty_prop*100), "% das vezes com seu partido e  esteve ausente em ", toreal(ausente_prop*100), "% das votações."
-               , " Em 2006, declarou ter recebido R$ ", 
+              , " Em 2006, declarou ter recebido R$ ", 
               ifelse(funding_private>1000000,toreal(funding_private/1000000,1),toreal(funding_private/1000)),
               ifelse(funding_private>1000000," milhões"," mil")," de doadores privados e ",
-              ifelse(funding_party>1000000,toreal(funding_party/1000000,1),toreal(funding_party/1000)),
-              ifelse(funding_party>1000000," milhões"," mil")," de seu partido."
+              ifelse(funding_party==0,"não ter recebido doações",
+                     paste(ifelse(funding_party>1000000,round(funding_party/1000000,1),round(funding_party/1000,1)),
+                           ifelse(funding_party>1000000,toreal(funding_party/1000000,1),toreal(funding_party/1000)),
+                           ifelse(funding_party>1000000," milhões"," mil")))," de seu partido."
               , collapse="<br")
     })
-    paste("Observação: Não levamos em consideração ausências justificadas ou licenças médicas.<br> ", res)
+        paste("Observação: Não levamos em consideração ausências justificadas ou licenças médicas.<br> ", res)
 }
-
-
-
 
 
 statsnow <- governistas[[1]]

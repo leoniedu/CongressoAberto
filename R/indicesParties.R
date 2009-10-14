@@ -99,7 +99,7 @@ rcnew$withgov <- as.numeric(with(rcnew,rcr.gov==rcr))
     nay <- function(d) {sum(d$rcr==0,na.rm=TRUE)} #extend "concept" of nay
     absent <- function(d) {sum(d$rcr==9,na.rm=TRUE)}
 #Create table with party/vote observations
-rcparty <- ddply(rcnew, .(partyR,rcvoteid,rc.gov), "nrow") #rc.gov does not varry with rcvoteid, so this is okay!
+rcparty <- ddply(rcnew, .(partyR,rcvoteid,rc.gov,rc.ldr), "nrow") #rc.gov and rc.ldr do not varry with rcvoteid, so this is okay!
 rcparty <- merge(rcparty,ddply(rcnew, .(partyR,rcvoteid), "withgov"),by=c("partyR","rcvoteid"))
 rcparty <- merge(rcparty,ddply(rcnew, .(partyR,rcvoteid), "withldr"),by=c("partyR","rcvoteid"))
 rcparty <- merge(rcparty,ddply(rcnew, .(partyR,rcvoteid), "yea"),by=c("partyR","rcvoteid"))
@@ -110,17 +110,18 @@ rcparty$rice <- (abs(rcparty$yea-rcparty$nay))/(rcparty$yea+rcparty$nay)
                               nay <- v$rcr==0 
                               div <- ifelse(abs(sum(yea)-sum(nay))/ (sum(yea)+sum(nay))>0.8,FALSE,TRUE)  
                               return(div)}    
-   govdeclared <-  function(v) {  yea <- v$rcr==1 #computes the overall rice score or divisiveness of each vote
-                                nay <- v$rcr==0 
-                              div <- ifelse(abs(sum(yea)-sum(nay))/ (sum(yea)+sum(nay))>0.8,FALSE,TRUE)  
-                              return(div)}                 
-divisive.vote <- ddply(rcnew, .(rcvoteid), "divisive")
+            
+   winningside <- function(v) {yea <- sum(v$rcr==1,na.rm=TRUE) #computes the overall winning position in the each vote
+                                nay <- sum(v$rcr==0,na.rm=TRUE) 
+                                res <- ifelse(yea>nay,"Sim","Não")
+                                return(res) }
+divisive.vote <- ddply(rcnew, .(rcvoteid), "divisive") #whether each vote was divisive
+winning.side <- ddply(rcnew, .(rcvoteid), "winningside")  #the majority position in each vote
+rcparty <- merge(rcparty,divisive.vote,by=c("rcvoteid"),all.x=TRUE)
+rcparty <- merge(rcparty,winning.side,by=c("rcvoteid"),all.x=TRUE)
+rcparty$govdeclared <- car::recode(rcparty$rc.gov,"c('Sim','Não','Obstrução')=TRUE;else=FALSE")
 rm(rcnew)
 gc()
-
-
-rcparty <- merge(rcparty,divisive.vote,by=c("rcvoteid"),all.x=TRUE)
-rcparty$govdeclared <- car::recode(rcparty$rc.gov,"c('Sim','Não','Obstrução')=TRUE;else=FALSE")
 
 #Compute party summary statistics over the entire period
 current.size <-  rcparty[which(rcparty$rcvoteid==max(rcparty$rcvoteid)),c("partyR","nrow")] #
@@ -133,7 +134,16 @@ rcpartyGOV <- subset(rcparty,govdeclared==TRUE) #With government stats are compu
 with.execALL <- as.matrix(by(rcpartyGOV$withgov/rcpartyGOV$nrow,rcpartyGOV$party,mean,na.rm=TRUE) )
 rcpartyGOVDIV <- subset(rcparty,divisive==TRUE & govdeclared==TRUE)
 with.execDIV <- as.matrix(by(rcpartyGOVDIV$withgov/rcpartyGOVDIV$nrow,rcpartyGOVDIV$party,na.rm=TRUE,mean) )
+with.majorityALL <- as.matrix(by(rcparty$winningside==rcparty$rc.ldr,rcparty$party,na.rm=TRUE,sum)) / length(unique(rcparty$rcvoteid))
+with.majorityDIV <- as.matrix(by(rcpartyDIV$winningside==rcpartyDIV$rc.ldr,rcpartyDIV$party,na.rm=TRUE,sum))/ 
+                                    length(unique(rcpartyDIV$rcvoteid)) #with.majority is measured by leader's vote (not majority of party)
+                                                                        #its a share of ALL votes, not necessarily of those in which leadership declared a vote
+                                                                        #large parties leadership declares votes in almost all votes, to check see
+                                                                        #party.declared <- length(unique(rcparty$rcvoteid))- as.matrix(by(is.na(rcparty$rc.ldr),rcparty$party,sum))
+
 rm(rcpartyGOV,rcpartyGOVDIV)
+
+
 
 #Get number of women in current composiiton of congress
 depcurrent <- dbGetQuery(connect,    ### Turned "off" the "conversion" function (dgGetQueryU) due to incompatibility with my system
@@ -151,21 +161,26 @@ party.data <- data.frame(current.size=0,
                          cohesionALL = round(cohesionALL,3),
                          share.absent = round(100*share.absent,1),
                          with.execALL = round(100*with.execALL,1),
-                         with.execDIV = round(100*with.execDIV,1))
+                         with.execDIV = round(100*with.execDIV,1),
+                         with.majorityALL = round(100*with.majorityALL,1),
+                         with.majorityDIV = round(100*with.majorityDIV,1)
+                         )
 party.data[current.size$party,"current.size"] <- current.size$nrow  #merge like this because parties might be missing in last vote
 party.data <- party.data[-which(rownames(party.data)=="S.Part."),]
 party.data$share.wom <- round(100*ifelse(is.na(wom[rownames(party.data)]),0,wom[rownames(party.data)]/party.data$current.size),2) #add number of women per party
 party.data <- party.data[which(party.data$ave.size>5),]  #report only parties greater than 5 legislators
 
-party.data.ranks <- data.frame(round(nrow(party.data)-apply(party.data,2,rank,ties.method="max")+1))
 
+party.data.ranks <- data.frame(round(nrow(party.data)-apply(party.data,2,rank,ties.method="max")+1))
 party.data.ranks$partyname <-party.data$partyname <- rownames(party.data)      
 party.data.ranks$partyid <-  party.data$partyid <- car::recode(party.data$partyname,"
                        'PRB'=10;'PP'=11;'PDT'=12;'PT'=13;'PTB'=14;'PMDB'=15;'PSTU'=16;'PDC'=17;
                        'PSC'=20;'PR'=22;'PPS'=23;'DEM'=25;'PAN'=26;'PRTB'=28;'PHS'=31;'PMN'=33;'PTC'=36;'PRP'=38;
                        'PSB'=40;'PSD'=41;'PV'=43;'PRP'=44;'PSDB'=45;'PSOL'=50;'PST'=52;
                        'PCdoB'=65;'PTdoB'=70;'PMSD'=75;'PPN'=76;'PCDN'=78;'PFS'=84;else=0")
-                
+
+
+       
 dbRemoveTable(connect,"br_partyindices")
 dbWriteTableU(connect,"br_partyindices",party.data)
 
