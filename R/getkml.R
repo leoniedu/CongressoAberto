@@ -95,8 +95,8 @@ for (snow in states) {
   ## ## this is likely the best
   bs <- c(0.01,.025,.05,.1,.2,.3,.5,1)    
   ##plot all
-  res.m$`Votos conquistados\nno município (%)` <- round(res.m$vote_prop*100)  
-
+  res.m$dominance <- res.m$`Votos conquistados\nno município (%)` <- round(res.m$vote_prop*100)  
+  
   if (FALSE) {
       p <- qplot(x,y,colour=`Votos conquistados\nno município (%)`,data=res.m,
                  label=municipality_tse06,alpha=I(2/3),
@@ -116,6 +116,7 @@ for (snow in states) {
       fn <- webdir(paste("images/elections/2006/","deputadofederal",snow,".RData",sep=""))
       save(p,file=fn)
   }
+  
   ## plot one
   m2 <- m1[m1$SIGLA==snow,]
   m <- get_borders(m2)  
@@ -123,7 +124,7 @@ for (snow in states) {
   m$x <- m$long
   m$y <- m$lat
   m <- m[order(m$rowid,m$id),]
-  p <- qplot(x,y,data=m,geom="polygon",fill=I("gray90"),colour=I("white"),group=id)
+  p <- qplot(x,y,data=m,geom="polygon",fill=I("gray90"),colour=I("white"),group=id, size=I(.2))
   p <- p+coord_equal()
   ##p  
   i <- 1
@@ -158,10 +159,10 @@ for (snow in states) {
       pnew <- pnew+geom_point(aes(x=x,y=y, colour=`Votos conquistados\nno município (%)`, label=municipality_tse06,size=eq), ,alpha=I(2/3), data=subset(res.m,candidate_code==cand))      
       dnow <- subset(res.m,candidate_code==cand)
       pnew <- pnew+scale_colour_continuous(limits=c(0,100))
-      pnew <- pnew+geom_text(mapping=aes(label=municipality_tse06),data=dnow[order(dnow$votes,decreasing=TRUE)[1:min(c(5,nrow(dnow)))],],size=4,vjust=2)    
+      vmax <- which.max(dnow$votes)
+      pmax <- which.max(dnow$dominance)      
+      pnew <- pnew+geom_text(mapping=aes(label=municipality_tse06),data=dnow[c(pmax,vmax),],size=4,vjust=2)
       fn <- webdir(paste("images/elections/2006/","deputadofederal",snow,cand,".png",sep=""))
-      
-      
       legend_color<- qplot(x=rnorm(100),fill=rnorm(100)) +scale_fill_continuous(name="Votos (%)\nno município", limits=c(0,100))
       legend_color <- legend_color+ opts(keep = "legend_box",
                                          legend.key.size = unit(2, "lines"),
@@ -172,9 +173,7 @@ for (snow in states) {
                                        legend.key.size = unit(2, "lines"),
                                        legend.text = theme_text(size = 12),
                                        legend.title = theme_text(size = 17,
-                                       face = "bold", hjust = 0))
-      
-
+                                       face = "bold", hjust = 0))      
       ## Plotting
       ## Plot Layout Setup
       Layout <- grid.layout( nrow = 1, ncol = 3,
@@ -192,9 +191,9 @@ for (snow in states) {
       print(legend_size, vp=subplot(1,2))
       print(legend_color, vp=subplot(1,3))
       dev.off()
-      gc()
-      
+      gc()      
   }
+  
 }
 
 
