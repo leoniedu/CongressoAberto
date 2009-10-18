@@ -14,17 +14,24 @@ b.state,
 round(c.cgov_prop*100),
 d.party,
 round(c.ausente_prop*100),
-d.mailaddress
-, a.biofile
-	FROM br_bio as a, br_bioidtse as b, 
-	br_legis_stats as c, 
-	br_deputados_current as d
-	where a.bioid={$bioid} and 
-	a.bioid=b.bioid
-	and a.bioid=c.bioid  
-	and	a.bioid=d.bioid
-	and b.year=2006 
-	 ");
+d.mailaddress,
+a.biofile,
+c.funding_total,
+c.funding_party,
+c.funding_number,
+c.votes,
+c.munname_abs,
+c.munname_rel,
+round(c.cparty_prop*100)
+    FROM br_bio as a, br_bioidtse as b, 
+    br_legis_stats as c, 
+    br_deputados_current as d
+    where a.bioid={$bioid} and 
+    a.bioid=b.bioid
+    and a.bioid=c.bioid  
+    and a.bioid=d.bioid
+    and b.year=2006 
+     ");
 if (!$result) {
   die("Query to show fields from table failed");
  }
@@ -39,23 +46,40 @@ $party = $row[5];
 $percausente = $row[6];
 $email = $row[7];
 $url = $row[8];
+$funding = $row[9];
+$fundingparty = $row[10];
+$funders =  $row[11];
+$votes = $row[12];
+$munabs = $row[13];
+$munrel = $row[14];
+$perccompartido = $row[15];
 
 // $statelegis = $row[2]; FIX: make it not depend on row order (Call by name)
-echo '<table border="0">';
+echo '<table style="width: 100%" cellspacing = "12">'; #border='1' rules ='rows'
 echo '<tr>';
-print("<td><img src=\"/php/timthumb.php?src=/images/bio/polaroid/foto".$bioid.".png&w=100&h=0&zc=0\" alt=\"$namelegis\" width=100/></td>");
-print("<td> 
-<p>$namelegis ($party/$state)<br>
-<a href=\"http://www.camara.gov.br/Internet/deputado/$url\"> Página do deputado no site na Câmara</a><br>
-Legislaturas: $legisserved <br>
-Vota com o governo: $percprogov% <br>
-Ausente: $percausente% <br>
-Email: <a href=\"mailto:$email\"> $email </a> <br>
-</p>
- </td></tr></table>");
+print("<td rowspan='2'><img src=\"/php/timthumb.php?src=/images/bio/polaroid/foto".$bioid.".png&w=100&h=0&zc=0\" alt=\"$namelegis\" width=100/></td>");
+print("<td colspan='3' >$namelegis ($party/$state)<br>
+                                            Email: <a href=\"mailto:$email\"> $email </a> (<a href=\"http://www.camara.gov.br/Internet/deputado/$url\">Página Oficial</a>)<br>
+                                            Legislaturas: $legisserved <br>
+</td>
+                </tr>
+                <tr>
+                                <td>Comportamento em Votações Nominais:<br>
+                                    Ausente: $percausente% <br>
+                                    Vota com o governo: $percprogov% <br>
+                                    Vota com o partido: $perccompartido% <br>
+                                </td>
+                                <td>Desempenho nas Eleições de 2006: <br>
+                                    Total de Votos: $votes <br>
+                                    Maior n&uacute;mero de votos: $munabs <br>
+                                    Maior porcentagem de votos: $munrel <br> </td>
+                                <td>Financiamento de Campanha (Declarado): <br>   
+                                    Doa&ccedil&otilde;es Totais: R&#36 $funding <br>
+                                    Doa&ccedil&otilde;es do Partido: R&#36 $fundingparty  <br>
+                                    N&uacute;mero de Doadores:  $funders<br> </td>
+</tr></table>");
 
 </script>
-
 
 
 <script language="javascript" type="text/javascript">

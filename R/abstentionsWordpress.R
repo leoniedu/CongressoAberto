@@ -3,6 +3,8 @@
 # Corrected the summation of campaign contributions on October 09
 # Improved the query for contributions, making it faster on Octoever 09
 # Leoni fixed bugs in assembling post, and Cesar added small changes on October 13
+# Cesar included data about electoral results of legislators (municpalities where got the most votes, total number of votes) on October 16
+
 
 ##library(lme4)
 library(ggplot2)
@@ -89,7 +91,7 @@ cparty <- merge(cparty,nparty)
 
 ##contributions
 ##Redo query: make a single query to avoid having to do all the mergers later.....
-contrib.cand <- dbGetQuery(connect, "select candno, state, SUM(contribsum) as funding_total from br_contrib GROUP BY candno, state")  
+contrib.cand <- dbGetQuery(connect, "select candno, state, SUM(contribsum) as funding_total, COUNT(contribsum) as funding_number from br_contrib GROUP BY candno, state")  
 contrib.candPP <- dbGetQuery(connect, "select candno, state, SUM(contribsum) as funding_party from br_contrib  WHERE donortype='PP' GROUP BY candno, state")  
 contrib.cand <- merge(contrib.cand,contrib.candPP,by=c("candno","state"),all=TRUE)
 contrib.cand$funding_party <- ifelse(is.na(contrib.cand$funding_party),0,contrib.cand$funding_party)
@@ -97,25 +99,62 @@ contrib.cand$funding_private <- contrib.cand$funding_total - contrib.cand$fundin
 elected<- dbGetQuery(connect, "select * from br_bioidtse")[,c("state","candidate_code","bioid")] #set of those eventually elected 
 contrib.elec <- merge(elected,contrib.cand,by.x=c("candidate_code","state"),by.y=c("candno","state"),all.x=TRUE)[,-c(1,2)] 
 
+## votes
+votemun.elec <- dbGetQuery(connect,    #votes of the elected candidates by municipality
+                    paste("SELECT a.year, a.office, a.candidate_code, a.votes, a.state, a.municipality, b.bioid  
+                           FROM br_vote_mun as a RIGHT JOIN br_bioidtse as b
+                           ON (b.state=a.state and b.candidate_code = a.candidate_code)
+                           WHERE a.office='DEPUTADO FEDERAL'",sep=""))
+totvotemun <- dbGetQuery(connect,     #total votes in each municipality #I DIDNT MANAGE TO EXTRACT A QUERY WITH ACTUAL MUNICIPALITY NAMES
+                    paste("SELECT SUM(votes) as totvotes,  municipality FROM br_vote_mun WHERE office='DEPUTADO FEDERAL' GROUP BY municipality",sep=""))
+votemun.elec <- merge(votemun.elec,totvotemun,by=c("municipality"),all.x=TRUE) #add the total number of votes by each municipality
+votemun.elec$voteshare <- votemun.elec$vote/votemun.elec$totvotes #compute the vote share in each municipality for each guy
+munnames <-dbGetQuery(connect,    
+                    paste("SELECT municipalitytse,  municipality_ibge07 FROM  br_municipios")) #municpality names
+totvotemun <- merge(totvotemun,munnames,by.x=c("municipality"),by.y=c("municipalitytse"),all.x=TRUE)     #add municipality name to the set
+          
+votecand.elec <- dbGetQuery(connect,    #total votes n all municipalities by each elected candiate
+                    paste("SELECT sum(a.votes) as votes, b.bioid  
+                           FROM br_vote_mun as a RIGHT JOIN br_bioidtse as b
+                           ON (b.state=a.state and b.candidate_code = a.candidate_code)
+                           WHERE a.office='DEPUTADO FEDERAL' GROUP BY b.bioid",sep=""))
+
+muncode.abs <- function(d){ sprintf("%05.0f", d$municipality[which.max(d$votes)])}
+muncode.rel <- function(d){ sprintf("%05.0f",d$municipality[which.max(d$voteshare)])}
+muncode.abs <- ddply(votemun.elec, .(bioid), "muncode.abs") #identify the municipality where each guy got the most votes
+muncode.abs <-merge(muncode.abs,munnames,by.x="muncode.abs",by.y="municipalitytse",all.x=TRUE)
+muncode.rel <- ddply(votemun.elec, .(bioid), "muncode.rel") #identify the municipality where each guy got thighest vote share
+muncode.rel <-merge(muncode.rel,munnames,by.x="muncode.rel",by.y="municipalitytse",all.x=TRUE) #merge in municipality names
+
+vote.stats <-merge( merge(votecand.elec,muncode.abs,by="bioid",all.x=TRUE),muncode.rel,by="bioid",all.x=TRUE,suffixes=c("abs","rel"))
+names(vote.stats) <- gsub("icipality_ibge07","name.",names(vote.stats))
+#get text names in here....
+
+
+##Create the stats dataset
 stats <- merge(ausente, lastseen, all=TRUE, by="bioid")
 stats <- merge(stats, cparty, all=TRUE)
 stats <- merge(stats, cgov, all=TRUE)
 stats <- merge(stats, contrib.elec, all=TRUE, by="bioid")
+stats <- merge(stats, vote.stats, all=TRUE, by="bioid")  #HAVEN'T CREATED THE REPORTS BASED ON THESE NEW VARAIBELS, YET!!!!!!!!
 ## missing info on cparty (due to party change)
 mp <- is.na(stats$cparty_prop)
 ## code missing as zero
 ## FIX; see if this makes sense
 stats$cparty_prop[mp] <- stats$cparty_count[mp] <- stats$cparty_total[mp] <- 0
 
+##Create ranks for variables of interest
 
 
 ## write db table ## FIX: should be a long format with dates at some point
 dbRemoveTable(connect, "br_legis_stats")
 dbWriteTableU(connect, "br_legis_stats", data.frame(stats))
 
+
+
+
+#### Below is the routine to produce the "10 mais" lists for posting ##############################
 infodeps <- dbGetQueryU(connect,"select a.*, b.* from br_deputados_current as a, br_bio as b where a.bioid=b.bioid")
-
-
 stats <- merge(stats,infodeps)
 pid <- dbGetQuery(connect, "select * from br_bioidpostid")
 dim(stats)
@@ -127,12 +166,12 @@ stats$sex <- factor(stats$title,
                     levels=c("Exmo. Senhor Deputado", "Exma. Senhora Deputada"),
                     labels=c("Male", "Female"))
 
-getpics <- function(s) {
+getpics <- function(s,mais=TRUE) {
     statsnow <- stats
-    if(length(grep("funding",s))==1){  
-    statsnow <- statsnow[with(statsnow, order(statsnow[,s], decreasing=TRUE))[1:10], ]
+    if(length(grep("(funding)|(votes)",s,perl=TRUE))==1){  
+    statsnow <- statsnow[with(statsnow, order(statsnow[,s], decreasing=mais))[1:10], ]
     }else{
-    statsnow <- statsnow[with(statsnow, order(get(s%+%"_count"),get(s%+%"_prop"), decreasing=TRUE))[1:10], ]
+    statsnow <- statsnow[with(statsnow, order(get(s%+%"_count"),get(s%+%"_prop"), decreasing=mais))[1:10], ]
     }
     ## their pics
     statsnow.pics <- webdir(paste("images/bio/polaroid/foto",statsnow$bioid,".png", sep=""))
@@ -160,6 +199,14 @@ capitalizados <- getpics("funding_total")
 capitalizados.2 <- getpics("funding_party")
 
 capitalizados.3 <- getpics("funding_private")
+
+votados <- getpics("votes")
+
+pobres <- getpics("funding_total",mais=FALSE)
+
+caronas <- getpics("votes",mais=FALSE)
+
+assiduos <- getpics("ausente",mais=FALSE)
 
 toreal <- function(x,digits=0) gsub("\\.", ",", round(x,digits))
 content <- function(statsnow) {

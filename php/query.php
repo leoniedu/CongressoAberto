@@ -154,6 +154,7 @@ br_bio as b,
 br_legis_stats as c,
 br_bioidpostid as d
 WHERE a.bioid=b.bioid and a.bioid=c.bioid and a.bioid=d.bioid  and c.nparty is not null
+order by Estado ASC, Nome ASC
 ";
 }
 
@@ -161,7 +162,7 @@ WHERE a.bioid=b.bioid and a.bioid=c.bioid and a.bioid=d.bioid  and c.nparty is n
 
 // , , 
 //, 
-//order by Estado, Partido DESC
+//
  
 // , , 
 //, 

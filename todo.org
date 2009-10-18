@@ -75,3 +75,5 @@ check voteid 3914
 1998
 Taylor Boas
 205A Hesburgh Center, Notre Dame, IN 46556
+* mapa dos deputados: maior numero de votos (concentracao) e maior porcentagem de votos (dominancia)
+
