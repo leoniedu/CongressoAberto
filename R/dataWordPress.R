@@ -142,8 +142,8 @@ content <- "
 <p> Aqui você encontra os principais dados do CongressoAberto.com.br. Dúvidas, pedidos e sugestões devem ser enviadas para <a href=\"mailto:admin@congressoaberto.com.br?subject=download de dados\">admin@congressoaberto.com.br</a>.</p>
 <p> Os dados são extraídos de duas fontes principais: </p>
 <ol>
-<li> <a href=\"www.camara.gov.br\"> Câmara dos Deputados </a>: Votações nominais, infomações biográficas dos deputados e informações sobre as proposições.</li>
-<li> <a href=\"www.tse.gov.br\"> Tribunal Superior Eleitoral </a>: Votos dos candidatos por município, contribuições de campanha e informações básicas dos candidatos.</li>
+<li> <a href=\"http://www.camara.gov.br\"> Câmara dos Deputados </a>: Votações nominais, infomações biográficas dos deputados e informações sobre as proposições.</li>
+<li> <a href=\"http://www.tse.gov.br\"> Tribunal Superior Eleitoral </a>: Votos dos candidatos por município, contribuições de campanha e informações básicas dos candidatos.</li>
 </ol>
 <!--list files \"/data\"-->
 <p> CongressoAberto.com.br está em fase experimental, e erros no tratamento dos dados não são só possíveis, como prováveis. Não nos responsabilizamos por erros na codificação e/ou nos dados originais.</p>

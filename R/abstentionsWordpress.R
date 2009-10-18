@@ -185,7 +185,7 @@ content <- function(statsnow) {
               ifelse(funding_private>1000000,toreal(funding_private/1000000,1),toreal(funding_private/1000)),
               ifelse(funding_private>1000000," milhões"," mil")," de doadores privados e ",
               ifelse(funding_party==0,"não ter recebido doações",
-                     paste(ifelse(funding_party>1000000,round(funding_party/1000000,1),round(funding_party/1000,1)),
+                     paste(
                            ifelse(funding_party>1000000,toreal(funding_party/1000000,1),toreal(funding_party/1000)),
                            ifelse(funding_party>1000000," milhões"," mil")))," de seu partido."
               , collapse="<br")
