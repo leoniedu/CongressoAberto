@@ -202,7 +202,7 @@ capitalizados.3 <- getpics("funding_private")
 
 votados <- getpics("votes")
 
-pobres <- getpics("funding_total",mais=FALSE)
+##pobres <- getpics("funding_total",mais=FALSE)
 
 caronas <- getpics("votes",mais=FALSE)
 

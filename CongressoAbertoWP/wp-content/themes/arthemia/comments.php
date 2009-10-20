@@ -79,7 +79,8 @@ $isByAuthor = true;
 
 <?php if ( get_option('comment_registration') && !$user_ID ) : ?>
 <p>Você precisa estar <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php echo urlencode(get_permalink()); ?>">logado</a> para comentar este artigo.</p>
-<p><?php do_action('fbc_display_login_button') ?> </p>
+<p><?php do_action('fbc_display_login_button') ?> </p><br>
+<br>
 <?php else : ?>
 
 <form action="<?php echo get_option('siteurl'); ?>/wp-comments-post.php" method="post" id="commentform">
@@ -87,8 +88,7 @@ $isByAuthor = true;
 
 <?php if ( $user_ID ) : ?>
 
-<p>Logado como <a href="<?php echo get_option('siteurl'); ?>/wp-admin/profile.php"><?php echo $user_identity; ?></a>. <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?action=logout" title="Log out of this account">Logout &raquo;</a></p>
-
+<p>Logado como <a href="<?php echo get_option('siteurl'); ?>/wp-admin/profile.php"><?php echo $user_identity; ?></a>. </p>
 <?php else : ?>
 
 <p>Comente no espaço abaixo, ou faça <a href="<?php trackback_url(true); ?>" rel="trackback">trackback</a> de seu próprio site. Você pode  <?php comments_rss_link('acompanhar os comentários'); ?> via RSS.</p>
