@@ -41,6 +41,7 @@ if (!update.all) {
 
 ## decreasing order by date
 rcsnow <- rcsnow[order(rcsnow$rcdate, decreasing=TRUE),]
+
 rcsnow <- rcsnow$rcvoteid
 
 

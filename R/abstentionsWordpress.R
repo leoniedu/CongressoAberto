@@ -206,7 +206,8 @@ pobres <- getpics("funding_total",mais=FALSE)
 
 caronas <- getpics("votes",mais=FALSE)
 
-assiduos <- getpics("ausente",mais=FALSE)
+## this was creating a problem in the "ausentes" page (few pics)
+##assiduos <- getpics("presente",mais=FALSE)
 
 toreal <- function(x,digits=0) gsub("\\.", ",", round(x,digits))
 content <- function(statsnow) {

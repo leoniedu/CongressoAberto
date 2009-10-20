@@ -9,10 +9,7 @@ if (!exists("tname")) {
 
 encode <- function(x) {
     newx <- gsub("-+","-",tolower(clean(gsub(" +|/","-",tolower(x)),cleanmore=FALSE)))
-    newx <- gsub("[^a-zA-Z-]*","",newx)
-    newx <- gsub("'","",newx)  
-    newx <- gsub("\\.","",newx)
-    ## FIX: accept only a-zA-Z-
+    newx <- gsub("[^0-9a-zA-Z-]*","",newx)
     newx <- URLencode(newx)
     newx
 }

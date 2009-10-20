@@ -73,6 +73,8 @@ alt="<?php the_title(); ?>" class="left" width="100px" height="100px"  /></a>
 	
 	</div>
 	
+	
+	
 	<?php } ?>
 
 	<div id="bottom" class="clearfloat">

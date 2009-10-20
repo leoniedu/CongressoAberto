@@ -84,5 +84,6 @@ Note: might create problems down the line
 * TODO Format values in legislator stats
 * TODO link do partido do cara (na pagina dos deputados) para a pagina do partido (quando houver?)
 * TODO nome do cara na primeira linha dos dados
-* TODO IAB post
+* TODO run IAB post  by zucco
+* TODO  run abstentionswordpress. check ausentes pic.
 
