@@ -57,7 +57,7 @@ m1$y <- sapply(m1@polygons,function(poly) poly@labpt[2])
 snow <- "AC"
 
 
-for (snow in states) {
+for (snow in states[25:27]) {
 ##for (snow in c("PI","MA")) {    
 
   ## number of seats
@@ -161,7 +161,7 @@ for (snow in states) {
       pnew <- pnew+scale_colour_continuous(limits=c(0,100))
       vmax <- which.max(dnow$votes)
       pmax <- which.max(dnow$dominance)      
-      pnew <- pnew+geom_text(mapping=aes(label=municipality_tse06),data=dnow[c(pmax,vmax),],size=4,vjust=2)
+      pnew <- pnew+geom_text(mapping=aes(label=municipality_tse06),data=dnow[unique(c(pmax,vmax)),],size=4,vjust=2)
       fn <- webdir(paste("images/elections/2006/","deputadofederal",snow,cand,".png",sep=""))
       legend_color<- qplot(x=rnorm(100),fill=rnorm(100)) +scale_fill_continuous(name="Votos (%)\nno município", limits=c(0,100))
       legend_color <- legend_color+ opts(keep = "legend_box",

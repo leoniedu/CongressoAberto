@@ -19,6 +19,9 @@ setwd(run.from)
 connect.db()
 
 
+
+
+
 ##tramit <- res <- NULL
 
 fx <-  function(i)  {
@@ -29,30 +32,26 @@ fx <-  function(i)  {
   if (!"try-error" %in% class(res)) {
       if (length(grep("Apensado", tramit)>0)) stop()
       billst <- data.frame(billsf[i,],res)
-      tramit <- data.frame(billid=billsf[i,"billid"],tramit)
       dbGetQuery(connect, "delete from br_bills where billid="%+%billsf$billid[i])
       ##FIX THIS. Should only add rows that are not in yet.
-      dbGetQuery(connect, "delete from br_tramit where billid="%+%billsf$billid[i])
       dbWriteTableU(connect, "br_bills", billst, append=TRUE)
-      dbWriteTableU(connect, "br_tramit", tramit, append=TRUE)      
-      gc()
-      closeAllConnections()
   } else {
       res <- NULL
+  }
+  if (!"try-error" %in% class(tramit)) {
+      tramit <- data.frame(billid=billsf[i,"billid"],tramit)
+      dbGetQuery(connect, "delete from br_tramit where billid="%+%billsf$billid[i])      
+      dbWriteTableU(connect, "br_tramit", tramit, append=TRUE)      
+  } else {
       tramit <- NULL
   }
-  list(res, tramit)  
+  closeAllConnections()
+  gc()
+  list(res, tramit)
 }
 
 billsf <- dbReadTableU(connect, "br_billid")
-
-if (!update.all) {
-    billsin <- dbGetQueryU(connect, "select billid from br_bills")
-    billsf <- billsf[!billsf$billid%in%billsin$billid,]
-}
-
 toup <- which(!is.na(billsf$billid))
-
 tmp <- lapply(toup, fx)
 
 

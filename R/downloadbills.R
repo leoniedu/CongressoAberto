@@ -32,17 +32,24 @@ if (update.all) {
   billsf <- merge(billsf,billsf.old,all=TRUE)
 }
 
-##update.all conditional
-toup <- which(is.na(billsf$billid))
-if (update.all) {
-    toup <- 1:nrow(billsf)
+billsin <- dbGetQueryU(connect, "select billid, status from br_bills")
+if (!update.all) {
+    ## take out ended propositions
+    billsin <- billsin[!grepl("Arquivada|Transformado em nova proposição|Transformado em Norma Jurídica|Vetado totalmente", billsin$status),]
+    ## only props that could be updated in the list
+    billsf <- billsf[billsf$billid%in%billsin$billid,]
 }
+
+
+toup <- which(is.na(billsf$billid))
+toup <- 1:nrow(billsf)
+
 
 for ( i in toup) {
     print(i)
     ##billsf[i, c("billurl", "billid")] <- with(billsf,getbill(billtype[i],billno[i],billyear[i],overwrite=download.now))
     ## FIX: when and what to download?
-    billsf[i, c("billid")] <- with(billsf,getbill(billtype[i],billno[i],billyear[i],overwrite=download.now & update.all))
+    billsf[i, c("billid")] <- with(billsf,getbill(billtype[i],billno[i],billyear[i],overwrite=download.now))
 }
 
 toupdate <- billsf[toup, ]

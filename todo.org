@@ -75,5 +75,14 @@ check voteid 3914
 1998
 Taylor Boas
 205A Hesburgh Center, Notre Dame, IN 46556
-* mapa dos deputados: maior numero de votos (concentracao) e maior porcentagem de votos (dominancia)
+* DONE mapa dos deputados: maior numero de votos (concentracao) e maior porcentagem de votos (dominancia)
+* tweet about the new deps page.
+@PollsAndVotes Have you thought about "tables of graphs"? I am trying to implement them in my Brazilian politics open gov site. 
+* DONE Fix manuela davila
+Note: might create problems down the line
+* TODO Put values on the legislator stats (number and prop of votes)
+* TODO Format values in legislator stats
+* TODO link do partido do cara (na pagina dos deputados) para a pagina do partido (quando houver?)
+* TODO nome do cara na primeira linha dos dados
+* TODO IAB post
 

@@ -76,11 +76,14 @@ $isByAuthor = true;
 
 <h3 id="respond">Comente este artigo!</h3>
 
+
 <?php if ( get_option('comment_registration') && !$user_ID ) : ?>
 <p>Você precisa estar <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php echo urlencode(get_permalink()); ?>">logado</a> para comentar este artigo.</p>
+<p><?php do_action('fbc_display_login_button') ?> </p>
 <?php else : ?>
 
 <form action="<?php echo get_option('siteurl'); ?>/wp-comments-post.php" method="post" id="commentform">
+
 
 <?php if ( $user_ID ) : ?>
 
@@ -117,5 +120,4 @@ $isByAuthor = true;
 <?php endif; // If registration required and not logged in ?>
 
 <?php endif; ?>
-
 
