@@ -18,10 +18,6 @@ setwd(run.from)
 
 connect.db()
 
-
-
-
-
 ##tramit <- res <- NULL
 
 fx <-  function(i)  {

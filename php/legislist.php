@@ -16,17 +16,18 @@ function handleQueryResponse(response) {
     return;
   }
   var post = new google.visualization.TablePatternFormat('<a href="/?p={1}"> {0} </a>');
-  var rate = new google.visualization.TablePatternFormat('{0} / {1}');
+  var rate = new google.visualization.TablePatternFormat('{0}% ({1})');
   var data = response.getDataTable();
   post.format(data, [0,1]);
-  rate.format(data, [5,6]);
-  rate.format(data, [7,8]);
+  rate.format(data, [4,5]);
+  rate.format(data, [6,7]);
+  rate.format(data, [8,9]);
   options['page'] = 'enable';
   options['pageSize'] = 20;
   options['pagingButtonsConfiguration'] = 'auto';
   options['allowHtml'] = true;
   var view = new google.visualization.DataView(data);
-  view.hideColumns([1,6,8]);
+  view.hideColumns([1,5,7,9]);
   visualization = new google.visualization.Table(document.getElementById('table1'));
   visualization.draw(view, options);
 }

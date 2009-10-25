@@ -42,7 +42,7 @@ if (update.all) {
   zip.files <- c("Janeiro1999","1slo51l","2sle51l","2slo51l","4sle51l","3slo51l")
   zip.files <- unique(c(zip.files,apply(expand.grid(unlist(meses),years.f),1,paste,collapse="")))
 }  else {
-  zip.files <- c(current.file,last.file)
+    zip.files <- c(current.file,last.file)
 }
 
 try(dir.create(paste(run.from,"/extracted",sep=""),recursive=TRUE)  )
@@ -66,13 +66,12 @@ for (i in zip.files) {
 ## the following code extracts to the current dir junking paths (i.e.)
 ##    it does not create directories, putting everything in the same place
 ## FIX: make overwrite false?
-if (download.now) tmp <- lapply(dir(pattern=".*\\.zip$"),function(x) unzip(x,junkpaths=TRUE,exdir="extracted"))
-
-  
-
+##if (download.now) tmp <- lapply(dir(pattern=".*\\.zip$"),function(x) unzip(x,junkpaths=TRUE,exdir="extracted"))
+if (download.now) tmp <- lapply(paste(zip.files,".zip",sep=''),function(x) unzip(x,junkpaths=TRUE,exdir="extracted"))
 setwd('extracted')
 ## unzip zip files that were inside zipfiles
 tmp <- lapply(dir(pattern=".*\\.zip$"),function(x) unzip(x,junkpaths=TRUE))
+
 SFfiles <- grep("SF",dir(),value=TRUE)
 if(length(SFfiles)>0){file.remove(SFfiles)} #Get rid of SENADO files, if they were downloaded
 unlink('*CD01E028O001905.TXT') ## Duplicated vote file LVCD01E028O001905 and LVCD01E028E001905

@@ -142,10 +142,11 @@ if($_GET["form"]=="legislist")
   					, d.postid
   					, a.party as Partido 
   					, cast(upper(a.state) as binary) as Estado
-	  				, round(c.ausente_prop*100) `Ausencias (%)`
-	  				, c.cgov_count `Segue o governo`
+	  				, round(c.ausente_prop*100) `Ausencias`
+	  				, c.ausente_total `Ausencias`
+	  				, round(c.cgov_prop*100) `Segue o governo`
 	  				, c.cgov_total `Segue o governo`
-	  				, c.cparty_count `Segue o partido`
+	  				, round(c.cparty_prop*100) `Segue o partido`
 	  				, c.cparty_total `Segue o partido`
 	  				, c.nparty `Numero de partidos`
 FROM

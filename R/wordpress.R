@@ -189,6 +189,7 @@ postbill <- function(bill=37642, propid=NULL) {
         propid <- unlist(dbGetQueryU(conwp, " select ID from "%+%tname("posts")%+%" where post_title='Proposições'"))
     }
     dnow <- dbGetQueryU(connect, "select * from br_bills where billid="%+%shQuote(bill))
+    dnow$billauthor[is.na(dnow$billauthor)] <- ""
     ##dnow <- subset(bills,billid==bill)
     ementashort <- dnow$ementashort
     if (is.na(ementashort)) ementashort <- dnow$ementa

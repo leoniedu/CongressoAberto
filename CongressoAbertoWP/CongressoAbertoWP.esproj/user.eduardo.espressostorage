@@ -114,6 +114,24 @@
 				<key>StateType</key>
 				<string>DefaultTab</string>
 			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/plugins/twitter-for-wordpress/twitter.php</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/plugins/countdown-timer/afdn_countdownTimer.php</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
+			<dict>
+				<key>DocumentURL</key>
+				<string>file://localhost/Users/eduardo/reps/CongressoAberto/CongressoAbertoWP/wp-content/plugins/twitter-widget/twitter-widget.php</string>
+				<key>StateType</key>
+				<string>DefaultTab</string>
+			</dict>
 		</array>
 	</dict>
 </dict>

@@ -18,7 +18,7 @@
 	<a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">
  <img src="<?php $values = get_post_custom_values("Image"); echo $values[0]; ?>" 
 alt="<?php the_title(); ?>" class="left"  border=0  /></a>
-	<?php the_excerpt(); ?>
+	<?php the_excerpt(); ?>	
 	<a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title(); ?>">Leia mais &raquo;</a>
 	<?php endwhile; ?>
 		</div>

@@ -24,7 +24,8 @@ unlink(path.expand(rf("data/camara/rollcalls/*.zip")))
 unlink(path.expand(rf("data/camara/rollcalls/extracted/*")))
 
 
-usource(rf("R/deputados.R"),echo=TRUE)
+##usource(rf("R/deputados.R"),echo=TRUE)
+update.all <- FALSE
 usource(rf("R/updateVot.R"),echo=TRUE)
 usource(rf("R/downloadbills.R"),echo=TRUE)
 usource(rf("R/processbills.R"),echo=TRUE)

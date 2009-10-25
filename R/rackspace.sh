@@ -99,8 +99,10 @@ mysql -u root -p
 CREATE DATABASE congressoaberto;
 GRANT ALL PRIVILEGES ON congressoaberto.* TO "monte"@"%" IDENTIFIED BY "e123456";
 CREATE DATABASE br;
+CREATE DATABASE br_chamber;
 GRANT ALL PRIVILEGES ON br.* TO "monte"@"%" IDENTIFIED BY "e123456";
 FLUSH PRIVILEGES;
+
 
 ## copy dumpfile from dreamhost
 bunzip2 backupbr.sql.bz2

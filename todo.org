@@ -78,12 +78,13 @@ Taylor Boas
 * DONE mapa dos deputados: maior numero de votos (concentracao) e maior porcentagem de votos (dominancia)
 * tweet about the new deps page.
 @PollsAndVotes Have you thought about "tables of graphs"? I am trying to implement them in my Brazilian politics open gov site. 
-* DONE Fix manuela davila
+* DONE Fix mabnuela davila
 Note: might create problems down the line
 * TODO Put values on the legislator stats (number and prop of votes)
 * TODO Format values in legislator stats
 * TODO link do partido do cara (na pagina dos deputados) para a pagina do partido (quando houver?)
 * TODO nome do cara na primeira linha dos dados
-* TODO run IAB post  by zucco
-* TODO  run abstentionswordpress. check ausentes pic.
+* DONE run IAB post  by zucco
+* DONE run abstentionswordpress. check ausentes pic.
+* do not update when camara server gives out a "out of memory" error.
 
