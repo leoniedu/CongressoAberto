@@ -52,34 +52,16 @@ echo '<p>Ementa: "'.$row[3].'"</p>' ;
 
 the_excerpt();
 
-//echo '<h3> Resultado da Votação </h3>';
-//echo '<a href="/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png">   <img src="/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png&h=300&w=300&zc=0&q=100"> </a>' ;
+echo '<h3> Resultado da Votação </h3>';
+echo '<a href="/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png">   <img src="/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png&h=300&w=300&zc=0&q=100"> </a>' ;
 // echo '<img src="/images/rollcalls/bar'.$rcvoteid.'large.png"  width=400 >'  ;
 
-//echo '<h3> Votação por partido </h3>';
-//echo '<img src="/php/timthumb.php?src=/images/rollcalls/mosaic'.$rcvoteid.'large.png&w=500&zc=0&q=100">' ;
+echo '<h3> Votação por partido </h3>';
+echo '<img src="/php/timthumb.php?src=/images/rollcalls/mosaic'.$rcvoteid.'large.png&w=500&zc=0&q=100">' ;
 
 
-//echo '<h3> Votação por estado </h3>';
-//echo '<img src="/php/timthumb.php?src=/images/rollcalls/map'.$rcvoteid.'large.png&w=350&zc=0&q=100">' ;
-
-
-echo '<table>
-<tr>
-<td><img src="/php/timthumb.php?src=/images/rollcalls/map'.$rcvoteid.'large.png&w=300&zc=0&q=100">
-</td>
-</tr>
-<tr>
-<td>
-<img src="/php/timthumb.php?src=/images/rollcalls/mosaic'.$rcvoteid.'large.png&w=400&zc=0&q=100">
-</td>
-</tr>
-<tr>
-<td>
-<img src="/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png&w=300&zc=0&q=100">
-</td>
-</tr>
-</table>';
+echo '<h3> Votação por estado </h3>';
+echo '<img src="/php/timthumb.php?src=/images/rollcalls/map'.$rcvoteid.'large.png&w=350&zc=0&q=100">' ;
 
 
 </script>
