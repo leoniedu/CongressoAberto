@@ -63,7 +63,7 @@ echo '<img src="/php/timthumb.php?src=/images/rollcalls/mosaic'.$rcvoteid.'large
 echo '<h3> Votação por estado </h3>';
 echo '<img src="/php/timthumb.php?src=/images/rollcalls/map'.$rcvoteid.'large.png&w=350&zc=0&q=100">' ;
 
-
+ 
 </script>
 
 <p><h3> Tabela com o Resultado da Votação </h3></p>
