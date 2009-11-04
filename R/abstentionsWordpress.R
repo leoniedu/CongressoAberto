@@ -104,20 +104,21 @@ votemun.elec <- dbGetQuery(connect,    #votes of the elected candidates by munic
                     paste("SELECT a.year, a.office, a.candidate_code, a.votes, a.state, a.municipality, b.bioid  
                            FROM br_vote_mun as a RIGHT JOIN br_bioidtse as b
                            ON (b.state=a.state and b.candidate_code = a.candidate_code)
-                           WHERE a.office='DEPUTADO FEDERAL'",sep=""))
+                           WHERE a.office='DEPUTADO FEDERAL' and a.year=2006",sep=""))
+
 totvotemun <- dbGetQuery(connect,     #total votes in each municipality #I DIDNT MANAGE TO EXTRACT A QUERY WITH ACTUAL MUNICIPALITY NAMES
-                    paste("SELECT SUM(votes) as totvotes,  municipality FROM br_vote_mun WHERE office='DEPUTADO FEDERAL' GROUP BY municipality",sep=""))
+                    paste("SELECT SUM(votes) as totvotes,  municipality FROM br_vote_mun WHERE office='DEPUTADO FEDERAL' and year=2006 GROUP BY municipality",sep=""))
 votemun.elec <- merge(votemun.elec,totvotemun,by=c("municipality"),all.x=TRUE) #add the total number of votes by each municipality
 votemun.elec$voteshare <- votemun.elec$vote/votemun.elec$totvotes #compute the vote share in each municipality for each guy
 munnames <-dbGetQuery(connect,    
-                    paste("SELECT municipalitytse,  municipality_ibge07 FROM  br_municipios")) #municpality names
+                    paste("SELECT municipalitytse,  municipality_ibge07 FROM  br_municipios where year=2006")) #municpality names
 totvotemun <- merge(totvotemun,munnames,by.x=c("municipality"),by.y=c("municipalitytse"),all.x=TRUE)     #add municipality name to the set
           
 votecand.elec <- dbGetQuery(connect,    #total votes n all municipalities by each elected candiate
-                    paste("SELECT sum(a.votes) as votes, b.bioid  
+                            paste("SELECT sum(a.votes) as votes, b.bioid  
                            FROM br_vote_mun as a RIGHT JOIN br_bioidtse as b
                            ON (b.state=a.state and b.candidate_code = a.candidate_code)
-                           WHERE a.office='DEPUTADO FEDERAL' GROUP BY b.bioid",sep=""))
+                           WHERE a.office='DEPUTADO FEDERAL' and a.year=2006 GROUP BY b.bioid",sep=""))
 
 muncode.abs <- function(d){ sprintf("%05.0f", d$municipality[which.max(d$votes)])}
 muncode.rel <- function(d){ sprintf("%05.0f",d$municipality[which.max(d$voteshare)])}
@@ -166,12 +167,14 @@ stats$sex <- factor(stats$title,
                     levels=c("Exmo. Senhor Deputado", "Exma. Senhora Deputada"),
                     labels=c("Male", "Female"))
 
+
+
 getpics <- function(s,mais=TRUE) {
     statsnow <- stats
     if(length(grep("(funding)|(votes)",s,perl=TRUE))==1){  
-    statsnow <- statsnow[with(statsnow, order(statsnow[,s], decreasing=mais))[1:10], ]
+        statsnow <- statsnow[with(statsnow, order(statsnow[,s], decreasing=mais))[1:10], ]
     }else{
-    statsnow <- statsnow[with(statsnow, order(get(s%+%"_count"),get(s%+%"_prop"), decreasing=mais))[1:10], ]
+        statsnow <- statsnow[with(statsnow, order(get(s%+%"_count"),get(s%+%"_prop"), decreasing=mais))[1:10], ]
     }
     ## their pics
     statsnow.pics <- webdir(paste("images/bio/polaroid/foto",statsnow$bioid,".png", sep=""))
@@ -179,7 +182,7 @@ getpics <- function(s,mais=TRUE) {
     fn <- "images/"%+%s%+%"top"%+%format(Sys.Date(),"%Y%m")%+%".png"
     cmd <- paste("convert ",
                  " \\( -size 300x xc:none ",statsnow.pics[1]," +append \\)",
-             " \\( ", paste(statsnow.pics[2:4], collapse=" "), " +append \\)",
+                 " \\( ", paste(statsnow.pics[2:4], collapse=" "), " +append \\)",
                  " \\( ", paste(statsnow.pics[5:7], collapse=" "), " +append \\)",
                  " \\( ", paste(statsnow.pics[8:10], collapse=" ")," +append \\)",
                  "-background none -append -resize 200x  -quality 95 -depth 8  ", webdir(fn), collapse=" ")
@@ -202,12 +205,11 @@ capitalizados.3 <- getpics("funding_private")
 
 votados <- getpics("votes")
 
-##pobres <- getpics("funding_total",mais=FALSE)
-
-caronas <- getpics("votes",mais=FALSE)
+##caronas <- getpics("votes",mais=FALSE)
 
 ## this was creating a problem in the "ausentes" page (few pics)
 ##assiduos <- getpics("presente",mais=FALSE)
+##pobres <- getpics("funding_total",mais=FALSE)
 
 toreal <- function(x,digits=0) gsub("\\.", ",", round(x,digits))
 content <- function(statsnow) {
@@ -241,6 +243,8 @@ content <- function(statsnow) {
         paste("Observação: Não levamos em consideração ausências justificadas ou licenças médicas.<br> ", res)
 }
 
+##post.title <- function(x) paste(x, format(final.date,"%m/%Y"))
+post.title <- function(x) x
 
 statsnow <- governistas[[1]]
 fn <- governistas[[2]]
@@ -248,7 +252,7 @@ statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"cgov_prop"])
 ## change final comma to "e" 
 excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais seguiram a indicação do governo nas votações nominais na Câmara dos Deputados na legislatura 2007-2010. Última atualização: ", format(final.date,"%d/%m/%Y"),".", sep='')
 ##FIX: insert date in the post?
-wpAddByTitle(conwp,post_title="Os Governistas"## %+%format(final.date,"%m/%Y")
+wpAddByTitle(conwp,post_title=post.title("Os Governistas")
              ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("governismo",slug="governismo")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
@@ -263,7 +267,7 @@ statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"cparty_prop"])
 ## change final comma to "e" 
 excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais seguiram a indicação dos seus partidos  nas votações nominais na Câmara dos Deputados na legislatura 2007-2010. Última atualização: ", format(final.date,"%d/%m/%Y"),".", sep='')
 ##FIX: insert date in the post?
-wpAddByTitle(conwp,post_title="Os Fiéis"## %+%format(final.date,"%m/%Y")
+wpAddByTitle(conwp,post_title=post.title("Os Fiéis")
              ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("partidos",slug="partidos")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
@@ -280,12 +284,12 @@ statsnow$npstate <- reorder(statsnow$npstate, statsnow[,"ausente_prop"])
 excerpt <- paste(paste(statsnow$npstate, collapse=", "), " são os dez deputados que mais faltaram às votações nominais na Câmara dos Deputados na legislatura 2007-2010. Última atualização: ", format(final.date,"%d/%m/%Y"),".", sep='')
 ##FIX: insert date in the post?
 wpAddByTitle(conwp
-             ,post_title="Os Ausentes"## %+%format(final.date,"%m/%Y")           
+             ,post_title=post.title("Os Ausentes")
              ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("absenteismo",slug="absenteismo")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
-             post_date=wptime(Sys.Date())$brasilia,
+             post_date=wptime("2009-10-10")$brasilia,
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
 

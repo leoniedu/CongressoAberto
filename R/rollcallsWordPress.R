@@ -84,4 +84,17 @@ if (nrc>0) {
 
 
 
+library(doMC)
+registerDoMC(2)
+fx <- function(x) {
+    try(connect.db())
+    try(connect.wp())
+    dbListTables(connect)
+    print(x)
+    try(postroll(x, saveplot=TRUE, post=FALSE), silent=FALSE)
+}
+system.time(foreach(x=rcsnow) %dopar% fx(x))
+
+
+
 

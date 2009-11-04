@@ -182,7 +182,7 @@ CREATE TABLE  `br_votacoes` (
     `billtype` varchar(30),
     `legis` int,
     `rcfile` varchar(30),
-    PRIMARY KEY  (`rvoteid`,`legis`)
+    PRIMARY KEY  (`rcvoteid`,`legis`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ;
 alter table br_votacoes add key legis_index(legis);
@@ -326,6 +326,27 @@ CREATE TABLE  `br_vote_mun` (
     `state` varchar(2) DEFAULT NULL,
     PRIMARY KEY (`year`,`office`,`candidate_code`,`municipality`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+alter table br_vote_mun add key yearround_index(year, elec_round);
+alter table br_vote_mun add key office_index(year, office);
+
+
+alter table br_vote_mun  PARTITION BY LIST(year) (
+    PARTITION e1990 VALUES IN (1990),
+    PARTITION e1992 VALUES IN (1992),
+    PARTITION e1994 VALUES IN (1994),
+    PARTITION e1996 VALUES IN (1996),
+    PARTITION e1998 VALUES IN (1998),
+    PARTITION e2000 VALUES IN (2000),
+    PARTITION e2002 VALUES IN (2002),
+    PARTITION e2004 VALUES IN (2004),
+    PARTITION e2006 VALUES IN (2006),
+    PARTITION e2008 VALUES IN (2008),
+    PARTITION e2010 VALUES IN (2010),
+    PARTITION e2012 VALUES IN (2012)
+);
+
+
+
 
 
 DROP TABLE IF EXISTS `br_vote_parties`;

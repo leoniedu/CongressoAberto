@@ -268,6 +268,11 @@ sudo locale-gen
 
 
 
+## enable gzip compression
+a2enmod deflate
+/etc/init.d/apache2 restart
+
+
 
 
 

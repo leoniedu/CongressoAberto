@@ -5,7 +5,6 @@ header('Content-Type: text/html; charset=utf-8');
  
 //Include the extended API
 include_once("gvServerAPIEx.php");
- 
 include_once("server.php");
  
 //------------------------------------------
@@ -124,6 +123,17 @@ $sql = "select CAST(b.rcdate AS DATE) as Data, a.party as Partido, a.namelegis a
 	where 
 		a.rcvoteid=b.rcvoteid AND 
 		a.rcvoteid=".$_GET["rcvoteid"]." order by Partido DESC" ;  
+ }
+
+# to display
+if($_GET["form"]=="rcvotes1") {
+$sql = "select a.party as Partido, a.namelegis as nome, a.state as Estado, a.rc as Voto  
+	from 
+		br_votos as a, 
+		br_votacoes as b  
+	where 
+		a.rcvoteid=b.rcvoteid AND 
+		a.rcvoteid=".$_GET["rcvoteid"]." order by Partido, Voto, Estado DESC" ;  
  }
  
  

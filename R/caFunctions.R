@@ -169,7 +169,7 @@ clean.name<-function(x){
     return(y)
 }
 
-clean<-function(x,cleanmore=TRUE){
+clean <- function(x,cleanmore=TRUE){
     #CLEANS ACCENTS AND OTHER MARKS FROM FIELD
     y<-toupper(x)
     y<-gsub("Â","A", y) 
@@ -292,7 +292,7 @@ dbGetQueryU <- function(conn,statement,...,
   df
 }
 
-dbWriteTableSeq <- function(conn,name,value,n=NULL,...) {
+dbWriteTableSeq <- function(conn,name,value,n=NULL, wait=0, ...) {
   nr <- nrow(value)
   if (is.null(n)) {
     splits <- min(100,round(nr/2))
@@ -303,6 +303,7 @@ dbWriteTableSeq <- function(conn,name,value,n=NULL,...) {
   for ( i in 1:max(st)) {
     cat(i,".")
     dbWriteTableU(connect,name,value[st==i,],append=TRUE)
+    Sys.sleep(wait)
   }
 }
 

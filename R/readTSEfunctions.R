@@ -23,29 +23,35 @@ recode.office <- function(office) {
   factor(office,levels=office.codes$code,labels=office.codes$office)
 }
 
-get.candidates <- function(year,dir) {
-  dirnow <- paste(dir,"/candidates",sep="")
-  files <- dir(dirnow,full.names=TRUE)
-  f <- function(file,...) {
-    ## as char  because do.call is giving a seg fault
-    data.frame(read.csv2(file,...,stringsAsFactors=FALSE),state=gsub(".*_([A-Z]{2}).*","\\1",file))
-  }
-  candidates <- do.call(rbind,lapply(files,f,encoding="latin1",header=FALSE))
-  print(head(candidates))
-  if (year%in%c(1998)) {
-    candidates <- candidates[,c(1:9)]
-  } else if (year%in%c(2002)) {
-    candidates <- candidates[,c(1,2,3,4,8,5,6,10,11)]
-  } else {
-    ## FIX: WILL NOT WORK FOR OTHER YEARS (NEED TO SPECIFY status COLUMN)
-    ## works for 2006
-    candidates <- candidates[,c(10,4,1,2,3,5,6,7,9,8)]
-  }
-  names(candidates) <- c("state","office","candidate_code","name","name.short","sex","party","colig","sit","status")
-  candidates$year <- year
-  candidates
-}
 
+
+get.candidates <- function(year) {
+    dirnow <- rf(paste("data/electoral/tse/sections/", year, "sections/candidates", sep=''))
+    files <- dir(dirnow,full.names=TRUE)
+    f <- function(file,...) {
+        ## as char  because do.call is giving a seg fault
+        data.frame(read.csv2(file,...,stringsAsFactors=FALSE),state=gsub(".*_([A-Z]{2}).*","\\1",file))
+    }
+    candidates <- do.call(rbind,lapply(files,f,encoding="latin1",header=FALSE))
+    print(head(candidates))        
+    if (year%in%c(1998)) {
+        candidates <- candidates[,c(1:9)]
+        candidates$status <- NA
+    } else if (year%in%c(2002)) {
+        candidates <- candidates[, c(1,2,3,4,8,5,6,10,11)]
+        candidates$status <- NA
+    } else {
+        ## FIX: WILL NOT WORK FOR OTHER YEARS (NEED TO SPECIFY status COLUMN)
+        ## works for 2006
+        candidates <- candidates[,c(10,4,1,2,3,5,6,7,9,8)]
+    }
+    ##print(head(candidates))    
+    names(candidates) <- c("state","office","candidate_code","name","name.short","sex","party","colig","sit","status")
+    candidates$colig <- as.numeric(as.character(candidates$colig))
+    print(head(candidates))
+    candidates$year <- year
+    candidates
+}
 
 read.section <- function(file="voto_secao_AC1998T1.txt",dir="/Users/eduardo/doNotBackup/projects/BrazilianPolitics/trunk/electoral/section/1998sections/") {
   ##voto_secao_AC1998T1.txt
@@ -63,13 +69,21 @@ read.section <- function(file="voto_secao_AC1998T1.txt",dir="/Users/eduardo/doNo
 }
 
 
-get.party <- function(year,dir) {
-  partido <- read.csv2(paste(dir,"/commontables/partido_",year,".txt",sep=""),encoding="latin1",header=FALSE)
-  names(partido) <- c("party","partyl","partyname")
-  partido$partyl <- toupper(gsub(" ","",partido$partyl))
-  partido$partyname <- toupper(partido$partyname)
-  partido$year <- year
-  partido
+get.party <- function(year) {
+    if (year==2006) {
+        partido <- read.csv2(rf(paste("data/electoral/tse/sections/2006sections/commontables/partido_",year,".txt",sep="")), encoding="latin1",header=FALSE)
+    } else if (year==2002) {
+        partido <- read.csv2(rf(paste("data/electoral/tse/sections/2002sections/parties/partido_2002.txt", sep='')),encoding="latin1",header=FALSE)
+    } else if (year==1998) {
+        partido <- read.csv2(rf(paste("data/electoral/tse/sections/1998sections/parties/partido_1998.txt", sep='')),encoding="latin1",header=FALSE)
+    } else {
+        stop()
+    }
+    names(partido) <- c("party","partyl","partyname")
+    partido$partyl <- toupper(gsub(" ","",partido$partyl))
+    partido$partyname <- toupper(partido$partyname)
+    partido$year <- year
+    partido
 }
 
 

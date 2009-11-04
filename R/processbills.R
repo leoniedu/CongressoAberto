@@ -20,10 +20,11 @@ connect.db()
 
 ##tramit <- res <- NULL
 
-fx <-  function(i)  {
-  print(i)
-  file <- rf(paste("data/www.camara.gov.br/sileg/Prop_Detalhe.asp?id=", billsf$billid[i], sep=''))
-  res <- try(readbill(file))
+fx <-  function(j)  {
+  print(j)
+  file <- rf(paste("data/www.camara.gov.br/sileg/Prop_Detalhe.asp?id=", j, sep=''))
+  i <- which(billsf$billid==j)
+  res <- try(read.bill(file))
   tramit <- try(read.tramit(file))
   if (!"try-error" %in% class(res)) {
       if (length(grep("Apensado", tramit)>0)) stop()
@@ -47,7 +48,7 @@ fx <-  function(i)  {
 }
 
 billsf <- dbReadTableU(connect, "br_billid")
-toup <- which(!is.na(billsf$billid))
+toup <- sort(na.omit(billsf$billid))
 tmp <- lapply(toup, fx)
 
 

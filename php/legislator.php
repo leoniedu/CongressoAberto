@@ -79,6 +79,25 @@ print("<td colspan='3' >$namelegis ($party/$state)<br>
                                     N&uacute;mero de Doadores:  $funders<br> </td>
 </tr></table>");
 
+
+
+$result = mysql_query("SELECT 
+twitter_username
+    FROM br_twitterAddress
+    where bioid={$bioid}
+     ");
+if (!$result) {
+  die("Query to show fields from table failed");
+ }
+
+$row = mysql_fetch_row($result);
+$twitter_username = $row[0];
+
+if ($twitter_username!='') {
+print("<h3> <a href=\"http://twitter.com/{$twitter_username}\"> @{$twitter_username}</a> no twitter: </h3>");
+include_once("wp-content/plugins/twitter-for-wordpress/twitter.php");
+twitter_messages($username = $twitter_username, $num = 3, $list = true, $update = true, $linked = '#', $hyperlinks = true, $twitter_users = true, $encode_utf8 = false);
+}
 </script>
 
 

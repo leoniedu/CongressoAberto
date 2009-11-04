@@ -2,7 +2,7 @@ Congresso Aberto
 
 * Data
 ** table with common names "e.g. reforma politica; or pec dos cartorios"
-http://spreadsheets.google.com/ccc?key=0AmbpsKXCxWvFdHN5aThFQmx4WHNvaFhOTkY5bVA5X0E&hl=en
+   http://spreadsheets.google.com/ccc?key=0AmbpsKXCxWvFdHN5aThFQmx4WHNvaFhOTkY5bVA5X0E&hl=en
 * Code
 ** Donations
 *** tables summarizing by donor
@@ -76,9 +76,8 @@ check voteid 3914
 Taylor Boas
 205A Hesburgh Center, Notre Dame, IN 46556
 * DONE mapa dos deputados: maior numero de votos (concentracao) e maior porcentagem de votos (dominancia)
-* tweet about the new deps page.
-@PollsAndVotes Have you thought about "tables of graphs"? I am trying to implement them in my Brazilian politics open gov site. 
-* DONE Fix mabnuela davila
+* DONE tweet about the new deps page.
+* DONE Fix manuela davila
 Note: might create problems down the line
 * TODO Put values on the legislator stats (number and prop of votes)
 * TODO Format values in legislator stats
@@ -87,4 +86,11 @@ Note: might create problems down the line
 * DONE run IAB post  by zucco
 * DONE run abstentionswordpress. check ausentes pic.
 * do not update when camara server gives out a "out of memory" error.
+* LegisTwitter
+** TODO store legislators tweets in database
+** TODO display tweets in legislator page
+** TODO get the list of legislators that tweet
+
+
+* LegisDados
 
