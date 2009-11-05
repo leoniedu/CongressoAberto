@@ -19,9 +19,11 @@ rf()
 library(gdata)
 
 ## download current list
-download.file("http://www2.camara.gov.br/internet/camaraFaz/destaques/DeputadosTwitter.xls/at_download/file", "twitter.xls")
+fname <- rf("data/camara/DeputadosTwitter.xls")
+download.file("http://www2.camara.gov.br/internet/camaraFaz/destaques/DeputadosTwitter.xls/at_download/file", fname)
 
-dnow <- read.xls("twitter.xls", encoding="latin1")[,1:4]
+dnow <- read.xls(fname, encoding="latin1")[,1:4]
+
 dnow <- dnow[!grepl("LICENCIADO", dnow$Deputado),]
 
 connect.db()

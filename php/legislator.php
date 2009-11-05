@@ -58,7 +58,7 @@ $perccompartido = $row[15];
 echo '<table style="width: 100%" cellspacing = "12">'; #border='1' rules ='rows'
 echo '<tr>';
 print("<td rowspan='2'><img src=\"/php/timthumb.php?src=/images/bio/polaroid/foto".$bioid.".png&w=100&h=0&zc=0\" alt=\"$namelegis\" width=100/></td>");
-print("<td colspan='3' >$namelegis ($party/$state)<br>
+print("<td colspan='3' >
                                             Email: <a href=\"mailto:$email\"> $email </a> (<a href=\"http://www.camara.gov.br/Internet/deputado/$url\">Página Oficial</a>)<br>
                                             Legislaturas: $legisserved <br>
 </td>

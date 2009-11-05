@@ -20,6 +20,35 @@ rf()
 connect.db()
 connect.wp()
 
+
+## download csv with popular names of propositions
+pop <- read.csv("http://spreadsheets.google.com/pub?key=tsyi8EBlxXsohXNNF9mP9_A&single=true&gid=0&output=csv")
+names(pop) <- c("billtype", "billno", "billyear", "billname", "tags")
+## load to db and get the ids
+
+dbRemoveTable(connect, "tmp")
+dbRemoveTable(connect, "br_proposition_names")
+dbWriteTableU(connect, "tmp", pop)
+
+tmp <- dbGetQuery(connect, "create table br_proposition_names select a.billid, b.tags, b.billname, c.postid  from  br_billid as a, tmp as b, br_billidpostid as c where a.billyear=b.billyear and a.billno=b.billno and a.billtype=b.billtype and a.billid=c.billid")
+
+
+source(rf("R/wordpress.R"))
+
+
+lapply(dbGetQuery(connect, "select billid from br_proposition_names")[,1], postbill, post_category=data.frame(slug="Featured", name="Featured"))
+
+
+read.csv("http://www.factual.com/tables/666549.csaml")
+
+
+             
+
+
+
+
+
+## roll calls
 unlink(path.expand(rf("data/camara/rollcalls/*.zip")))
 unlink(path.expand(rf("data/camara/rollcalls/extracted/*")))
 

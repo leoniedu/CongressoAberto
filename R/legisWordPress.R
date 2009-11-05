@@ -59,11 +59,12 @@ postlegis <- function(bioid, skip=FALSE) {
     post_content <- paste('<script language=\"php\">$bioid = ',bioid,';include(\'php/legislator.php\');</script>')
     fulltext <-  paste(dbGetQueryU(connect,paste("select * from br_bio where bioid=",bioid)),collapse="\n")
     post_excerpt = with(idname, paste(namelegis, toupper(state), party, sep=" / "))
-    pid <- wpAddByTitle(conwp,post_title=title,post_name=encode(title),
-                        post_content=post_content,
-                        post_parent=parent_id,
-                        post_excerpt=post_excerpt,
-                        fulltext=fulltext)
+    ptitle <- paste(title, " (", idname$party, "/", toupper(idname$state), ")", sep='')
+    pid <- wpAddByName(conwp,post_title=ptitle, post_name=encode(title),
+                       post_content=post_content,
+                       post_parent=parent_id,
+                       post_excerpt=post_excerpt,
+                       fulltext=fulltext)
     print(pid)
     res <- data.frame(bioid=bioid,postid=pid)
   dwp <- dbWriteTableU(connect,"br_bioidpostid",res,append=TRUE)
