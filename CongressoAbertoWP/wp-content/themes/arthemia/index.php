@@ -28,7 +28,7 @@ alt="<?php the_title(); ?>" class="left"  border=0  /></a>
 <!--	<img src="<?php echo get_option('home'); ?>/wp-content/themes/arthemia/images/featured.png" width="72px" height="17px" alt="" /> -->
 
 	<?php query_posts("showposts=3&category_name=Featured"); $i = 1; ?>
-		<h3><div class="title"> Votações Relevantes </div></h3>
+		<h4><div class="title"> Votações em Destaque </div></h4>
       	<?php while (have_posts()) : the_post(); ?>
 	<div class="clearfloat">
 	<?php $values = get_post_custom_values("Image");

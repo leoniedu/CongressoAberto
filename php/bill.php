@@ -13,7 +13,7 @@ $row = mysql_fetch_row($result);
 // $statelegis = $row[2]; FIX: make it not depend on row order (Call by name)
 echo '<p><a href="http://www.camara.gov.br/sileg/Prop_Detalhe.asp?id='.$billid.'" > Página da proposição no site da Câmara </a> <br>';
 echo '<a href="http://www.camara.gov.br/sileg/MostrarIntegra.asp?CodTeor='.$row[3].'"> Íntegra da proposição (pdf) no site da Câmara</a><br>';
-echo 'Autoria: '.$row[0].'<br>';
+echo 'Autoria: '.$row[0].' <br>';
 echo 'Ementa: '.$row[1].'<br>';
 echo 'Status: '.$row[2].'<br></p>';
 //echo '<p>Billid: '.$billid.'</p>';

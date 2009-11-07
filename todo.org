@@ -1,7 +1,7 @@
 Congresso Aberto
 
 * Data
-** table with common names "e.g. reforma politica; or pec dos cartorios"
+** DONE table with common names "e.g. reforma politica; or pec dos cartorios"
    http://spreadsheets.google.com/ccc?key=0AmbpsKXCxWvFdHN5aThFQmx4WHNvaFhOTkY5bVA5X0E&hl=en
 * Code
 ** Donations
@@ -79,17 +79,17 @@ Taylor Boas
 * DONE tweet about the new deps page.
 * DONE Fix manuela davila
 Note: might create problems down the line
-* TODO Put values on the legislator stats (number and prop of votes)
-* TODO Format values in legislator stats
+* DONE Put values on the legislator stats (number and prop of votes)
+* DONE Format values in legislator stats
 * TODO link do partido do cara (na pagina dos deputados) para a pagina do partido (quando houver?)
-* TODO nome do cara na primeira linha dos dados
+* DONE nome do cara na primeira linha dos dados
 * DONE run IAB post  by zucco
 * DONE run abstentionswordpress. check ausentes pic.
-* do not update when camara server gives out a "out of memory" error.
+* TODO do not update when camara server gives out a "out of memory" error.
 * LegisTwitter
 ** TODO store legislators tweets in database
-** TODO display tweets in legislator page
-** TODO get the list of legislators that tweet
+** DONE display tweets in legislator page
+** DONE get the list of legislators that tweet
 
 
 * LegisDados

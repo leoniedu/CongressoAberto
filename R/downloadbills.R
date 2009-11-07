@@ -22,6 +22,7 @@ bills <- dbReadTableU(connect,"br_votacoes")
 billsf <- unique(bills[,c("billtype","billno","billyear")])
 billsf$billno[billsf$billno=="NA"] <- NA
 billsf <- subset(billsf,!is.na(billno))
+
 if (update.all) {  
     ##FIX: unique bills by billtype billno billyear
     billsf$billid <- NA

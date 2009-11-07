@@ -209,8 +209,10 @@ postbill <- function(bill=37642, propid=NULL, ...) {
     ##postid <- wpAddByTitle(conwp,post_title=as.character(title),post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=excerpt, tags=tags,post_parent=pp)
     pname <- encode(title)
     ## get popular name if they exist
-    popname <- dbGetQuery(connect, "select billname from br_proposition_names where billid="%+%bill)[1]
-    title <- paste(popname, "  (", title, ")", sep='')
+    popname <- dbGetQuery(connect, "select billname from br_proposition_names where billid="%+%bill)
+    if (nrow(popname)>0) {
+        title <- paste(popname[1], "  (", title, ")", sep='')
+    }
     postid <- wpAddByName(conwp,post_title=title,post_name=pname, post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=excerpt, tags=tags,post_parent=pp, ...)
     dbWriteTableU(connect,"br_billidpostid",data.frame(postid,billid=bill),append=TRUE)
     res <- c(bill,postid)

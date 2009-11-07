@@ -720,6 +720,7 @@ read.tramit <- function(file, encoding="latin1") {
     require(XML)
     zz <- pipe(paste("tidy -q -raw ",file, "2>&1"), encoding="latin1")
     tidy <- readLines(zz)
+    if (any(grepl("Out of memory", zz))) stop("server error")
     closeAllConnections() 
     html <- htmlTreeParse(tidy, asText=TRUE, error=function(...){},
                           useInternalNodes=TRUE,
@@ -739,6 +740,7 @@ read.tramit <- function(file, encoding="latin1") {
 read.bill <- function(file) {  
     if (length(grep("Prop_Erro|Prop_Lista",file))>0)  return(NULL)
     tmp <- readLines(file)
+    if (any(grepl("Out of memory", tmp))) stop("server error")
     if (!any(grepl("Módulo", tmp))) tmp <- readLines(file,encoding="latin1")  
     if(length(grep("Nenhuma proposição encontrada",tmp))>0) return(NULL)
     tmp <-  gsub("\r|&nbsp","",tmp)
@@ -811,7 +813,7 @@ read.bill <- function(file) {
                           stringsAsFactors=FALSE))
     if (("try-error"%in%class(res))) {   
         res <- NULL
-    } 
+    }
     res
 }
 
@@ -1576,6 +1578,12 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
   fulltext <- paste(rcs,collapse="\n")
   ## create post data
   title <- rcs$billproc
+  post_category <- data.frame(slug="votacoes",name="Votações")
+  popname <- dbGetQuery(connect, "select a.*, b.* from  br_proposition_names as a, br_votacoes as b where a.billyear=b.billyear and a.billno=b.billno and a.billtype=b.billtype and b.rcvoteid="%+%rcid)
+  if (nrow(popname)>0) {
+      title <- paste(popname$billname[1], " - ", title, sep='')
+      post_category <- rbind(post_category, data.frame(slug="Featured",name="Featured"))
+  }
   name <- with(rcs,encode(paste(bill,rcvoteid,sep="-")))
   content <- paste('<script language="php">$rcvoteid = ',rcs$rcvoteid,';include("php/rc.php");</script>')
   date <- wptime(rcs$rcdate)
@@ -1589,7 +1597,6 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
                          rc=rcnow$rc)
   margin <- govwins(rcnow, rcgov, threshold)
   post_excerpt <- sumroll(rcnow, margin, rcgov)
-  post_category <- data.frame(slug="votacoes",name="Votações")
   img <- paste("images/rollcalls/bar",rcid, sep='')
   if (!is.na(margin))  {
     if (margin>0) {
@@ -1648,7 +1655,7 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
       ##convert.png(fnl, crop=TRUE)
   }
   if (post) {
-      postid <- wpAddByName(conwp,post_title=title,post_type="post",post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=post_excerpt,post_category=post_category,
+      postid <- wpAddByName(conwp,post_title=title,post_type="post",post_content=content,post_date=date$brasilia,post_date_gmt=date$gmt,fulltext=fulltext,post_excerpt=post_excerpt,post_category=unique(post_category),
                             custom_fields=data.frame(meta_key="Image",meta_value=img%+%"small.png"),
                             post_name=name,tags=tags)
       ##FIX: create table in mysql
