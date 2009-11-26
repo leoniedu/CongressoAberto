@@ -1,36 +1,16 @@
-plot.heat.old <- function(tmp,state.map,z,title=NULL,breaks=NULL,reverse=FALSE,cex.legend=1,bw=.2,col.vec=NULL,main=NULL,plot.legend=TRUE) {
-  ##Break down the vote proportions
-  if (is.null(breaks)) {
-    breaks=
-      seq(
-          floor(min(tmp@data[,z],na.rm=TRUE)*10)/10
-          ,
-          ceiling(max(tmp@data[,z],na.rm=TRUE)*10)/10
-          ,.1)
-  }
-  tmp@data$zCat <- cut(tmp@data[,z],breaks,include.lowest=TRUE)
-  cutpoints <- levels(tmp@data$zCat)
-  if (is.null(col.vec)) col.vec <- heat.colors(length(levels(tmp@data$zCat)))
-  if (reverse) {
-    cutpointsColors <- rev(col.vec)
-  } else {
+plot.heat.new <- function(tmp,state.map,z,title=NULL,breaks=NULL,cex.legend=1,bw=.2,col.vec=NULL,main=NULL,plot.legend=TRUE, ...) {
+    tmp@data$zCat <- cut(tmp@data[,z],breaks,include.lowest=TRUE)
+    cutpoints <- levels(tmp@data$zCat)
+    if (is.null(col.vec)) col.vec <- heat.colors(length(levels(tmp@data$zCat)))
     cutpointsColors <- col.vec
-  }
-  levels(tmp@data$zCat) <- cutpointsColors
-  ## labels for selected areas
-  ##tmp.c <- tmp@data 
-  ##tmp.c$name <- capwords(tolower(as.character(tmp.c$NOMEMESO)))
-  ##only metropolitana and DF
-  ##tmp.c <- tmp.c[c(grep("^Metropolitana",tmp.c$name),grep("^Distrito",tmp.c$name)),]
-  ##tmp.c$name <- gsub("Metropolitana D[aeo] ","",tmp.c$name)
-  ##plot
-  plot(tmp,border=gray(.8), lwd=bw,axes = FALSE, las = 1,col=as.character(tmp@data$zCat),main="A")
-  if (!is.null(state.map)) {
-      plot(state.map,add=TRUE,lwd=1)
-  }
-  ##with(tmp.c,text(x,y,name,cex=0.75))
-  if (plot.legend) legend("bottomleft", cutpoints, fill = cutpointsColors,bty="n",title=title,cex=cex.legend)
-  ##title("Cartogram")
+    levels(tmp@data$zCat) <- cutpointsColors
+    cols <- as.character(tmp$zCat)
+    ##cols <- "white"
+    plot(tmp,border=cols, lwd=bw,axes = FALSE, las = 1,col=as.character(tmp@data$zCat),main="A", ...)
+    if (!is.null(state.map)) {
+        plot(state.map,add=TRUE,lwd=1, border="white")
+    }
+    if (plot.legend) legend("bottomleft", cutpoints, fill = cutpointsColors,bty="n",title=title,cex=cex.legend)
 }
 
 

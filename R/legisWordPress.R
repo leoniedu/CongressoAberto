@@ -71,5 +71,5 @@ postlegis <- function(bioid, skip=FALSE) {
 }
 
 
-lapply(dnow$bioid,postlegis)
+lapply(sort(dnow$bioid),postlegis)
 

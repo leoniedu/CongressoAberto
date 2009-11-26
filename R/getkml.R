@@ -49,10 +49,6 @@ m1$y <- sapply(m1@polygons,function(poly) poly@labpt[2])
 ##res <- dbGetQuery(connect,paste("select * from br_vote_mun where office='DEPUTADO FEDERAL' AND year='2006'  AND state='",snow,"'",sep=''))
 
 
-
-
-
-
 ## select a state j
 snow <- "AC"
 
@@ -62,6 +58,7 @@ for (snow in states[25:27]) {
 
   ## number of seats
   elected <- dbGetQuery(connect,paste("select * from br_vote_candidates where  office='DEPUTADO FEDERAL' AND year='2006' AND state='",snow,"' AND sit in ('MÉDIA','ELEITO')",sep=''))
+  
   nseats <- nrow(elected)  
   ## let's try to plot one deputy
   ## get votes for all candidates in each municip
@@ -198,196 +195,54 @@ for (snow in states[25:27]) {
 
 
 
-
-
-
-
-
-
-
-## tmp0 <- subset(res.mun,state_tse06=="BA")[1:10,]
-## res <- list()
-## for (i in 1:nrow(tmp0)) {
-##   print(i)
-##   res[[i]] <- GNsearch(name=tmp0$municipality_ibge07[i], country="BR",featureCode="PPL")
-## }  
-
-
-## plots
-## snow <- "RR"
-## tmp2 <- dbGetQuery(connect,paste("select * from br_vote_mun_ag where state='",snow,"'",sep=""))
-
-## cnow <- paste(25,sep=",")
-## tmp1 <- dbGetQuery(connect,paste("select * from br_vote_mun where office=\"DEPUTADO FEDERAL\" and candidate_code in (",cnow,")  AND state='",snow,"'",sep=""))
-## tmp3 <- merge(tmp1,tmp2,by=c("year","state","municipality","office"),suffixes=c("",".ag"))
-
-
-##qplot(rank(votes,ties.method="random"),votes,data=tmp3,size=votes)+scale_x_continuous(formatter="comma")+facet_grid(~candidate_code)+theme_bw()
-
-
-## png(file="~/Sites/maps/tmp.png",width=240,height=240)
-## print(p)
-## dev.off()
-
-
-
-
-
-
-
-    ## cc <- merge(cc,res.m,all.x=TRUE)
-  ## m <- merge(cc,m,all=TRUE)
-  ## important ordering info so paths are nice
-  ## m <- m[order(m$candidate_code,m$rowid),]
-  ##mnow <- merge(res.m,m,by=c("candidate_code","geocodig_m"))
-  ## mnow <- mnow[order(mnow$rowid),]
-  ##p+geom_point(aes=aes(x,y,colour=vote_prop,label=municipality_tse06,size=votes),data=mnow,alpha=I(2/3),facets=~candidate_code)+
-  
-  
-  ## p <- qplot(x,y,colour=vote_prop,data=mnow,label=municipality_tse06,alpha=I(2/3),size=votes,facets=~candidate_code)+theme_bw()+coord_equal() 
-  ## p+geom_path(aes=aes(x=long,y=lat,group=groupid),size=1)
-  
-  
-  ##p+geom_text(data=subset(m2@data,votes>0),aes(size=sqrt(votes_total)))
-
-## res <- dbGetQuery(connect,paste("select * from br_vote_mun where office='DEPUTADO FEDERAL' AND year='2006' AND candidate_code=",cand," AND state='",snow,"'",sep=''))
-## res <- merge(subset(res0,state==snow),res,by=c("state","municipality"),all=TRUE)
-
-## res$vote_prop <- with(res,votes/votes_total)
-
-## ## assign ibge codes to votes
-## ##m0 <- dbGetQuery(connect,"select * from br_municipios where state_tse06='BA'")
-## m0 <- dbGetQuery(connect,"select * from br_municipios")
-## m0$municipalitytse <- as.numeric(as.character(m0$municipalitytse))
-## m0$GEOCODIG_M <- m0$geocodig_m
-## m0 <- merge(res,m0,by.x=c("municipality"),by.y=c("municipalitytse"),all.x=TRUE)
-
-
-## ## map for current state
-## m2 <- merge.sp(m1[m1@data$SIGLA==snow,],m0,by="GEOCODIG_M")
-## m2$votes[is.na(m2$votes)] <- 0
-
-## ## breaks for color ramp
-## ##bs <- seq(0,max(m2$vote_prop,na.rm=TRUE),length=9)
-## bs <- c(0,.025,.05,.1,.2,.4,.6,.8,1)
-
-## library(colorspace)
-## alpha.now <- .95
-## ##col.now <- alpha(diverge_hcl(length(bs)),alpha.now)
-## col.now <- alpha(sequential_hcl(length(bs)),alpha.now)
-
-## m2 <- color.heat(m2,"vote_prop",col.vec=col.now,
-##                  breaks=bs,reverse=TRUE)
-## m2@data$zCat <- as.character(m2@data$zCat)
-## m2@data$zCat[is.na(m2@data$zCat)] <- "transparent"
-
-## m2@data$parea <- with(m2@data,votes_total/sum(votes_total))
-## m2@data$pone <- with(m2@data,votes/sum(votes))
-
-## ##FIX: create table for description.
-## ##FIX: microregiao for whole brazil map.
-## ## creates a KML file containing the polygons of South Africa, Switzerland, and Canada
-
-
-## ##sapply(m2@polygons,function(poly) list(ID=poly@ID,labpt=poly@labpt,area=poly@area))
-## ## get polygons by municipality with the largest areas
-
-## plot.heat(m2,"vote_prop",state.map=NULL,col.vec=col.now,breaks=bs,reverse=TRUE)
-
-## ## plot(m2)
-## ## with(m2@data,points(x,y,cex=20*(votes_total/sum(votes_total)),pch=19,col=as.character(zCat)))
-## ## ##with(m2@data,text(x,y,label=municipality_tse06,cex=.3))
-
-
-## ## this is likely the best
-## p <- qplot(x,y,colour=vote_prop,data=subset(m2@data,votes>0),label=municipality_tse06,alpha=I(2/3),size=votes)+theme_bw()+coord_equal() +scale_area(name="votes",to = c(0.001, 20),breaks=c(100,1000,10000))
-
-## p
-
-## p+geom_text(data=subset(m2@data,votes>0),aes(size=sqrt(votes_total)))
-
-
-
-
-
-
-
-
-
-
-
-## pointKml <- function(data,title='Hello',description='World!',file="~/Desktop/tmp.kml") {
-##   kmlStyles <- sapply(1:nrow(data),function(i){
-##     paste(
-##           '<Style id="',data$id[i],'">
-##                        <IconStyle>
-##                          <Icon>
-##            <href>',data$image[i],'</href>
-##              </Icon>
-##                </IconStyle>
-##                  </Style>',sep='')
-##   })
-##   kmlPoints <- sapply(1:nrow(data),function(i) {
-##     paste('<Placemark>',
-##           '<name><![CDATA[',data$name[i],']]></name>',
-##           '<description><![CDATA[',data$description[i],']]></description>',
-##           '<styleUrl>#',data$id[i],'</styleUrl>',
-##           '<Point>',
-##           '<coordinates>',data$x[i],",",data$y[i],0,'</coordinates>',
-##           '</Point>',
-##           '</Placemark>'
-##           ,sep='')
-##   })
-##   ## pics
-##   sapply(1:nrow(data),function(i) {
-##     with(dnow[i,],{
-##       png(file=paste("~/Desktop/images/pic",id,".png",sep=''),bg="transparent",heigh=200,width=200,pointsize=1)
-##       ##print(grid.circle(gp=gpar(fill=as.character(zCat[i]))))
-##       print(grid.circle(r=size,gp=gpar(fill=alpha("red",.75))))
-##     }
-##          )
-##     dev.off()
-##   })
-##   cat('<?xml version="1.0" encoding="UTF-8"?>
-##     <kml xmlns="http://earth.google.com/kml/2.2">
-##       <Document>
-##         <name>',title,'</name>
-##           <description><![CDATA[<i>',description,'</i>]]></description>',
-##       kmlStyles,
-##       kmlPoints,
-##       '</Document></kml>',file=file)  
-## }
-
-## dnow <- m2@data
-## dnow$id <- dnow$GEOCODIG_M
-## dnow$image <- paste("http://files.eduardoleoni.com/pic",dnow$id,".png",sep='')
-## dnow$name <- dnow$municipality_tse06
-## dnow$description <- dnow$votes
-## mm <- function(x,lo,hi) ifelse(x<lo,lo,ifelse(x>hi,hi,x))
-## dnow$size <- with(dnow,(votes/max(votes)))*.5
-
-## pointKml(dnow,file="~/Desktop/tmp.kml")
-
-## system("scp ~/Desktop/images/pic*.png leoniedu@cluelessresearch.com:files.eduardoleoni.com/.")
-
-## system("scp ~/Desktop/tmp.kml leoniedu@cluelessresearch.com:files.eduardoleoni.com/tmp6.kml")
-
-
-
-
-
-
-## ###old
-
-
-## qplot(x,y,size=votes_total/sum(votes_total),colour=vote_prop,data=m2@data,geom="text",label=municipality_tse06)
-
-
-## qplot(x,y,colour=vote_prop,data=m2@data,alpha=I(1/2),size=parea)+theme_bw()+coord_map() +scale_area("votes")
-
-
-
-
-
-
+res.mun <-  dbGetQuery(connect,paste("select * from br_municipios where year='2006'",sep=''))
+
+res <- dbGetQuery(connect,paste("select * from br_vote_mun where office='PRESIDENTE' AND year='2006' and candidate_code=13",sep=''))
+
+res.xy <- m1@data
+res$municipality <- as.numeric(as.character(res$municipality))
+res.mun$municipalitytse <- as.numeric(as.character(res.mun$municipalitytse))
+res.m <- merge(res.mun,res,by.x=c("municipalitytse","state_tse06","year"),
+               by.y=c("municipality","state","year"))
+res.m <- merge(res.m,res.xy,
+               by.x=c("geocodig_m"),
+               by.y=c("GEOCODIG_M"),all.y=TRUE)
+
+
+
+## create a spatial points data frame from the state data:
+statesp <- data.frame(subset(res.m, state_tse06=="BA",
+                             select=c(votes, x, y, municipality_tse06, state_tse06) ))
+statesp$Name <- statesp$municipality_tse06
+statesp$municipality_tse06 <- NULL
+coordinates(statesp) = cbind(statesp$x,statesp$y)
+statesp$x <- statesp$y <- NULL
+## how to produce three layers:
+
+osmMap(webmaps::layer(statesp,name="state1",lstyle(fillColor="red")), outputDir="/Users/eduardo/tmp")
+
+
+var state1 = new OpenLayers.Layer.GML("state1","state1.gml",{
+    strategies: [new OpenLayers.Strategy.Cluster()],
+    projection: new OpenLayers.Projection("EPSG:4326"),
+    styleMap: new OpenLayers.Style(OpenLayers.Util.applyDefaults({'fillColor': 'red'
+                                                              },OpenLayers.Feature.Vector.style['default']))    
+});
+
+
+var style = new OpenLayers.Style({
+    strokeWidth: "${width}"
+  } , {
+    context: {
+      width: function(feature) {
+        return (feature.cluster) ? 2 : 1;
+      }
+    }
+  );
+
+var state1 = new OpenLayers.Layer.GML("state1","state1.gml",{
+    strategies: [
+                 new OpenLayers.Strategy.Cluster()
+                 ],
+    projection: new OpenLayers.Projection("EPSG:4326"),
 

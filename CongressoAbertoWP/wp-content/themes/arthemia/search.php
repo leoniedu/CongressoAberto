@@ -59,5 +59,4 @@ alt="" class="left"  width="150px"  /></a>
 
 
 
-<?php get_sidebar(); ?>
 <?php get_footer(); ?>

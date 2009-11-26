@@ -37,8 +37,8 @@ var map, wms;
 function init(){
   //var lon = -66.94796;
   //var lat = -9.933975;
-  // FIX AREA!
-  var zoom = 4;
+  // FIX AREA!aass
+  var zoom = 6;
   var max_value = 1000000;
   var symbol = new Geometry('circle', 1, max_value);
   var context = {
@@ -53,7 +53,7 @@ function init(){
   strokeWidth: 2,
   strokeOpacity: 0.9,
   fillColor : 'red', 
-  fillOpacity : 0.1, 
+  fillOpacity : 0.5, 
   pointRadius: "${getSize}"
   };
   
@@ -85,6 +85,8 @@ function init(){
 		    } 
 				  );
   // FIX: Google maps projection is off
+  var strategy = new OpenLayers.Strategy.Cluster({distance: 15, threshold: 3});
+  vote_layer = new OpenLayers.Layer.Vector("feature_layer", {strategies: [strategy]});
   map.addLayer(wms);
   feature_layer.styleMap = styleMap;
   feature_layer.isBaseLayer = false;
@@ -95,8 +97,10 @@ function init(){
   map.addControl(new OpenLayers.Control.PanZoomBar());
   map.addControl(new OpenLayers.Control.Navigation({zoomWheelEnabled: false}));
   
+  
   function show_label(feature) {
     var selectedFeature = feature;
+    
     var label = selectedFeature.data.label + ' - ' + selectedFeature.data.value + " votos.";
     var hed = document.getElementById('info');
 		hed.innerHTML = label;

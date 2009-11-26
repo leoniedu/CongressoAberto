@@ -86,12 +86,33 @@ Note: might create problems down the line
 * DONE run IAB post  by zucco
 * DONE run abstentionswordpress. check ausentes pic.
 * TODO do not update when camara server gives out a "out of memory" error.
+* TODO roll call graph explanation
+* TODO roll call graph threshold: only winning side.
+
 * LegisTwitter
 ** TODO store legislators tweets in database
 ** DONE display tweets in legislator page
 ** DONE get the list of legislators that tweet
 
+** TODO Foto do deputado no campo personalizado
+** TODO checar Costa ferreira 98927
+** TODO search page has a bug (twitter updates at the bottom)
+** upper/lower case of names, ementa, etc.
+
+** common names
+*** Projeto de Lei 22/03 patentes medicamentos aids
+*** 3971/08 exigindo nivel superior prof educacao basica
+*** Projeto de Lei 5003/2001, que mais tarde veio se tornar o Projeto de Lei da Câmara (PLC) 122/200 homofobia
+*** projeto de Lei da Câmara 89/2003, e Projetos de Lei do Senado n. 137/2000, e n. 76/2000 cibercrime
+*** o projeto de lei nº. 1746/2007 que cria cargos efetivos e comissionados no Ministério da Educação
+*** receita médica para quem for fazer tatuagem, acupuntura e piercing
+
+
+* TODO use rtidyhtml (http://www.omegahat.org/RTidyHTML/) insteado tidy on read.tramit
+
 
 * LegisDados
 ** pics
 
+
+* 
