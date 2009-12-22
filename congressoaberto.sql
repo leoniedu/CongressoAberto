@@ -187,7 +187,7 @@ CREATE TABLE  `br_votacoes` (
 ;
 alter table br_votacoes add key legis_index(legis);
 alter table br_votacoes add key date_index(rcdate);
-alter table br_votacoes add key rcvoteid_index(rcvoteid);
+alter table br_votacoes add key rcfile_index(rcfile);
 
 
 DROP TABLE IF EXISTS `br_billid`;

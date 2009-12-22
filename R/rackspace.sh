@@ -310,3 +310,7 @@ dpkg-reconfigure
 
 
 install.packages(c("ggplot2", "car", "RMySQL", "XML", "wnominate", "pcsl", dep=TRUE)
+
+
+## CONFIGURE POSTFIX 
+dpkg-reconfigure postfix

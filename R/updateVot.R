@@ -75,6 +75,7 @@ tmp <- lapply(dir(pattern=".*\\.zip$"),function(x) unzip(x,junkpaths=TRUE))
 SFfiles <- grep("SF",dir(),value=TRUE)
 if(length(SFfiles)>0){file.remove(SFfiles)} #Get rid of SENADO files, if they were downloaded
 unlink('*CD01E028O001905.TXT') ## Duplicated vote file LVCD01E028O001905 and LVCD01E028E001905
+unlink('*CD03O355E004152.txt') ## Duplicated vote file LVCD01E028O001905 and LVCD01E028E001905
 new.LVfiles<- dir(pattern="LV.*txt$",ignore.case=TRUE)
 votes <- setdiff(new.LVfiles,old.LVfiles) #compare new files with old to flag recently downloaded
 ## FIX: use file information to get what files recently modified.
