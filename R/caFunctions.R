@@ -1634,7 +1634,7 @@ postroll <- function(rcid=2797, saveplot=TRUE, post=TRUE) {
       print(plots[["large"]])
       dev.off()
   }
-  if (saveplot) {
+  if (saveplot & (sum(rcnow$rc%in%c("Sim", "Não"))>0)) {
       barplots <- barplot.rc.simple(rcnow, govpos(rcgov), threshold=threshold)  
       mosaicplots <- mosaic.rc(rcnow, pmedians)
       print.png(barplots, paste("images/rollcalls/bar",rcid, sep=''), crop=FALSE, small=4)

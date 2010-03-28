@@ -257,7 +257,7 @@ wpAddByTitle(conwp,post_title=post.title("Os Governistas")
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("governismo",slug="governismo")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
-             post_date=wptime(Sys.Date())$brasilia,
+             post_date=wptime("2009-10-10")$brasilia,
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
 
@@ -272,7 +272,7 @@ wpAddByTitle(conwp,post_title=post.title("Os Fiéis")
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("partidos",slug="partidos")),
              ##post_excerpt='Saiba quem são os deputados federais que mais faltam às votações nominais.',
              post_type="post",
-             post_date=wptime(Sys.Date())$brasilia,
+             post_date=wptime("2009-10-10")$brasilia,
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
 
 
@@ -303,6 +303,7 @@ wpAddByTitle(conwp
              ,post_title="As Campanhas Mais Caras"## %+%format(final.date,"%m/%Y")           
              ,post_content=content(statsnow)
              ,post_category=data.frame(name="Headline",slug="headline"), post_excerpt=excerpt,tags=data.frame(name=c("campanhas",slug="campanhas")),
+             post_date=wptime("2009-10-10")$brasilia,
              post_type="post",
              custom_fields=data.frame(meta_key="Image",meta_value=fn))
 

@@ -9,7 +9,7 @@
 		<div id="headline">
 <!--		<img src="<?php echo get_option('home'); ?>/wp-content/themes/arthemia/images/headline.png" width="75px" height="21px" alt="" /> -->
 <!-- we select one of the headlines randomly -->
-		<?php query_posts("showposts=1&category_name=Headline&orderby=rand"); ?>
+		<?php query_posts("showposts=1&category_name=Headline&orderby=rand"); ?> 
 		<?php while (have_posts()) : the_post(); ?>	
 	
 	<h3><div class="title"><a href="<?php the_permalink() ?>" rel="bookmark"><?php the_title(); ?></a></div></h3>

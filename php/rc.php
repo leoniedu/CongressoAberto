@@ -10,7 +10,7 @@ var visualization;
 var data;
 var options = {'showRowNumber': true};
 function drawVisualization() {
-  var query = new google.visualization.Query('/php/query.php?form=rcvotes1&rcvoteid='+rcvoteid);    
+  var query = new google.visualization.Query('http://congressoaberto.com.br/php/query.php?form=rcvotes1&rcvoteid='+rcvoteid);    
     query.send(handleQueryResponse);
 }
 function handleQueryResponse(response) {
@@ -53,15 +53,15 @@ echo '<p>Ementa: "'.$row[3].'"</p>' ;
 the_excerpt();
 
 echo '<h3> Resultado da Votação </h3>';
-echo '<a href="/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png">   <img src="/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png&h=300&w=300&zc=0&q=100"> </a>' ;
+echo '<a href="http://congressoaberto.com.br/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png">   <img src="http://congressoaberto.com.br/php/timthumb.php?src=/images/rollcalls/bar'.$rcvoteid.'large.png&h=300&w=300&zc=0&q=100"> </a>' ;
 // echo '<img src="/images/rollcalls/bar'.$rcvoteid.'large.png"  width=400 >'  ;
 
 echo '<h3> Votação por partido </h3>';
-echo '<img src="/php/timthumb.php?src=/images/rollcalls/mosaic'.$rcvoteid.'large.png&w=500&zc=0&q=100">' ;
+echo '<img src="http://congressoaberto.com.br/php/timthumb.php?src=/images/rollcalls/mosaic'.$rcvoteid.'large.png&w=500&zc=0&q=100">' ;
 
 
 echo '<h3> Votação por estado </h3>';
-echo '<img src="/php/timthumb.php?src=/images/rollcalls/map'.$rcvoteid.'large.png&w=350&zc=0&q=100">' ;
+echo '<img src="http://congressoaberto.com.br/php/timthumb.php?src=/images/rollcalls/map'.$rcvoteid.'large.png&w=350&zc=0&q=100">' ;
 
  
 </script>
@@ -73,5 +73,5 @@ echo '<img src="/php/timthumb.php?src=/images/rollcalls/map'.$rcvoteid.'large.pn
 
 
 <?php 
-print("<p><a href=\"/php/query.php?form=rcvotes&rcvoteid=$rcvoteid&tqx=reqId:0;out:csv;csvFile:votacao_rc$rcvoteid\"> Download da votação em formato csv</a></p>");
+print("<p><a href=\"http://congressoaberto.com.br/php/query.php?form=rcvotes&rcvoteid=$rcvoteid&tqx=reqId:0;out:csv;csvFile:votacao_rc$rcvoteid\"> Download da votação em formato csv</a></p>");
 ?>

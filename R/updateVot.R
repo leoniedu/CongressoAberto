@@ -30,9 +30,9 @@ meses[[3]] <- c("Marco","Mar%C3%A7o")
 
 current.date <- as.Date(Sys.time())
 last.date <- as.Date(Sys.time())-30
-current.file <- paste(meses[as.numeric(format(current.date, "%m"))],
+current.file <- paste(unlist(meses[as.numeric(format(current.date, "%m"))]),
                       format(current.date, "%y"),sep='')
-last.file <- paste(meses[as.numeric(format(last.date, "%m"))],
+last.file <- paste(unlist(meses[as.numeric(format(last.date, "%m"))]),
                    format(last.date, "%y"),sep='')
 
 ##list of files to download
