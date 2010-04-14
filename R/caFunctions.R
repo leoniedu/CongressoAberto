@@ -163,6 +163,26 @@ pad0 <- function(x,mx=NULL,fill=0) {
   paste(sapply(px,function(x) paste(rep(fill,x),collapse="")),x,sep="")
 }
 
+pad <- function(x,mx=NULL,fill=0, left=TRUE) {
+    lx <- nchar(as.character(x))
+    mx.calc <- max(lx,na.rm=TRUE)
+    if (!is.null(mx)) {
+        if (mx<mx.calc) {
+            stop("number of maxchar is too small")
+        }
+    } else {
+        mx <- mx.calc
+    }
+    px <- mx-lx
+    if (left) {
+        res <- paste(sapply(px,function(z) paste(rep(fill,z),collapse="")),x,sep="")
+    } else {
+        res <- paste(x,sapply(px,function(z) paste(rep(fill,z),collapse="")),sep="")
+    }
+    res[is.na(x)] <- NA
+    res
+}
+
 clean.name<-function(x){
     #CLEANS ACCENTS AND OTHER MARKS FROM FIELD CALLED "NAME" 
     y <- clean(x$name)

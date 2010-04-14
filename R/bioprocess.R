@@ -108,17 +108,18 @@ index.file <- rf(paste("data/bio/all/",index.url,sep=""))
 
 oldfiles <- dir(rf('data/bio/all'),pattern="DepNovos_Detalhe", full.names=TRUE)
 if (download.now) {
-  try(file.remove(index.file))
-  ## -nd put in same directory. this doesnt work because it implies -nc (rename files to .1,.2, etc)
-  ## -nH --cut-dirs=2 takes out the directories
-  ## -r recursive
-  ## -P directory path to put files
-  ## -R pattern : reject files matching pattern
-  tmp <- system(paste("wget -nH --cut-dirs=2 -r -l 1 -A \"DepNovos_*\" -R \"*foto.asp*\" -P ", rf("data/bio/all"), " 'http://www.camara.gov.br/internet/deputado/",index.url,"' 2>&1",sep=''), intern=TRUE)
+    try(file.remove(index.file))
+    ## -nd put in same directory. this doesnt work because it implies -nc (rename files to .1,.2, etc)
+    ## -nH --cut-dirs=2 takes out the directories
+    ## -r recursive
+    ## -P directory path to put files
+    ## -R pattern : reject files matching pattern
+    urlpath <- paste(" 'http://www.camara.gov.br/internet/deputado/",index.url, sep='')
+    tmp <- system(paste("wget -nH --cut-dirs=2 -r -l 1 -A \"DepNovos_*\" -R \"*foto.asp*\" -P ", rf("data/bio/all"), urlpath, "' 2>&1",sep=''), intern=TRUE)
 }
 newfiles <- dir('~/reps/CongressoAberto/data/bio/all',pattern="DepNovos_Detalhe",full.names=TRUE)
 if (update.all) {
-  files.list <- newfiles
+    files.list <- newfiles
 }  else {
   fi <- file.info(newfiles)
   files.list <- setdiff(newfiles, oldfiles)
@@ -127,22 +128,22 @@ if (update.all) {
 }
 
 if (length(files.list)>0) {
-
-  ll <- readLines(index.file,encoding='latin1')
-  ll <- gsub("\t+| +"," ",ll)
-  ##pe <- ll[grep("[A-Z] - [A-Z]",ll)]
-  peloc <- grep("/[A-Z]{2}<",ll)
-  pe <- trim(ll[peloc])
-  pe <- gsub("</b>","",pe)
-  pe <- strsplit(pe,"/")
-  np <- sapply(pe,function(x) x[[1]])
-  uf <- sapply(pe,function(x) x[[length(x)]])
-  np <- strsplit(np," - ")
-  name <- sapply(np,function(x) trim(x[[1]]))
-  partido.current <- sapply(np,function(x) {
-    newx <- try(trim(x[[2]]))
-    ifelse ("try-error"%in%class(newx),"",newx)
-  })
+    
+    ll <- readLines(index.file,encoding='latin1')
+    ll <- gsub("\t+| +"," ",ll)
+    ##pe <- ll[grep("[A-Z] - [A-Z]",ll)]
+    peloc <- grep("/[A-Z]{2}<",ll)
+    pe <- trim(ll[peloc])
+    pe <- gsub("</b>","",pe)
+    pe <- strsplit(pe,"/")
+    np <- sapply(pe,function(x) x[[1]])
+    uf <- sapply(pe,function(x) x[[length(x)]])
+    np <- strsplit(np," - ")
+    name <- sapply(np,function(x) trim(x[[1]]))
+    partido.current <- sapply(np,function(x) {
+        newx <- try(trim(x[[2]]))
+        ifelse ("try-error"%in%class(newx),"",newx)
+    })
   id <- as.numeric(gsub(".*id=([0-9]+)&.*","\\1",ll[peloc-1]))
   
   data.legis <- data.frame(bioid=id,nameindex=name,state=uf)##,partido.current=partido.current)

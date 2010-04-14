@@ -1,6 +1,5 @@
 
-read.all <- function(state,dir="/Users/eduardo/doNotBackup/doNotBackup/projects/BrazilianPolitics/trunk/electoral/section/Eleições\ 1998/votosecao1998/",year=1998,round=1,write.sections=FALSE,...) {
-  require(reshape)
+read.all <- function(state,dir="~/reps/CongressoAberto/data/electoral/tse/2006sections/",year=2006,round=2,write.sections=FALSE, upload=TRUE, ...) {
   cat(state,"\n")
   dnow <- read.section(file=paste("sections/voto_secao_",state,year,"T",
                          round,".txt",sep=""),
@@ -8,15 +7,19 @@ read.all <- function(state,dir="/Users/eduardo/doNotBackup/doNotBackup/projects/
   dnow$year <- year
   dnow$elec.round <- round
   dnow$state <- state
-  dnow$office <- recode.office(dnow$office)
-  dnow.rc <- dnow
-  dnow.rc$id <- with(dnow.rc,paste(municipality,office,type,candidate.code,sep=";"))
-  dnow.rc$votes <- with(dnow.rc,ave(votes,id,FUN=sum))
-  dnow.rc$section <- dnow.rc$zone <- dnow.rc$id <- NULL
-  dnow.rc <- data.frame(unique(dnow.rc))
-  ##data.frame(recast(dnow,year+elec.round+state+municipality+office+type+candidate.code~variable,fun.aggregate=sum,measure.var="votes"))
-  if (write.sections) dbWriteTableU(connect, "br_vote_section", dnow,append=TRUE)
-  dbWriteTableU(connect, "br_vote_mun", dnow.rc,append=TRUE)
+  ## dnow$office <- recode.office(dnow$office)
+  if (upload) {
+      dnow.rc <- dnow
+      dnow.rc$id <- with(dnow.rc,paste(municipality,office,type,candidate.code,sep=";"))
+      dnow.rc$votes <- with(dnow.rc,ave(votes,id,FUN=sum))
+      dnow.rc$section <- dnow.rc$zone <- dnow.rc$id <- NULL
+      dnow.rc <- data.frame(unique(dnow.rc))
+      ##data.frame(recast(dnow,year+elec.round+state+municipality+office+type+candidate.code~variable,fun.aggregate=sum,measure.var="votes"))
+      if (write.sections) dbWriteTableU(connect, "br_vote_section", dnow,append=TRUE)
+      dbWriteTableU(connect, "br_vote_mun", dnow.rc,append=TRUE)
+  } else {
+      dnow
+  }
 }
 
 recode.office <- function(office) {
@@ -28,12 +31,25 @@ recode.office <- function(office) {
 get.candidates <- function(year) {
     dirnow <- rf(paste("data/electoral/tse/sections/", year, "sections/candidates", sep=''))
     files <- dir(dirnow,full.names=TRUE)
+    testfile <- function(file) {
+        ## test number of ;
+        fnow <- readLines(file, encoding="latin1")
+        nsemi <- nchar(sapply(fnow, function(x) gsub("[^;]","",x)))
+        nsemitest <- nsemi%in%8
+        if ((year==2006) &
+            (min(nsemitest)==0)) {
+            stop(paste("problem in file", file, "line", which(!nsemitest)))
+        }
+        fnow <- gsub("ANTONIO JORGE; PRIMO", "ANTONIO JORGE PRIMO", fnow)
+        ##fname <- tempfile()
+        ##write(fnow, file=fname)
+    }
     f <- function(file,...) {
+        testfile(file)
         ## as char  because do.call is giving a seg fault
         data.frame(read.csv2(file,...,stringsAsFactors=FALSE),state=gsub(".*_([A-Z]{2}).*","\\1",file))
     }
     candidates <- do.call(rbind,lapply(files,f,encoding="latin1",header=FALSE))
-    print(head(candidates))        
     if (year%in%c(1998)) {
         candidates <- candidates[,c(1:9)]
         candidates$status <- NA
@@ -48,7 +64,6 @@ get.candidates <- function(year) {
     ##print(head(candidates))    
     names(candidates) <- c("state","office","candidate_code","name","name.short","sex","party","colig","sit","status")
     candidates$colig <- as.numeric(as.character(candidates$colig))
-    print(head(candidates))
     candidates$year <- year
     candidates
 }
@@ -60,7 +75,7 @@ read.section <- function(file="voto_secao_AC1998T1.txt",dir="/Users/eduardo/doNo
   elec.round <- substr(file,19,19)
   data <- read.table(paste(dir,file,sep=""),header=FALSE,sep=",",
                      comment.char="",
-                     col.names=c("municipality","zone","section","office","type","candidate.code","votes")
+                     col.names=c("municipality","zone","section","office","type","candidate_code","votes")
                      ,colClasses="integer"
                      ##,nrows=100
                      )

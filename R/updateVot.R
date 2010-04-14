@@ -67,7 +67,7 @@ for (i in zip.files) {
 ##    it does not create directories, putting everything in the same place
 ## FIX: make overwrite false?
 ##if (download.now) tmp <- lapply(dir(pattern=".*\\.zip$"),function(x) unzip(x,junkpaths=TRUE,exdir="extracted"))
-if (download.now) tmp <- lapply(paste(zip.files,".zip",sep=''),function(x) unzip(x,junkpaths=TRUE,exdir="extracted"))
+if (download.now) tmp <- lapply(dir(pattern=".zip"),function(x) unzip(x,junkpaths=TRUE,exdir="extracted"))
 setwd('extracted')
 ## unzip zip files that were inside zipfiles
 tmp <- lapply(dir(pattern=".*\\.zip$"),function(x) unzip(x,junkpaths=TRUE))
@@ -102,7 +102,11 @@ if (length(votes)>0) {
         ## load twitter user passwd
         source(rf("R/twitter.R"))
         load(rf("R/up.RData"))
-        tw <- paste(nvotes,"novas votações!")
+        if (nvotes>1) {
+            tw <- paste(nvotes,"novas votações!")
+        } else {
+            tw <- paste(nvotes,"novas votação!")
+        }
         ns <- tweet(tw, userpwd=usrpwd, wait=0)
     }
     print(paste(nvotes, "effectively updated"))

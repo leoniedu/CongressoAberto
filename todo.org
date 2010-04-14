@@ -75,7 +75,6 @@ check voteid 3914
 * TODO do not update when camara server gives out a "out of memory" error.
 * TODO roll call graph explanation
 * TODO roll call graph threshold: only winning side.
-
 * LegisTwitter
 ** TODO store legislators tweets in database
 ** DONE display tweets in legislator page
@@ -105,8 +104,5 @@ check voteid 3914
 * idea for roll call votes table http://www.washingtonpost.com/wp-srv/special/politics/votes/senate/senatehealthcare/index.html
 
 
-* Compras
-** baterias aaa
+* Link para paginas dos deputados estao quebrados.
 
-* levar p/ brasil
-** killawatt

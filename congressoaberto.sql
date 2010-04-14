@@ -361,6 +361,78 @@ CREATE TABLE  `br_vote_parties` (
 
 
 
+DROP TABLE IF EXISTS `br_vote_geocode_addresses`;
+CREATE TABLE `br_vote_geocode_addresses` (
+  `date` bigint(10),
+  `state` varchar(2),
+  `municipality` bigint(20) DEFAULT NULL,
+  `municipality_name` varchar(100),
+  `bairro` varchar(100),
+  `zipcode` bigint(10) DEFAULT NULL,
+  `country` varchar(50),
+  `lat` double DEFAULT NULL,
+  `lon` double DEFAULT NULL,
+  `geocode_status` varchar(20) DEFAULT NULL,
+  `geocode_match` varchar(20) DEFAULT NULL,
+  `address` varchar(100),
+  PRIMARY KEY (date, municipality, address, bairro, zipcode)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- alter table br_locations add key yearround_index(year, elec_round);
+-- alter table br_vote_mun add key office_index(year, office);
+
+DROP TABLE IF EXISTS `br_vote_geocode_zipcodes`;
+CREATE TABLE `br_vote_geocode_zipcodes` (
+  `date` bigint(10),
+  `state` varchar(2),
+  `zipcode` bigint(10) DEFAULT NULL,
+  `country` varchar(50),
+  `lat` double DEFAULT NULL,
+  `lon` double DEFAULT NULL,
+  `geocode_status` varchar(20) DEFAULT NULL,
+  `geocode_match` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (date, state, zipcode)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- alter table br_locations add key yearround_index(year, elec_round);
+-- alter table br_vote_mun add key office_index(year, office);
+
+DROP TABLE IF EXISTS `br_vote_geocode_municipalities`;
+CREATE TABLE `br_vote_geocode_municipalities` (
+  `date` bigint(10),
+  `municipality` bigint(20) DEFAULT NULL,	
+  `municipality_name` varchar(100),
+  `state` varchar(2),
+  `country` varchar(50),
+  `lat` double DEFAULT NULL,
+  `lon` double DEFAULT NULL,
+  `geocode_status` varchar(20) DEFAULT NULL,
+  `geocode_match` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (date, state, municipality)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- alter table br_locations add key yearround_index(year, elec_round);
+-- alter table br_vote_mun add key office_index(year, office);
+
+DROP TABLE IF EXISTS `br_vote_locations`;
+CREATE TABLE `br_vote_locations` (
+  `date` bigint(10),
+  `cod` bigint(20) DEFAULT NULL,
+  `state` varchar(2),
+  `municipality` bigint(20) DEFAULT NULL,
+  `location_code` varchar(20),
+  `location_name` varchar(100),
+  `municipality_name` varchar(100),
+  `zone` bigint(20) DEFAULT NULL,
+  `section` bigint(20) DEFAULT NULL,
+  `bairro` varchar(100),
+  `zipcode` bigint(10) DEFAULT NULL,
+  `country` varchar(50),
+  `address` varchar(100),
+  PRIMARY KEY (date, state, zone, section)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- alter table br_locations add key yearround_index(year, elec_round);
+-- alter table br_vote_mun add key office_index(year, office);
+
+
+
 
 ---- FIX accents
 -- update br_municipios set municipality_tse06=cast(cast(municipality_tse06 as binary) as char);

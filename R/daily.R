@@ -22,16 +22,14 @@ connect.wp()
 
 
 ## download csv with popular names of propositions
-pop <- read.csv("http://www.factual.com/tables/666549.csaml")
-
+##pop <- read.csv("http://www.factual.com/tables/XRJarj.csaml")
+pop <- read.csv("http://spreadsheets.google.com/pub?key=0Ahup3xoDmIoodDNEY2tKbWxCekYtVGs1bTZuRjE0M2c&hl=en&single=true&gid=0&output=csv")
 names(pop) <- c("billtype", "billno", "billyear", "billname", "tags")
 ## load to db and get the ids
-
 dbRemoveTable(connect, "tmp")
 dbRemoveTable(connect, "br_proposition_names")
 dbWriteTableU(connect, "tmp", pop)
 tmp <- dbGetQuery(connect, "create table br_proposition_names select a.billid, b.tags, b.billname, c.postid, b.billno, b.billtype, b.billyear  from  br_billid as a, tmp as b, br_billidpostid as c where a.billyear=b.billyear and a.billno=b.billno and a.billtype=b.billtype and a.billid=c.billid")
-
 tmp <- dbGetQuery(connect, "select * from  br_proposition_names")
 
 

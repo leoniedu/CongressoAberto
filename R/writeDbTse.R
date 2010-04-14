@@ -28,6 +28,7 @@ run.from <- rf("data/camara/rollcalls")
 library(reshape)
 library(RMySQL)
 source(rf("R/readTSEfunctions.R"))
+library(data.table)
 
 
 connect.db()
@@ -37,6 +38,7 @@ year.now <- 2006
 dir.now <- rf(paste("data/electoral/tse/sections/", year.now,"sections/", sep=''))
 
 
+
 office.codes <- read.csv2(file=
                           paste(dir.now,"commontables/cargo_",year.now,".txt",sep='')
                           ,encoding="latin1",header=FALSE)
@@ -44,14 +46,41 @@ names(office.codes) <- c("code","office","electorate","votable","mainofficecode"
 
 parties <- get.party(2002)
 
-dbWriteTableU(connect,"br_vote_parties",parties,append=TRUE)
 
-cand <- get.candidates(year=year.now,dir=dir.now)
-cand$office <- recode.office(cand$office)
+## cand$office <- recode.office(cand$office)
 sit.codes <- read.csv2(file=paste(dir.now,"commontables/candidato_sit_tot_",year.now,".txt",sep=''),encoding="latin1",header=FALSE)
+
+cand <- get.candidates(year=year.now)
+cand$state_code <- as.integer(factor(cand$state, levels=states))
+cand$year <- as.integer(cand$year)
 cand$sit <- factor(cand$sit,levels=sit.codes$V1,labels=sit.codes$V2)
+cand$state <- NULL
+cand <- data.table(cand, key=c("year,state_code,office,candidate_code"))
+
+
+for (i in toupper(states)) {
+    print(i)
+    for (round in 2) {
+        print(round)
+        vnow <- read.all(i, year=2006, round=round, dir=dir.now, upload=FALSE)
+        vnow$state_code <- as.integer(factor(vnow$state, levels=states))
+        vnow$year <- as.integer(vnow$year)
+        vnow$office_name <- recode.office(vnow$office)
+        vnow <- data.table(vnow, key=c("year,state_code,office,candidate_code"))
+        vnow <- merge(vnow, cand, all.x=TRUE)
+        save(vnow, file=rf(paste("data/electoral/tse/sections/", year.now,"sections/", i, round, ".RData", sep='')))
+    }
+}
+
+    
+
+
+
+
+
 
 ##FIX: create table/indexes in sql
+dbWriteTableU(connect,"br_vote_parties",parties,append=TRUE)
 dbWriteTableU(connect, name="br_vote_candidates", value=cand,append=TRUE )
 
 lapply(toupper(states),read.all,year=year.now,round=1,dir=dir.now)
